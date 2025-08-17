@@ -204,7 +204,7 @@ const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => (
       <Link
         className="text-blue-600 hover:underline"
-        href={`/orders/${row.getValue("id")}`}
+        href={`/dashboard/orders/${row.getValue("id")}`}
       >
         # {row.getValue("id")}
       </Link>
