@@ -9,6 +9,7 @@ import {
   PlusCircle,
   Search,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 const productsData = [
@@ -262,13 +263,18 @@ export default function ProductPage() {
     []
   );
 
+  const router = useRouter();
+
   return (
     <div className="bg-gray-50 min-h-screen p-4 sm:p-6 lg:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800">Products</h1>
-          <button className="mt-4 md:mt-0 flex items-center bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors">
+          <button
+            onClick={() => router.push("/dashboard/products/create")}
+            className="mt-4 md:mt-0 flex items-center bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
+          >
             <PlusCircle className="h-5 w-5 mr-2" />
             Add Product
           </button>

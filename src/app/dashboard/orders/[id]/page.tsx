@@ -1,7 +1,11 @@
+"use client";
+
+import { DataTable } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowLeft,
   Check,
@@ -10,6 +14,57 @@ import {
   Printer,
   Truck,
 } from "lucide-react";
+
+const columns: ColumnDef<{
+  id: number;
+  name: string;
+  image: string;
+  quantity: number;
+  price: number;
+  total: number;
+}>[] = [
+  {
+    accessorKey: "name",
+    header: "Product",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-3">
+        <img
+          src={row.original.image}
+          alt={row.getValue("name")}
+          className="w-12 h-12 rounded-md object-cover bg-gray-100"
+        />
+        <span className="font-medium text-gray-900">
+          {row.getValue("name")}
+        </span>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "quantity",
+    header: "Quantity",
+    cell: ({ row }) => (
+      <div className="text-center text-gray-600">
+        {row.getValue("quantity")}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "price",
+    header: "Price",
+    cell: ({ row }) => (
+      <div className="text-right text-gray-900">${row.getValue("price")}</div>
+    ),
+  },
+  {
+    accessorKey: "total",
+    header: "Total",
+    cell: ({ row }) => (
+      <div className="text-right font-medium text-gray-900">
+        ${row.getValue("total")}
+      </div>
+    ),
+  },
+];
 
 const OrderDetails = () => {
   const deliverySteps = [
@@ -169,43 +224,7 @@ const OrderDetails = () => {
                 <CardTitle>Order Items</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {/* Table Header */}
-                  <div className="grid grid-cols-12 gap-4 text-sm font-medium text-gray-500 pb-2 border-b">
-                    <div className="col-span-6">Product</div>
-                    <div className="col-span-2 text-center">Quantity</div>
-                    <div className="col-span-2 text-right">Price</div>
-                    <div className="col-span-2 text-right">Total</div>
-                  </div>
-
-                  {/* Items */}
-                  {orderItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="grid grid-cols-12 gap-4 items-center py-3"
-                    >
-                      <div className="col-span-6 flex items-center gap-3">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-12 h-12 rounded-md object-cover bg-gray-100"
-                        />
-                        <span className="font-medium text-gray-900">
-                          {item.name}
-                        </span>
-                      </div>
-                      <div className="col-span-2 text-center text-gray-600">
-                        {item.quantity}
-                      </div>
-                      <div className="col-span-2 text-right text-gray-900">
-                        ${item.price}
-                      </div>
-                      <div className="col-span-2 text-right font-medium text-gray-900">
-                        ${item.total}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <DataTable columns={columns} data={orderItems} />
               </CardContent>
             </Card>
           </div>
