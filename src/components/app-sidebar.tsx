@@ -1,12 +1,12 @@
 "use client";
 
 import {
+  IconCategory,
   IconChartBar,
   IconDashboard,
   IconHelp,
   IconListDetails,
   IconReport,
-  IconSearch,
   IconSettings,
 } from "@tabler/icons-react";
 import * as React from "react";
@@ -46,6 +46,11 @@ const data = {
       url: "/dashboard/orders",
       icon: IconChartBar,
     },
+    {
+      title: "Categories",
+      url: "/dashboard/categories",
+      icon: IconCategory,
+    },
   ],
 
   navPageBuilder: [
@@ -58,11 +63,6 @@ const data = {
       name: "FAQ",
       url: "/dashboard/page-builder/faq",
       icon: IconHelp,
-    },
-    {
-      name: "Search",
-      url: "#",
-      icon: IconSearch,
     },
   ],
   documents: [
