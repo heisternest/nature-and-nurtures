@@ -13,6 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFormStatus } from "react-dom";
 
+// Import your server action
+import { login } from "./action";
+
 function SubmitButton() {
   const { pending } = useFormStatus();
 
@@ -55,7 +58,8 @@ export default function SignInPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <form className="space-y-4">
+            {/* Bind the login server action to form */}
+            <form action={login} className="space-y-4">
               <div className="space-y-2">
                 <Label
                   htmlFor="email"

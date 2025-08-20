@@ -48,19 +48,19 @@ const data = {
     },
   ],
 
-  navSecondary: [
+  navPageBuilder: [
     {
-      title: "Settings",
-      url: "#",
+      name: "Hero Section",
+      url: "/dashboard/page-builder/hero",
       icon: IconSettings,
     },
     {
-      title: "Get Help",
-      url: "#",
+      name: "FAQ",
+      url: "/dashboard/page-builder/faq",
       icon: IconHelp,
     },
     {
-      title: "Search",
+      name: "Search",
       url: "#",
       icon: IconSearch,
     },
@@ -94,7 +94,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
+
+        <NavDocuments title="Documents" items={data.documents} />
+        <NavDocuments title="Page Builder" items={data.navPageBuilder} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

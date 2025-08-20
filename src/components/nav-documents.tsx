@@ -27,6 +27,7 @@ import {
 import Link from "next/link";
 
 export function NavDocuments({
+  title,
   items,
 }: {
   items: {
@@ -34,12 +35,13 @@ export function NavDocuments({
     url: string;
     icon: Icon;
   }[];
+  title: string;
 }) {
   const { isMobile } = useSidebar();
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Documents</SidebarGroupLabel>
+      <SidebarGroupLabel>{title}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.name}>
