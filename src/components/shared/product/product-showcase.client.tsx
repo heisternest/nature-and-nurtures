@@ -8,71 +8,17 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { ChevronRight, ShoppingBag } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
-// --- Types ---
-interface Product {
-  id: number;
-  brand: string;
-  name: string;
-  type: string;
-  price: number;
-  imageUrl: string;
-}
-
-// --- Mock Data ---
-const products: Product[] = [
-  {
-    id: 1,
-    brand: "GLOWBEAUTY",
-    name: "CLAY MASK",
-    type: "LIGHT BLUE",
-    price: 199.0,
-    imageUrl: "face-3.webp",
-  },
-  {
-    id: 2,
-    brand: "GLOWBEAUTY",
-    name: "HYDRATING SHEET MASK",
-    type: "WHITE",
-    price: 299.0,
-    imageUrl: "face-5.webp",
-  },
-  {
-    id: 3,
-    brand: "GLOWBEAUTY",
-    name: "EXFOLIATING MASK",
-    type: "GREEN",
-    price: 399.0,
-    imageUrl: "face-2.webp",
-  },
-  {
-    id: 4,
-    brand: "GLOWBEAUTY",
-    name: "CHARCOAL MASK",
-    type: "CHARCOAL",
-    price: 155.0,
-    imageUrl: "face-1.webp",
-  },
-  {
-    id: 5,
-    brand: "GLOWBEAUTY",
-    name: "CLAY MASK",
-    type: "LIGHT BLUE",
-    price: 199.0,
-    imageUrl: "face-2-2.webp",
-  },
-];
-
-// --- Components ---
-const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
-  <div className="p-4">
+const ProductCard: React.FC<{ product: any }> = ({ product }) => (
+  <Link href={`/product/${product.id}`} className="p-4">
     <div
       className="rounded-lg relative flex flex-col justify-end h-96 bg-center bg-cover text-left overflow-hidden"
-      style={{ backgroundImage: `url(${product.imageUrl})` }}
+      style={{ backgroundImage: `url(${product.images[0]})` }}
     >
       <div className="absolute top-4 left-4 text-xs font-semibold tracking-widest bg-white/80 px-3 py-1 rounded">
-        {product.brand}
+        {product.category.name}
       </div>
       <div className="absolute top-4 right-4 border border-gray-300 rounded-full p-2 bg-white/80">
         <ShoppingBag size={16} className="text-gray-600" />
@@ -87,10 +33,10 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
         </p>
       </div>
     </div>
-  </div>
+  </Link>
 );
 
-export const ProductShowcase: React.FC = () => {
+export const ProductShowcaseClient = ({ products }: { products: any }) => {
   return (
     <Carousel opts={{ align: "start", loop: true }} className="w-full">
       <div className="max-w-7xl mx-auto my-20 overflow-hidden">
@@ -129,7 +75,7 @@ export const ProductShowcase: React.FC = () => {
 
         {/* Carousel */}
         <CarouselContent className="ml-0">
-          {products.map((product) => (
+          {products.map((product: any) => (
             <CarouselItem
               key={product.id}
               className="basis-1/1 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"

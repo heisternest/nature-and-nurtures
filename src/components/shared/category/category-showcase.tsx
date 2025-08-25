@@ -4,48 +4,10 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
-import { cn } from "@/lib/utils";
+import { Category } from "@/generated/prisma";
 import Autoplay from "embla-carousel-autoplay";
 import * as React from "react";
-
-const categories = [
-  "Skincare",
-  "Makeup",
-  "Haircare",
-  "Fragrance",
-  "Tools & Accessories",
-];
-
-const products = [
-  {
-    name: "Face Wash",
-    category: "Skincare",
-    imageUrl: "feature-6.webp",
-  },
-  {
-    name: "Cleansers",
-    category: "Skincare",
-    imageUrl: "c1.webp",
-  },
-  {
-    name: "Beauty Tools",
-    category: "Tools & Accessories",
-    imageUrl: "p2-1-1.webp",
-  },
-  {
-    name: "Sunscreens",
-    category: "Skincare",
-    imageUrl: "p2-5.webp",
-  },
-  {
-    name: "Moisturizers",
-    category: "Skincare",
-    imageUrl: "c5.webp",
-  },
-];
 
 const ArrowIcon = () => (
   <svg
@@ -72,14 +34,7 @@ const ArrowIcon = () => (
   </svg>
 );
 
-interface ProductCardProps {
-  product: {
-    name: string;
-    imageUrl: string;
-  };
-}
-
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product }: any) => {
   return (
     <div className="p-2">
       <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden group">
@@ -90,7 +45,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         />
         <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
         <div className="absolute bottom-4 left-4 right-4">
-          <button className="w-full bg-white/90 backdrop-blur-sm text-black px-4 py-3 rounded-lg flex justify-between items-center text-sm font-medium transition-colors duration-300 hover:bg-white">
+          <button className="w-full  bg-white/90 backdrop-blur-sm text-black px-4 py-3 rounded-lg flex justify-between items-center text-sm font-medium transition-colors duration-300 hover:bg-white">
             <span>{product.name.toUpperCase()}</span>
             <ArrowIcon />
           </button>
@@ -100,8 +55,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
   );
 };
 
-export function CategoryShowcase() {
-  const [activeCategory, setActiveCategory] = React.useState("Skincare");
+export function CategoryShowcaseClient({
+  categories,
+}: {
+  categories: Category[];
+}) {
   const plugin = React.useRef(
     Autoplay({ delay: 5000, stopOnInteraction: true })
   );
@@ -132,39 +90,15 @@ export function CategoryShowcase() {
           opts={{ align: "start", loop: false }}
           className="w-full"
         >
-          {/* Categories & Carousel Navigation */}
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-            <div className="flex flex-wrap gap-2 justify-center">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={cn(
-                    "px-5 py-2 text-sm font-medium rounded-full border transition-colors duration-300",
-                    activeCategory === cat
-                      ? "bg-neutral-800 text-white border-neutral-800"
-                      : "bg-white text-neutral-700 border-neutral-300 hover:bg-neutral-100 hover:border-neutral-400"
-                  )}
-                >
-                  {cat.toUpperCase()}
-                </button>
-              ))}
-            </div>
-            <div className="">
-              <CarouselPrevious className=" relative border border-neutral-300 rounded-full w-10 h-10" />
-              <CarouselNext className="static  border border-neutral-300 rounded-full w-10 h-10" />
-            </div>
-          </div>
-
           {/* Products Carousel */}
 
           <CarouselContent className="-ml-2">
-            {products.map((product) => (
+            {categories.map((category) => (
               <CarouselItem
-                key={product.name}
+                key={category.id}
                 className="pl-2 basis-1/2 md:basis-1/3 lg:basis-1/4"
               >
-                <ProductCard product={product} />
+                <ProductCard product={category} />
               </CarouselItem>
             ))}
           </CarouselContent>

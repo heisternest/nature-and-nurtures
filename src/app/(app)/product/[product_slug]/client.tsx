@@ -2,34 +2,12 @@
 
 import { useState } from "react";
 
-export function ProductPage() {
+export function ProductPage({ product }: { product: any }) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState("M");
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
-
-  const images = [
-    "/product/amber/1.webp",
-    "/product/amber/2.webp",
-    "/product/amber/3.webp",
-    "/product/amber/4.webp",
-  ];
-
-  const thumbnails = [
-    "/product/amber/1.webp",
-    "/product/amber/2.webp",
-    "/product/amber/3.webp",
-    "/product/amber/4.webp",
-  ];
-
-  const colors = [
-    { name: "Gray", color: "#8B8B8B" },
-    { name: "Pink", color: "#E8A5A5" },
-    { name: "White", color: "#F5F5F5" },
-  ];
-
-  const sizes = ["S", "M", "L", "XL"];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -38,7 +16,7 @@ export function ProductPage() {
         <div className="flex gap-4 sticky top-8 self-start">
           {/* Thumbnails */}
           <div className="flex flex-col gap-2">
-            {thumbnails.map((thumb, index) => (
+            {product.images.map((image: string, index: number) => (
               <button
                 key={index}
                 onClick={() => setSelectedImage(index)}
@@ -47,7 +25,7 @@ export function ProductPage() {
                 }`}
               >
                 <img
-                  src={thumb || "/placeholder.svg"}
+                  src={image || "/placeholder.svg"}
                   alt={`Product thumbnail ${index + 1}`}
                   width={80}
                   height={100}
@@ -60,7 +38,7 @@ export function ProductPage() {
           {/* Main Image */}
           <div className="flex-1 bg-gray-100 rounded-lg overflow-hidden h-[38rem]">
             <img
-              src={images[selectedImage] || "/placeholder.svg"}
+              src={product.images[selectedImage] || "/placeholder.svg"}
               alt="Mesh Shirt"
               width={500}
               height={1200}
@@ -74,8 +52,12 @@ export function ProductPage() {
           {/* Header */}
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm text-gray-500 font-medium">T-SHIRT</p>
-              <h1 className="text-3xl font-bold text-gray-900">Mesh Shirt</h1>
+              <p className="text-sm text-gray-500 font-medium">
+                {product.category.name}
+              </p>
+              <h1 className="text-3xl font-bold text-gray-900">
+                {product.name}
+              </h1>
             </div>
             <button className="p-2 hover:bg-gray-100 rounded-full">
               <svg
@@ -112,34 +94,34 @@ export function ProductPage() {
 
           {/* Price */}
           <div className="flex items-center gap-3">
-            <span className="text-3xl font-bold text-gray-900">$35.00</span>
-            <span className="text-lg text-gray-500 line-through">$45.00</span>
+            <span className="text-3xl font-bold text-gray-900">
+              ${product.price}
+            </span>
+            <span className="text-lg text-gray-500 line-through">
+              ${product.originalPrice}
+            </span>
             <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-medium">
-              -22%
+              -{product.discount}%
             </span>
           </div>
 
           {/* Description */}
-          <p className="text-gray-600 leading-relaxed">
-            Keep your home organized, yet elegant with storage cabinets by Onita
-            Patio Furniture. Traditionally designed, they are perfect to be used
-            in the any place where you need to store.
-          </p>
+          <p className="text-gray-600 leading-relaxed">{product.description}</p>
 
           {/* Colors */}
           <div>
             <h3 className="text-sm font-medium text-gray-900 mb-3">Colors:</h3>
             <div className="flex gap-2">
-              {colors.map((color, index) => (
+              {product.colors.map((color: any) => (
                 <button
-                  key={index}
-                  onClick={() => setSelectedColor(index)}
+                  key={color.id}
+                  onClick={() => setSelectedColor(color.id)}
                   className={`w-8 h-8 rounded-full border-2 ${
-                    selectedColor === index
+                    selectedColor === color.id
                       ? "border-gray-900"
                       : "border-gray-300"
                   }`}
-                  style={{ backgroundColor: color.color }}
+                  style={{ backgroundColor: color.hexColor }}
                 />
               ))}
             </div>
@@ -151,7 +133,7 @@ export function ProductPage() {
               <h3 className="text-sm font-medium text-gray-900">Size:</h3>
             </div>
             <div className="flex gap-2">
-              {sizes.map((size) => (
+              {product.sizes.map((size: any) => (
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
@@ -161,7 +143,7 @@ export function ProductPage() {
                       : "border-gray-300 text-gray-700 hover:border-gray-400"
                   }`}
                 >
-                  {size}
+                  {size.size}
                 </button>
               ))}
             </div>
@@ -227,13 +209,11 @@ export function ProductPage() {
           <div className="space-y-4 pt-6 border-t border-gray-200">
             <div className="text-lg text-gray-600 space-y-1">
               <p>
-                <strong>SKU:</strong> 53453412
+                <strong>SKU:</strong> {product.sku}
               </p>
               <p>
-                <strong>Categories:</strong> fashion, women
-              </p>
-              <p>
-                <strong>Tag:</strong> t-shirt
+                <strong>Categories:</strong>
+                {product.category.name}
               </p>
             </div>
           </div>
@@ -275,83 +255,6 @@ export function ProductPage() {
               Guaranteed Safe Checkout
             </h3>
           </div>
-
-          {/* Get It Today Section */}
-          <div className="pt-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Get It Today
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <svg
-                  className="w-5 h-5 text-gray-600 mt-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                  />
-                </svg>
-                <div>
-                  <h4 className="font-medium text-gray-900">Free Shipping</h4>
-                  <p className="text-sm text-gray-600">
-                    Free shipping on orders over $75.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <svg
-                  className="w-5 h-5 text-gray-600 mt-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"
-                  />
-                </svg>
-                <div>
-                  <h4 className="font-medium text-gray-900">
-                    Support Everyday
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    Support from 8:30 AM to 10:00 PM everyday
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <svg
-                  className="w-5 h-5 text-gray-600 mt-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  />
-                </svg>
-                <div>
-                  <h4 className="font-medium text-gray-900">100 Day Returns</h4>
-                  <p className="text-sm text-gray-600">
-                    Not impressed? Get a refund. You have 100 days to break our
-                    hearts.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -389,14 +292,7 @@ export function ProductPage() {
                 Description
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                Keep your home organized, yet elegant with storage cabinets by
-                Onita Patio Furniture. These cabinets not only make a great
-                storage units, but also bring a great decorative accent to your
-                decor. Traditionally designed, they are perfect to be used in
-                the hallway, living room, bedroom, office or any place where you
-                need to store or display things. Made of high quality materials,
-                they are sturdy and durable for years. Bring one-of-a- kind look
-                to your interior with furniture from Onita Furniture!
+                {product.description}
               </p>
             </div>
 
