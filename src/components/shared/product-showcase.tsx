@@ -90,32 +90,6 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
   </div>
 );
 
-const CurvedArrow = () => (
-  <svg
-    width="150"
-    height="100"
-    viewBox="0 0 150 100"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="absolute -bottom-12 left-1/2 transform -translate-x-1/4"
-  >
-    <path
-      d="M1 1C1 55.5 45.5 99 99 99"
-      stroke="black"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M99 99L93 93M99 99L105 93"
-      stroke="black"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
 export const ProductShowcase: React.FC = () => {
   return (
     <Carousel opts={{ align: "start", loop: true }} className="w-full">
@@ -131,8 +105,9 @@ export const ProductShowcase: React.FC = () => {
           {/* Central text block with "Explore Face Wash" and the curved arrow */}
           <div className="text-center relative">
             <h2 className="text-5xl text-gray-300">Explore</h2>
-            <h1 className="text-6xl italic text-gray-900 -mt-4">Face Wash</h1>
-            <CurvedArrow />
+            <h1 className="text-6xl italic text-gray-900 -mt-4">
+              Our Products
+            </h1>
           </div>
 
           {/* Description text to the right of the central text */}

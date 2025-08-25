@@ -12,56 +12,60 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Category } from "@/generated/prisma";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { CreateCategory } from "./action";
+import { SaveCategory } from "./action";
 
 const categorySchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
-  description: z.string().min(1, { message: "Description is required" }),
+  description: z
+    .string()
+    .min(1, { message: "Description is required" })
+    .optional()
+    .nullable(),
   imageUrl: z
     .string()
-    .nonempty({ message: "Image is required" })
-    .url({ message: "Image must be a valid URL" }),
-  active: z.boolean(),
+    .url({ message: "Image must be a valid URL" })
+    .optional()
+    .nullable(),
 });
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
 
-export default function CategoryCreate() {
-  const form = useForm<CategoryFormValues>({
+export function CategoryEdit({ category }: { category: Category }) {
+  const form = useForm({
     resolver: zodResolver(categorySchema),
     defaultValues: {
-      name: "",
-      description: "",
-      imageUrl: "",
-      active: true,
+      name: category.name,
+      description: category.description,
+      imageUrl: category.imageUrl,
     },
   });
 
   const router = useRouter();
 
+  const param = useParams<{ category_id: string }>();
+
   async function onSubmit(values: CategoryFormValues) {
-    // TODO: replace with actual API call
-    // Example: await fetch('/api/dashboard/categories', { method: 'POST', body: JSON.stringify(values) })
     try {
-      const save = await CreateCategory(values);
+      const save = await SaveCategory(param.category_id, values);
       if (save.success) {
-        toast("Category Created Successfully");
+        toast("Category Updated Successfully");
         router.push("/dashboard/categories");
       }
     } catch (error) {
       console.log(error);
-      toast.error("Failed to create category");
+      toast.error("Failed to update category");
     }
   }
 
   return (
     <div className="container mx-auto py-8 px-8">
-      <h1 className="mb-4 text-2xl font-semibold">Create Category</h1>
+      <h1 className="mb-4 text-2xl font-semibold">Update Category</h1>
 
       <Form {...form}>
         <form
@@ -89,7 +93,11 @@ export default function CategoryCreate() {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Short description" {...field} />
+                  <Textarea
+                    placeholder="Short description"
+                    {...field}
+                    value={field.value ?? ""}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -100,12 +108,12 @@ export default function CategoryCreate() {
             name="imageUrl"
             control={form.control}
             bucketName="ecom"
-            value={form.watch("imageUrl")}
+            value={form.watch("imageUrl") as string | undefined}
             type="single"
           />
 
           <div className="flex items-center gap-2">
-            <Button type="submit">Create Category</Button>
+            <Button type="submit">Update Category</Button>
           </div>
         </form>
       </Form>
