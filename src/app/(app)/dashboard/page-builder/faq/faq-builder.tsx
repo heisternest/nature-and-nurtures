@@ -143,7 +143,6 @@ export function FAQBuilderForm({ data }: { data?: FAQData | null }) {
 
   const saveFaq = async () => {
     setLoading(true);
-    console.log(faqData);
     const save = await SaveFAQ(faqData);
     if (save.success) {
       toast("Successfully saved");

@@ -50,8 +50,6 @@ export default async function Page({
     return notFound();
   }
 
-  console.log(product);
-
   return (
     <>
       <Header />

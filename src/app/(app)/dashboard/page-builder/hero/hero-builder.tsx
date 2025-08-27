@@ -119,7 +119,7 @@ function HeroDisplay({ data }: HeroDisplayProps) {
 }
 
 // Main App component acting as the page builder
-export function HeroFormBuilder({ data }: { data?: HeroData | null }) {
+export function HeroFormBuilder({ data }: { data?: any }) {
   // Default data used when no `data` prop is provided so the builder never
   // initializes with null values.
   const defaultHero: HeroData = {

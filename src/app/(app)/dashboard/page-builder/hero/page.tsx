@@ -9,7 +9,6 @@ export default async function HeroBuilder() {
       pageType: "HERO",
     },
   });
-  console.log(heroData);
 
   return <HeroFormBuilder data={heroData?.content} />;
 }
