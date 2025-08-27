@@ -64,7 +64,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
   );
 };
 
-export const FAQSection = () => {
+export const FAQSectionClient = ({ data }: any) => {
   // State to manage which accordion sections are open
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     "RADICAL TRANSPARENCY": true,
@@ -78,30 +78,6 @@ export const FAQSection = () => {
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  // Accordion data
-  const accordionData = [
-    {
-      title: "RADICAL TRANSPARENCY",
-      content:
-        "NO BLACK BOXES, NOTHING TO HIDE. WE DISCLOSE OUR FULL FORMULAS, SO YOU WILL NEVER HAVE TO GUESS WHAT'S IN IT AND HOW MUCH.",
-    },
-    {
-      title: "CLEAN, BEYOND REPROACH",
-      content:
-        "Our commitment to clean beauty goes beyond typical standards. We meticulously source ingredients and formulate products that are safe, non-toxic, and free from harmful chemicals.",
-    },
-    {
-      title: "CONSCIOUS & RESPONSIBLE",
-      content:
-        "WE ARE COMMITTED TO USING ONLY THE SAFEST, MOST EFFECTIVE INGREDIENTS, AND WE NEVER COMPROMISE ON QUALITY.",
-    },
-    {
-      title: "POTENT & MULTI TASKING",
-      content:
-        "Our products are designed to be powerful and efficient, delivering multiple benefits in a single step to simplify your routine without sacrificing results.",
-    },
-  ];
 
   // Function to toggle accordion sections
   const toggleSection = (title: string) => {
@@ -145,7 +121,7 @@ export const FAQSection = () => {
               </h1>
 
               <div>
-                {accordionData.map((item) => (
+                {data.accordionItems.map((item: any) => (
                   <AccordionItem
                     key={item.title}
                     title={item.title}
