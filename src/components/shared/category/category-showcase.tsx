@@ -5,7 +5,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { Category } from "@/generated/prisma";
+import { Category } from "@prisma/client";
 import Autoplay from "embla-carousel-autoplay";
 import * as React from "react";
 

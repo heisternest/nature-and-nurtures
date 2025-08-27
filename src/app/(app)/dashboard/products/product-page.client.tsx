@@ -1,7 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/data-table";
-import { Product } from "@/generated/prisma";
+import { Product } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowUpDown,
