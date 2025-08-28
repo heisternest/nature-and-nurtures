@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/carousel";
 import { Category } from "@prisma/client";
 import Autoplay from "embla-carousel-autoplay";
+import Link from "next/link";
 import * as React from "react";
 
 const ArrowIcon = () => (
@@ -36,7 +37,7 @@ const ArrowIcon = () => (
 
 const ProductCard = ({ product }: any) => {
   return (
-    <div className="p-2">
+    <Link href={`/category/${product.id}`} className="p-2">
       <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden group">
         <img
           src={product.imageUrl}
@@ -51,7 +52,7 @@ const ProductCard = ({ product }: any) => {
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

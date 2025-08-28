@@ -2,17 +2,22 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, ShoppingBag, User } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
-import { CartDrawer } from "./cart-drawer";
+import { CartDrawer } from "../cart-drawer";
+import { SearchDrawer } from "../search-drawer";
 
-export default function Header() {
+export function HeaderClient() {
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState<
     null | "explore" | "types" | "skinCare" | "bestsellers"
   >(null);
 
   const showDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
+  const showSearchDrawer = () => setSearchOpen(true);
+  const closeSearchDrawer = () => setSearchOpen(false);
 
   // Dummy megamenu data
   const megaMenuFeatured = [
@@ -78,7 +83,9 @@ export default function Header() {
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-6">
         <div className="flex items-center space-x-6">
           {/* Logo */}
-          <img src="/logo.png" alt="Logo" className="h-8 w-auto" />
+          <Link href="/">
+            <img src="/logo.png" alt="Logo" className="h-8 w-auto" />
+          </Link>
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8 text-sm font-medium relative">
@@ -187,119 +194,15 @@ export default function Header() {
                 )}
               </AnimatePresence>
             </div>
-            {/* BEST SELLERS MEGAMENU (same style, different dummy data) */}
-            <div
-              className="relative group"
-              onMouseEnter={() => setMenuOpen("bestsellers")}
-              onMouseLeave={() => setMenuOpen(null)}
-            >
-              <a href="#" className="hover:text-gray-700">
-                BEST SELLERS
-              </a>
-              <AnimatePresence>
-                {menuOpen === "bestsellers" && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    transition={{ duration: 0.2 }}
-                    className="fixed left-0 top-20 w-full z-30 bg-white shadow-2xl border-b border-gray-100 px-16 py-12 flex justify-center"
-                  >
-                    <div className="flex w-full max-w-7xl space-x-12">
-                      {/* Featured */}
-                      <div className="min-w-[180px]">
-                        <h4 className="font-bold mb-4 text-xs tracking-widest text-[#7c2943]">
-                          FEATURED
-                        </h4>
-                        <ul className="space-y-4">
-                          {megaMenuFeatured.map((item) => (
-                            <li key={item}>
-                              <a
-                                href="#"
-                                className="text-lg text-gray-900 hover:text-[#7c2943] font-normal transition-colors"
-                              >
-                                {item}
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      {/* Product Type */}
-                      <div className="min-w-[260px]">
-                        <h4 className="font-bold mb-4 text-xs tracking-widest text-[#7c2943]">
-                          PRODUCT TYPE
-                        </h4>
-                        {megaMenuTypes.map((section) => (
-                          <div key={section.title} className="mb-4">
-                            <div className="font-serif text-xl mb-2 text-gray-900">
-                              {section.title}
-                            </div>
-                            <ul className="ml-2 pl-2 border-l border-[#7c2943] space-y-1">
-                              {section.items.map((item) => (
-                                <li key={item}>
-                                  <a
-                                    href="#"
-                                    className="text-gray-900 hover:text-[#7c2943] text-base font-normal transition-colors"
-                                  >
-                                    {item}
-                                  </a>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-                      {/* Skin Care & Body */}
-                      <div className="min-w-[220px]">
-                        {megaMenuSkinCare.map((section) => (
-                          <div key={section.title} className="mb-4">
-                            <div className="font-serif text-xl mb-2 text-gray-900">
-                              {section.title}
-                            </div>
-                            <ul className="ml-2 pl-2 border-l border-[#7c2943] space-y-1">
-                              {section.items.map((item) => (
-                                <li key={item}>
-                                  <a
-                                    href="#"
-                                    className="text-gray-900 hover:text-[#7c2943] text-base font-normal transition-colors"
-                                  >
-                                    {item}
-                                  </a>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-                      {/* Images */}
-                      <div className="flex flex-col items-center justify-start space-y-6">
-                        {megaMenuImages.map((img) => (
-                          <div
-                            key={img.label}
-                            className="flex flex-col items-center"
-                          >
-                            <img
-                              src={img.src}
-                              alt={img.label}
-                              className="w-40 h-32 object-cover rounded"
-                            />
-                            <span className="mt-2 text-sm text-gray-700 text-center">
-                              {img.label}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
           </nav>
         </div>
 
         {/* Icons */}
         <div className="flex items-center space-x-4">
-          <Search className="w-5 h-5 cursor-pointer" />
+          <Search
+            className="w-5 h-5 cursor-pointer"
+            onClick={showSearchDrawer}
+          />
           <User className="w-5 h-5 cursor-pointer" />
           <div className="relative">
             <ShoppingBag
@@ -312,6 +215,7 @@ export default function Header() {
           </div>
         </div>
       </div>
+      <SearchDrawer open={searchOpen} closeDrawer={closeSearchDrawer} />
       <CartDrawer open={open} closeDrawer={closeDrawer} />
     </header>
   );

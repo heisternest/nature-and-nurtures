@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const Newsletter = () => {
   return (
     <section className="flex flex-col md:flex-row items-center justify-between w-full mx-auto mt-20 max-w-7xl">
@@ -38,9 +40,9 @@ export const Newsletter = () => {
         </form>
         <p className="mt-6 text-center text-lg text-neutral-700">
           WE CARE ABOUT YOUR DATA. READ OUR{" "}
-          <a href="#" className="underline">
+          <Link href="/privacy-policy" className="underline">
             PRIVACY POLICY
-          </a>
+          </Link>
           .
         </p>
       </div>

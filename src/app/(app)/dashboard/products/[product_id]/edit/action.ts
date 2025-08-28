@@ -54,7 +54,7 @@ export async function SaveProduct(id: string, data: ProductData) {
         },
         features: {
           create: data.features.map((feature) => ({
-            title: feature.title,
+            title: feature.description,
             description: feature.description,
           })),
         },

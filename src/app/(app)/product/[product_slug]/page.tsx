@@ -1,28 +1,54 @@
 "use server";
 
 import { Footer } from "@/components/shared/footer";
-import Header from "@/components/shared/header";
+import Header from "@/components/shared/header/index";
 import prisma from "@/lib/db";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductPage } from "./client";
 
-// export const metadata = {
-//   title: "Mesh Shirt - Nature Nurtures",
-//   description: "Shop the latest Mesh Shirt from Nature Nurtures.",
-//   openGraph: {
-//     title: "Mesh Shirt - Nature Nurtures",
-//     description: "Shop the latest Mesh Shirt from Nature Nurtures.",
-//     url: "https://www.naturenurtures.com/product/mesh-shirt",
-//     images: [
-//       {
-//         url: "https://www.naturenurtures.com/product/mesh-shirt/1.webp",
-//         width: 800,
-//         height: 600,
-//         alt: "Mesh Shirt - Nature Nurtures",
-//       },
-//     ],
-//   },
-// };
+async function getProduct(product_slug: string) {
+  return prisma.product.findUnique({
+    where: { id: product_slug, active: true },
+    include: {
+      category: {
+        select: { id: true, name: true },
+      },
+      sizes: true,
+      colors: true,
+      features: { select: { description: true } },
+      specifications: true,
+    },
+  });
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ product_slug: string }>;
+}): Promise<Metadata> {
+  const { product_slug } = await params;
+
+  const product = await prisma.product.findUnique({
+    where: { id: product_slug, active: true },
+    select: {
+      name: true,
+      description: true,
+      category: { select: { name: true } },
+    },
+  });
+
+  if (!product) {
+    return { title: "Product Not Found" };
+  }
+
+  return {
+    title: `${product.name} - ${product.category?.name ?? "Product"}`,
+    description:
+      product.description ??
+      `View details of ${product.name} in our ${product.category?.name} collection.`,
+  };
+}
 
 export default async function Page({
   params,
@@ -31,24 +57,11 @@ export default async function Page({
 }) {
   const { product_slug } = await params;
 
-  const product = await prisma.product.findUnique({
-    where: { id: product_slug, active: true },
-    include: {
-      category: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-      sizes: true,
-      colors: true,
-    },
-  });
+  const product = await getProduct(product_slug);
 
-  if (!product) {
-    // Handle product not found
-    return notFound();
-  }
+  if (!product) return notFound();
+
+  console.log(product);
 
   return (
     <>

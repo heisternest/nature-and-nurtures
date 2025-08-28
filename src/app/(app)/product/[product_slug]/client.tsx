@@ -299,30 +299,15 @@ export function ProductPage({ product }: { product: any }) {
             {/* About This Products */}
             <div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                About This Products
+                About This Product
               </h3>
               <ul className="space-y-3 text-gray-600">
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 flex-shrink-0"></span>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 flex-shrink-0"></span>
-                  Nulla luctus libero quis mauris vestibulum dapibus.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 flex-shrink-0"></span>
-                  Maecenas ullamcorper erat mi, vel consequat enim suscipit at.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 flex-shrink-0"></span>
-                  Quisque consectetur nibh ac urna molestie scelerisque.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 flex-shrink-0"></span>
-                  Mauris in nisl scelerisque massa consectetur pretium sed et
-                  mauris.
-                </li>
+                {product.features.map((item: any) => (
+                  <li key={item.id} className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 flex-shrink-0"></span>
+                    {item.description}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -330,9 +315,16 @@ export function ProductPage({ product }: { product: any }) {
 
         {activeTab === "specifications" && (
           <div className="mb-16">
-            <p className="text-gray-600">
-              Specifications content would go here...
-            </p>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {product.specifications.map((spec: any) => (
+                <li key={spec.id} className="flex gap-2">
+                  <span className="font-medium text-gray-900 ">
+                    {spec.key}:
+                  </span>
+                  <span className="text-gray-600">{spec.value}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 
