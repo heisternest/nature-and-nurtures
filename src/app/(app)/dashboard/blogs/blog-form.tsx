@@ -1,3 +1,5 @@
+"use client";
+
 import { FileUpload } from "@/components/file-upload";
 import { RichTextEditor } from "@/components/text-editor/text-editor";
 import { Badge } from "@/components/ui/badge";
@@ -45,7 +47,7 @@ import {
   Tag,
   X,
 } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -75,17 +77,18 @@ export function BlogForm() {
   const [newTag, setNewTag] = React.useState("");
 
   const availableCategories = [
-    // diaper related categories
-    "Diapering Tips",
-    "Baby Care",
-    "Parenting Advice",
-    "Child Development",
-    "Health and Safety",
-    "Feeding and Nutrition",
-    "Sleep and Routines",
+    // fashion related categories
+    "Fashion Tips",
+    "Latest Trends",
+    "Outfit Ideas",
+    "Sustainable Fashion",
+    "Fashion History",
+    "Celebrity Style",
+    "Fashion News",
   ];
 
-  const { slug: id } = useParams();
+  const { id } = useParams();
+  const router = useRouter();
 
   const onSubmit = async (data: BlogFormValues) => {
     // const { error } = await supabase
@@ -116,6 +119,7 @@ export function BlogForm() {
       toast.error(`Error saving post: ${error.message}`);
     } else {
       toast.success(`Post saved as ${data.status}`);
+      router.push("/dashboard/blogs");
     }
   };
 
