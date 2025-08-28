@@ -1,5 +1,6 @@
 "use client";
 import { DataTable } from "@/components/data-table";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ColumnDef } from "@tanstack/react-table";
 import {
@@ -9,6 +10,7 @@ import {
   PlusCircle,
   Search,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer } from "recharts";
 
@@ -248,6 +250,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState("All");
   const tabs = ["All", "Published", "Draft", "Archived"];
 
+  const router = useRouter();
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-4 sm:p-6 lg:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
@@ -322,36 +326,11 @@ export default function App() {
                       className="pl-9 pr-3 py-2 w-full sm:w-48 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
-                  <button className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <svg
-                      className="w-5 h-5 text-gray-500 dark:text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M3 4h18M7 8h10M10 12h4"
-                      ></path>
-                    </svg>
-                  </button>
-                  <button className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <svg
-                      className="w-5 h-5 text-gray-500 dark:text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M12 6V4m0 16v-2m8-8h2M4 12H2m15.364 6.364l1.414 1.414M4.222 4.222l1.414 1.414m12.728 0l-1.414 1.414M5.636 18.364l-1.414 1.414"
-                      ></path>
-                    </svg>
-                  </button>
+                  <Button
+                    onClick={() => router.push("/dashboard/blogs/create")}
+                  >
+                    Create Blog
+                  </Button>
                 </div>
               </div>
             </div>

@@ -56,12 +56,8 @@ export default async function Page({
   params: Promise<{ product_slug: string }>;
 }) {
   const { product_slug } = await params;
-
   const product = await getProduct(product_slug);
-
   if (!product) return notFound();
-
-  console.log(product);
 
   return (
     <>
