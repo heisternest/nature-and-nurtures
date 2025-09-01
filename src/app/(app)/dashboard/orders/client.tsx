@@ -18,58 +18,6 @@ import {
 import Link from "next/link";
 import { Line, LineChart, ResponsiveContainer } from "recharts";
 
-const cardData = [
-  {
-    title: "Total Orders",
-    value: "21",
-    change: "+25.2% last week",
-    trend: [
-      { name: "Page A", uv: 200 },
-      { name: "Page B", uv: 300 },
-      { name: "Page C", uv: 250 },
-      { name: "Page D", uv: 400 },
-      { name: "Page E", uv: 350 },
-    ],
-  },
-  {
-    title: "Order items over time",
-    value: "15",
-    change: "+18.2% last week",
-    trend: [
-      { name: "Page A", uv: 100 },
-      { name: "Page B", uv: 250 },
-      { name: "Page C", uv: 150 },
-      { name: "Page D", uv: 300 },
-      { name: "Page E", uv: 280 },
-    ],
-  },
-  {
-    title: "Returns Orders",
-    value: "0",
-    change: "-1.2% last week",
-    trend: [
-      { name: "Page A", uv: 400 },
-      { name: "Page B", uv: 300 },
-      { name: "Page C", uv: 350 },
-      { name: "Page D", uv: 200 },
-      { name: "Page E", uv: 220 },
-    ],
-    stroke: "#ef4444",
-  },
-  {
-    title: "Fulfilled orders over time",
-    value: "12",
-    change: "+12.2% last week",
-    trend: [
-      { name: "Page A", uv: 200 },
-      { name: "Page B", uv: 300 },
-      { name: "Page C", uv: 250 },
-      { name: "Page D", uv: 400 },
-      { name: "Page E", uv: 350 },
-    ],
-  },
-];
-
 function paymentColor(paymentStatus: string) {
   switch (paymentStatus) {
     case "refund":
@@ -184,7 +132,13 @@ const columns: ColumnDef<Order>[] = [
   },
 ];
 
-export function OrdersPageClient({ data }: { data: any }) {
+export function OrdersPageClient({
+  data,
+  cardData,
+}: {
+  data: any;
+  cardData: any[];
+}) {
   return (
     <div className="bg-gray-50/50 min-h-screen p-4 sm:p-6 lg:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
