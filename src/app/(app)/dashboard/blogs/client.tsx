@@ -171,7 +171,7 @@ export function BlogClient({ data }: { data: any }) {
         </header>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             title="Total Posts"
             value="84"
@@ -204,7 +204,7 @@ export function BlogClient({ data }: { data: any }) {
             chartType="line"
             trend="down"
           />
-        </div>
+        </div> */}
 
         {/* Blog Posts Table Section */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
