@@ -1,15 +1,17 @@
-import { ArrowRight, ArrowUp, Download, Star } from "lucide-react";
-import React from "react";
+"use client";
+
+import {
+  getCustomerReviewsStats,
+  getRevenueByDevice,
+  getSalesByLocation,
+  getStoreVisitsData,
+} from "@/actions/dashboard";
+import { ArrowRight, Download, Star } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import {
   Bar,
   BarChart,
   CartesianGrid,
-  Cell,
-  Legend,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -71,19 +73,78 @@ const customerReviewsData = {
 };
 
 // Main App Component
-export function StatsChart() {
+interface DashboardData {
+  totalRevenue: number;
+  totalOrders: number;
+  totalProducts: number;
+  totalUsers: number;
+  revenueData: Array<{ name: string; value: number }>;
+  salesData: Array<{ name: string; value: number }>;
+  customersData: Array<{ name: string; value: number }>;
+}
+
+export function StatsChart({ data }: { data: DashboardData }) {
+  const [revenueData, setRevenueData] = useState(totalRevenueData);
+  const [salesByLocation, setSalesByLocation] = useState(salesByLocationData);
+  const [storeVisits, setStoreVisits] = useState(storeVisitsData);
+  const [customerReviews, setCustomerReviews] = useState(customerReviewsData);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [revenueResult, salesResult, visitsResult, reviewsResult] =
+          await Promise.all([
+            getRevenueByDevice(),
+            getSalesByLocation(),
+            getStoreVisitsData(),
+            getCustomerReviewsStats(),
+          ]);
+
+        setRevenueData(revenueResult);
+        setSalesByLocation(salesResult);
+        setStoreVisits(visitsResult);
+        setCustomerReviews(reviewsResult);
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="text-gray-900 mb-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+              <div className="animate-pulse">
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-8 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+              <div className="animate-pulse">
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-8 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="text-gray-900 mb-10">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Dashboard Area */}
-        <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <TotalRevenueCard />
-          <ReturningRateCard />
-        </div>
-        <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <SalesByLocationCard />
-          <StoreVisitsCard />
-          <CustomerReviewsCard />
+        <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <TotalRevenueCard revenueData={revenueData} />
+          <SalesByLocationCard salesData={salesByLocation} />
         </div>
       </div>
     </div>
@@ -166,7 +227,11 @@ const Progress = ({
 );
 
 // Dashboard Card Components
-function TotalRevenueCard() {
+function TotalRevenueCard({
+  revenueData,
+}: {
+  revenueData: Array<{ name: string; desktop: number; mobile: number }>;
+}) {
   return (
     <Card className="md:col-span-2">
       <CardHeader>
@@ -178,7 +243,7 @@ function TotalRevenueCard() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={totalRevenueData}
+                data={revenueData}
                 margin={{ top: 5, right: 20, left: -10, bottom: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -221,11 +286,19 @@ function TotalRevenueCard() {
         <div className="flex md:flex-col justify-around md:justify-center gap-4 border-t md:border-t-0 md:border-l border-gray-200 pt-4 md:pt-0 md:pl-6">
           <div>
             <p className="text-sm text-gray-500">Desktop</p>
-            <p className="text-2xl font-bold">24,828</p>
+            <p className="text-2xl font-bold">
+              {revenueData
+                .reduce((sum, item) => sum + item.desktop, 0)
+                .toLocaleString()}
+            </p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Mobile</p>
-            <p className="text-2xl font-bold">25,010</p>
+            <p className="text-2xl font-bold">
+              {revenueData
+                .reduce((sum, item) => sum + item.mobile, 0)
+                .toLocaleString()}
+            </p>
           </div>
         </div>
       </CardContent>
@@ -233,79 +306,16 @@ function TotalRevenueCard() {
   );
 }
 
-function ReturningRateCard() {
-  return (
-    <Card className="md:col-span-2">
-      <CardHeader className="flex justify-between items-center">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-800">
-            Returning Rate
-          </h3>
-          <div className="flex items-baseline gap-2">
-            <p className="text-2xl font-bold">$42,379</p>
-            <span className="text-sm font-semibold text-green-600 flex items-center">
-              <ArrowUp className="w-4 h-4" />
-              +2.5%
-            </span>
-          </div>
-        </div>
-        <Button>
-          <Download className="w-4 h-4 mr-2" />
-          Export
-        </Button>
-      </CardHeader>
-      <CardContent>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={returningRateData}
-              margin={{ top: 5, right: 20, left: -10, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis
-                dataKey="name"
-                tick={{ fill: "#6b7280", fontSize: 12 }}
-                axisLine={false}
-                tickLine={false}
-              />
-              <YAxis
-                tick={{ fill: "#6b7280", fontSize: 12 }}
-                axisLine={false}
-                tickLine={false}
-                hide
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #e5e7eb",
-                  borderRadius: "0.5rem",
-                  color: "#1f2937",
-                }}
-              />
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke="#1f2937"
-                strokeWidth={2}
-                dot={false}
-              />
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke="#9ca3af"
-                strokeWidth={2}
-                dot={false}
-                transform="translate(0, -20)"
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function SalesByLocationCard() {
+function SalesByLocationCard({
+  salesData,
+}: {
+  salesData: Array<{
+    name: string;
+    value: number;
+    change: number;
+    color: string;
+  }>;
+}) {
   return (
     <Card>
       <CardHeader className="flex justify-between items-center">
@@ -322,7 +332,7 @@ function SalesByLocationCard() {
       </CardHeader>
       <CardContent>
         <ul className="space-y-4">
-          {salesByLocationData.map((item) => (
+          {salesData.map((item) => (
             <li key={item.name} className="space-y-1">
               <div className="flex justify-between items-center text-sm">
                 <div className="flex items-center gap-2">
@@ -354,58 +364,16 @@ function SalesByLocationCard() {
   );
 }
 
-function StoreVisitsCard() {
-  return (
-    <Card>
-      <CardHeader>
-        <h3 className="text-lg font-semibold text-gray-800">
-          Store Visits by Source
-        </h3>
-      </CardHeader>
-      <CardContent>
-        <div className="h-64 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={storeVisitsData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {storeVisitsData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #e5e7eb",
-                  borderRadius: "0.5rem",
-                  color: "#1f2937",
-                }}
-              />
-              <Legend
-                iconSize={10}
-                layout="vertical"
-                verticalAlign="middle"
-                align="right"
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function CustomerReviewsCard() {
-  const maxCount = Math.max(...customerReviewsData.ratings.map((r) => r.count));
+function CustomerReviewsCard({
+  reviewsData,
+}: {
+  reviewsData: {
+    average: number;
+    total: number;
+    ratings: Array<{ stars: number; count: number; color: string }>;
+  };
+}) {
+  const maxCount = Math.max(...reviewsData.ratings.map((r) => r.count));
   return (
     <Card>
       <CardHeader className="flex justify-between items-center">
@@ -414,7 +382,7 @@ function CustomerReviewsCard() {
             Customer Reviews
           </h3>
           <p className="text-sm text-gray-500">
-            Based on 5,500 verified purchases
+            Based on {reviewsData.total.toLocaleString()} verified purchases
           </p>
         </div>
         <Button variant="ghost" className="text-sm font-semibold text-gray-700">
@@ -425,16 +393,14 @@ function CustomerReviewsCard() {
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex flex-col items-center justify-center">
             <div className="flex items-baseline">
-              <span className="text-4xl font-bold">
-                {customerReviewsData.average}
-              </span>
+              <span className="text-4xl font-bold">{reviewsData.average}</span>
             </div>
             <div className="flex text-yellow-500">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
                   className={`w-5 h-5 ${
-                    i < Math.floor(customerReviewsData.average)
+                    i < Math.floor(reviewsData.average)
                       ? "fill-current"
                       : "fill-gray-300"
                   }`}
@@ -444,7 +410,7 @@ function CustomerReviewsCard() {
             <p className="text-sm text-gray-500 mt-1">out of 5</p>
           </div>
           <div className="flex-1 space-y-2">
-            {customerReviewsData.ratings.map((rating) => (
+            {reviewsData.ratings.map((rating) => (
               <div
                 key={rating.stars}
                 className="flex items-center gap-2 text-sm"

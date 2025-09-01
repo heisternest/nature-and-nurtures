@@ -2,7 +2,7 @@
 
 import { useCartStore } from "@/lib/cart-store";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, ShoppingBag, User } from "lucide-react";
+import { Search, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -225,7 +225,6 @@ export function HeaderClient({ data }: { data: any }) {
             className="w-5 h-5 cursor-pointer"
             onClick={showSearchDrawer}
           />
-          <User className="w-5 h-5 cursor-pointer" />
           <div className="relative">
             <ShoppingBag
               className="w-5 h-5 cursor-pointer"

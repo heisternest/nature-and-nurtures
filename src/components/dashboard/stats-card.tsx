@@ -1,3 +1,5 @@
+"use client";
+
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 import { ArrowUp } from "lucide-react";
 import { Line, LineChart, ResponsiveContainer, Tooltip } from "recharts";
@@ -11,38 +13,10 @@ import {
   CardTitle,
 } from "../ui/card";
 
-const revenueData = [
-  { name: "Jan", value: 280 },
-  { name: "Feb", value: 400 },
-  { name: "Mar", value: 300 },
-  { name: "Apr", value: 600 },
-  { name: "May", value: 200 },
-  { name: "Jun", value: 500 },
-];
-
-const salesData = [
-  { name: "Jan", value: 250 },
-  { name: "Feb", value: 350 },
-  { name: "Mar", value: 700 },
-  { name: "Apr", value: 400 },
-  { name: "May", value: 300 },
-  { name: "Jun", value: 400 },
-];
-
-const customersData = [
-  { name: "Jan", value: 150 },
-  { name: "Feb", value: 550 },
-  { name: "Mar", value: 400 },
-  { name: "Apr", value: 200 },
-  { name: "May", value: 250 },
-  { name: "Jun", value: 600 },
-];
-
 interface StatCardProps {
   title: string;
   value: string;
   percentage: number;
-  from: string;
   data: Array<{ name: string; value: number }>;
   chartColor: string;
 }
@@ -97,10 +71,8 @@ const CongratsCard = () => (
     </div>
     <div className="relative z-10 flex flex-col flex-grow justify-between">
       <div>
-        <h3 className="text-xl font-semibold text-gray-800">
-          Congratulations Toby! 🎉
-        </h3>
-        <p className="text-sm text-gray-500 mt-1">Best seller of the month</p>
+        <h3 className="text-xl font-semibold text-gray-800">Hello Admin! 🎉</h3>
+        <p className="text-sm text-gray-500 mt-1">Overview of your store</p>
       </div>
       <div>
         <p className="text-3xl font-bold text-gray-900 mt-4">$15,231.89</p>
@@ -117,7 +89,6 @@ const StatCard = ({
   title,
   value,
   percentage,
-  from,
   data,
   chartColor,
 }: StatCardProps) => {
@@ -168,7 +139,17 @@ const StatCard = ({
   );
 };
 
-export function StatsCards() {
+interface DashboardData {
+  totalRevenue: number;
+  totalOrders: number;
+  totalProducts: number;
+  totalUsers: number;
+  revenueData: Array<{ name: string; value: number }>;
+  salesData: Array<{ name: string; value: number }>;
+  customersData: Array<{ name: string; value: number }>;
+}
+
+export function StatsCards({ data }: { data: DashboardData }) {
   return (
     <div className="mb-12">
       <div className=" mx-auto">
@@ -181,26 +162,23 @@ export function StatsCards() {
           {/* Stat Cards */}
           <StatCard
             title="Revenue"
-            value="$125,231"
-            percentage={20.1}
-            from="month"
-            data={revenueData}
+            value={`$${data.totalRevenue.toLocaleString()}`}
+            percentage={20.1} // You might want to calculate this dynamically
+            data={data.revenueData}
             chartColor="#3b82f6" // blue-500
           />
           <StatCard
             title="Sales"
-            value="20K"
-            percentage={-1.7}
-            from="month"
-            data={salesData}
+            value={data.totalOrders.toString()}
+            percentage={-1.7} // You might want to calculate this dynamically
+            data={data.salesData}
             chartColor="#8b5cf6" // violet-500
           />
           <StatCard
             title="New Customers"
-            value="3602"
-            percentage={36.5}
-            from="month"
-            data={customersData}
+            value={data.totalUsers.toString()}
+            percentage={36.5} // You might want to calculate this dynamically
+            data={data.customersData}
             chartColor="#10b981" // emerald-500
           />
         </div>

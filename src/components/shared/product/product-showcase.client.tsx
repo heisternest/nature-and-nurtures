@@ -57,12 +57,6 @@ export const ProductShowcaseClient = ({ products }: { products: any }) => {
           </div>
 
           {/* Description text to the right of the central text */}
-          <div className="max-w-xs text-gray-600 leading-relaxed text-sm">
-            <p>
-              A GENTLE CLEANSER FOR ALL SKIN TYPES. REMOVES IMPURITIES AND
-              MAKEUP. LEAVES SKIN FRESH AND CLEAN. PERFECT FOR DAILY USE.
-            </p>
-          </div>
 
           {/* Navigation arrows on the far right */}
           <div className="flex items-center space-x-4">
