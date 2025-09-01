@@ -152,6 +152,18 @@ export default function ProductPageClient({
 
   const router = useRouter();
 
+  // Calculate dynamic stats
+  const totalValue = productsData.reduce(
+    (sum, p) => sum + p.price * (p.stockQuantity || 0),
+    0
+  );
+  const totalStock = productsData.reduce(
+    (sum, p) => sum + (p.stockQuantity || 0),
+    0
+  );
+  const activeCount = productsData.filter((p) => p.active).length;
+  const inactiveCount = productsData.filter((p) => !p.active).length;
+
   return (
     <div className="bg-gray-50 min-h-screen p-4 sm:p-6 lg:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
@@ -171,26 +183,26 @@ export default function ProductPageClient({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <StatCard
             title="Total Sales"
-            value="$30,230"
-            change="+20.1"
+            value={formatCurrency(totalValue)}
+            change="0"
             changeType="positive"
           />
           <StatCard
             title="Number of Sales"
-            value="982"
-            change="+5.02"
+            value={totalStock.toString()}
+            change="0"
             changeType="positive"
           />
           <StatCard
-            title="Affiliate"
-            value="$4,530"
-            change="+3.1"
+            title="Active Products"
+            value={activeCount.toString()}
+            change="0"
             changeType="positive"
           />
           <StatCard
-            title="Discounts"
-            value="$2,230"
-            change="-3.58"
+            title="Inactive Products"
+            value={inactiveCount.toString()}
+            change="0"
             changeType="negative"
           />
         </div>
