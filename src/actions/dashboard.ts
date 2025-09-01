@@ -256,35 +256,30 @@ export async function getCustomerReviewsStats() {
 
 export async function getRevenueByDevice() {
   try {
-    // This is a placeholder since we don't have device data in the current schema
-    // In a real app, you'd track this via analytics or add a field to orders
-    const sixMonthsAgo = new Date();
-    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    // Get daily revenue data for the last 28 days
+    const twentyEightDaysAgo = new Date();
+    twentyEightDaysAgo.setDate(twentyEightDaysAgo.getDate() - 28);
 
-    const monthlyRevenue = await prisma.order.groupBy({
-      by: ["createdAt"],
-      _sum: {
-        amountTotal: true,
-      },
-      where: {
-        createdAt: {
-          gte: sixMonthsAgo,
-        },
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
+    const dailyRevenue = await prisma.$queryRaw`
+      SELECT
+        DATE("createdAt") as date,
+        SUM("amountTotal") as total_revenue
+      FROM orders
+      WHERE "createdAt" >= ${twentyEightDaysAgo}
+      GROUP BY DATE("createdAt")
+      ORDER BY DATE("createdAt") ASC
+    `;
 
-    // Simulate desktop/mobile split (60/40)
-    const revenueData = monthlyRevenue.map((item) => {
-      const total = item._sum.amountTotal ? item._sum.amountTotal / 100 : 0;
+    // Format the data for the chart
+    const revenueData = (dailyRevenue as any[]).map((item) => {
+      const total = Number(item.total_revenue) / 100; // Convert from cents to dollars
+      const date = new Date(item.date);
       return {
-        name: item.createdAt
-          ? item.createdAt.toLocaleDateString("en-US", { month: "short" })
-          : "Unknown",
-        desktop: Math.round(total * 0.6),
-        mobile: Math.round(total * 0.4),
+        name: date.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        }),
+        total: Math.round(total),
       };
     });
 

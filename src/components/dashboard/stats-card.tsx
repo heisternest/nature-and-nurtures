@@ -61,7 +61,7 @@ const TinyChart = ({ data, strokeColor }: TinyChartProps) => (
   </div>
 );
 
-const CongratsCard = () => (
+const CongratsCard = ({ totalRevenue }: { totalRevenue: number }) => (
   <div className="relative bg-gray-50 p-6 rounded-lg overflow-hidden shadow-sm h-full flex flex-col">
     <div
       className="absolute -top-10 -right-10 text-8xl opacity-10"
@@ -75,7 +75,7 @@ const CongratsCard = () => (
         <p className="text-sm text-gray-500 mt-1">Overview of your store</p>
       </div>
       <div>
-        <p className="text-3xl font-bold text-gray-900 mt-4">$15,231.89</p>
+        <p className="text-3xl font-bold text-gray-900 mt-4">${totalRevenue}</p>
         <div className="flex items-center text-sm text-green-600 font-medium mt-1">
           <ArrowUp className="h-4 w-4 mr-1" />
           <span>+65% from last month</span>
@@ -156,7 +156,7 @@ export function StatsCards({ data }: { data: DashboardData }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Congrats Card */}
           <div className="md:col-span-1">
-            <CongratsCard />
+            <CongratsCard totalRevenue={data.totalRevenue} />
           </div>
 
           {/* Stat Cards */}
