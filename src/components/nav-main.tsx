@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +29,7 @@ export function NavMain({
   }[];
 }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <SidebarGroup>
@@ -59,6 +60,7 @@ export function NavMain({
               <SidebarMenuButton
                 onClick={() => router.push(item.url)}
                 tooltip={item.title}
+                isActive={pathname === item.url}
               >
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>

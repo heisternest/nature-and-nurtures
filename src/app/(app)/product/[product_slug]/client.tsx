@@ -2,6 +2,7 @@
 
 import { useCartStore } from "@/lib/cart-store";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export function ProductPage({ product }: { product: any }) {
   const [selectedImage, setSelectedImage] = useState(0);
@@ -24,6 +25,7 @@ export function ProductPage({ product }: { product: any }) {
       } / ${selectedSize}`,
     };
     addToCart(cartItem);
+    toast(`Added ${product.name} to cart`);
   };
 
   return (
@@ -199,9 +201,6 @@ export function ProductPage({ product }: { product: any }) {
               className="w-full bg-white border border-gray-300 text-gray-900 py-3 px-6 rounded-md font-medium hover:bg-gray-50 transition-colors"
             >
               ADD TO CART
-            </button>
-            <button className="w-full bg-black text-white py-3 px-6 rounded-md font-medium hover:bg-gray-800 transition-colors">
-              BUY IT NOW
             </button>
           </div>
 

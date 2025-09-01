@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  IconBorderBottom,
   IconCategory,
   IconChartBar,
   IconDashboard,
@@ -63,6 +64,11 @@ const data = {
       name: "FAQ",
       url: "/dashboard/page-builder/faq",
       icon: IconHelp,
+    },
+    {
+      name: "Footer",
+      url: "/dashboard/page-builder/footer",
+      icon: IconBorderBottom,
     },
   ],
   documents: [
