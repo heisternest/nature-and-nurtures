@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sheet,
   SheetContent,
@@ -5,50 +7,48 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useCartStore } from "@/lib/cart-store";
 import { Trash2 } from "lucide-react";
-
-interface CartItem {
-  name: string;
-  image: string;
-  options: string;
-  price: number;
-  quantity: number;
-}
+import { useState } from "react";
 
 interface CartDrawerProps {
   open: boolean;
   closeDrawer: () => void;
 }
 
-const cartItems: CartItem[] = [
-  {
-    name: "BASIC TEE",
-    image: "/p2-1-1.webp",
-    options: "SIENNA / LARGE",
-    price: 32.0,
-    quantity: 1,
-  },
-  {
-    name: "LEATHER TOTE BAG",
-    image: "/c1.webp",
-    options: "BLACK / LARGE",
-    price: 32.0,
-    quantity: 1,
-  },
-  {
-    name: "NOMAD TUMBLER",
-    image: "/feature-1.webp",
-    options: "WHITE",
-    price: 35.0,
-    quantity: 1,
-  },
-];
+export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
+  const { items, removeFromCart, updateQuantity, getTotalPrice } =
+    useCartStore();
+  const [isLoading, setIsLoading] = useState(false);
 
-export function CartDrawer({ open, closeDrawer }: CartDrawerProps) {
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  const subtotal = getTotalPrice();
+
+  const handleCheckout = async () => {
+    if (items.length === 0) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ items }),
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("Failed to create checkout session");
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Sheet open={open} onOpenChange={(o) => !o && closeDrawer()}>
@@ -57,9 +57,9 @@ export function CartDrawer({ open, closeDrawer }: CartDrawerProps) {
           <SheetTitle>Shopping Cart</SheetTitle>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-8 py-4">
-          {cartItems.map((item) => (
+          {items.map((item) => (
             <div
-              key={item.name}
+              key={item.id}
               className="flex items-center py-4 border-b last:border-b-0"
             >
               <img
@@ -88,6 +88,9 @@ export function CartDrawer({ open, closeDrawer }: CartDrawerProps) {
                   {/* Replace Select with your own or shadcn select if needed */}
                   <select
                     defaultValue={item.quantity}
+                    onChange={(e) =>
+                      updateQuantity(item.id, parseInt(e.target.value))
+                    }
                     className="border rounded px-2 py-1 w-16"
                   >
                     {[1, 2, 3].map((qty) => (
@@ -96,7 +99,10 @@ export function CartDrawer({ open, closeDrawer }: CartDrawerProps) {
                       </option>
                     ))}
                   </select>
-                  <button className="ml-4 text-gray-400 hover:text-red-500">
+                  <button
+                    className="ml-4 text-gray-400 hover:text-red-500"
+                    onClick={() => removeFromCart(item.id)}
+                  >
                     <Trash2 size={20} />
                   </button>
                 </div>
@@ -120,8 +126,12 @@ export function CartDrawer({ open, closeDrawer }: CartDrawerProps) {
             <button className="flex-1 border border-gray-900 rounded-full py-3 font-semibold text-gray-900 hover:bg-gray-100 transition">
               VIEW CART
             </button>
-            <button className="flex-1 bg-black text-white rounded-full py-3 font-semibold hover:bg-gray-900 transition">
-              CHECK OUT
+            <button
+              className="flex-1 bg-black text-white rounded-full py-3 font-semibold hover:bg-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleCheckout}
+              disabled={isLoading || items.length === 0}
+            >
+              {isLoading ? "PROCESSING..." : "CHECK OUT"}
             </button>
           </div>
           <div className="text-center text-gray-500 text-sm">

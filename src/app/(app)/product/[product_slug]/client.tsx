@@ -1,5 +1,6 @@
 "use client";
 
+import { useCartStore } from "@/lib/cart-store";
 import { useState } from "react";
 
 export function ProductPage({ product }: { product: any }) {
@@ -8,6 +9,22 @@ export function ProductPage({ product }: { product: any }) {
   const [selectedSize, setSelectedSize] = useState("M");
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
+
+  const { addToCart } = useCartStore();
+
+  const handleAddToCart = () => {
+    const cartItem = {
+      id: product.id,
+      name: product.name,
+      image: product.images[0] || "/placeholder.svg",
+      price: product.price,
+      quantity: quantity,
+      options: `${
+        product.colors[selectedColor]?.name || "Default"
+      } / ${selectedSize}`,
+    };
+    addToCart(cartItem);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -177,7 +194,10 @@ export function ProductPage({ product }: { product: any }) {
 
           {/* Buttons */}
           <div className="space-y-3">
-            <button className="w-full bg-white border border-gray-300 text-gray-900 py-3 px-6 rounded-md font-medium hover:bg-gray-50 transition-colors">
+            <button
+              onClick={handleAddToCart}
+              className="w-full bg-white border border-gray-300 text-gray-900 py-3 px-6 rounded-md font-medium hover:bg-gray-50 transition-colors"
+            >
               ADD TO CART
             </button>
             <button className="w-full bg-black text-white py-3 px-6 rounded-md font-medium hover:bg-gray-800 transition-colors">

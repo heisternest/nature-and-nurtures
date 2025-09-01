@@ -61,6 +61,9 @@ model Product {
   cartItems      CartItem[]
   orderItems     OrderItem[]
 
+  stripeProductId String? @unique
+  stripePriceId   String? @unique
+
   // Computed fields (handled in application layer)
   // rating: calculated from reviews
   // reviewCount: count of reviews
@@ -226,23 +229,30 @@ model CartItem {
 
 // Orders (optional - for complete e-commerce)
 model Order {
-  id          String      @id @default(cuid())
-  orderNumber String      @unique
-  status      OrderStatus @default(PENDING)
-  totalAmount Float
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id                    String      @id @default(cuid())
+  stripeSessionId       String      @unique
+  stripePaymentIntent   String?
+  deliveryStatus        OrderStatus @default(PENDING)
+  status                String // e.g., 'complete', 'pending'
+  currency              String
+  amountSubtotal        Int
+  amountTotal           Int
+  customerName          String
+  customerEmail         String
+  customerPhone         String?
+  customerAddressLine1  String?
+  customerAddressLine2  String?
+  customerCity          String?
+  customerState         String?
+  customerPostalCode    String?
+  customerCountry       String?
+  deliveryInstructions  String? // from custom_fields
+  landmark              String? // from custom_fields
+  preferredDeliveryTime String? // from custom_fields
+  orderType             String? // from metadata
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
 
-  // Customer info
-  userId       String?     @db.Uuid
-  user         auth_users? @relation(fields: [userId], references: [id])
-  customerName String
-  email        String
-
-  // Shipping address
-  shippingAddress Json
-
-  // Relations
   items OrderItem[]
 
   @@map("orders")
@@ -264,20 +274,18 @@ enum OrderStatus {
 
 // Order items
 model OrderItem {
-  id       String @id @default(cuid())
-  quantity Int
-  price    Float
+  id          String   @id @default(cuid())
+  order       Order    @relation(fields: [orderId], references: [id])
+  orderId     String
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id])
+  productName String
+  quantity    Int
+  unitPrice   Int
+  totalPrice  Int
 
-  // Product variant details
-  selectedColor String?
-  selectedSize  String?
-  productName   String // Store product name for historical reference
-
-  // Relations
-  orderId   String
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId String
-  product   Product @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("order_items")
   @@schema("public")
@@ -629,7 +637,6 @@ model auth_users {
   one_time_tokens             one_time_tokens[]
   sessions                    sessions[]
 
-  orders  Order[]
   reviews Review[]
 
   @@index([instance_id])

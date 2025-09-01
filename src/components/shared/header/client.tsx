@@ -1,11 +1,12 @@
 "use client";
 
+import { useCartStore } from "@/lib/cart-store";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, ShoppingBag, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { CartDrawer } from "../cart-drawer";
+import { CartClientDrawer } from "../cart/client";
 import { SearchDrawer } from "../search-drawer";
 
 export function HeaderClient({ data }: { data: any }) {
@@ -14,6 +15,8 @@ export function HeaderClient({ data }: { data: any }) {
   const [menuOpen, setMenuOpen] = useState<
     null | "explore" | "types" | "skinCare" | "bestsellers"
   >(null);
+
+  const { items } = useCartStore();
 
   // Prepare dynamic megamenu content from `data` (categories with products)
   // Assumptions:
@@ -228,14 +231,16 @@ export function HeaderClient({ data }: { data: any }) {
               className="w-5 h-5 cursor-pointer"
               onClick={showDrawer}
             />
-            <span className="absolute -top-2 -right-2 text-xs bg-black text-white rounded-full px-1">
-              3
-            </span>
+            {items.length > 0 && (
+              <span className="absolute -top-2 -right-2 text-xs bg-black text-white rounded-full px-1 min-w-[18px] h-[18px] flex items-center justify-center">
+                {items.length}
+              </span>
+            )}
           </div>
         </div>
       </div>
       <SearchDrawer open={searchOpen} closeDrawer={closeSearchDrawer} />
-      <CartDrawer open={open} closeDrawer={closeDrawer} />
+      <CartClientDrawer open={open} closeDrawer={closeDrawer} />
     </header>
   );
 }
