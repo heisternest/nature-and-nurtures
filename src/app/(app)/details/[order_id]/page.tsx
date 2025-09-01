@@ -7,7 +7,7 @@ import { OrderDetailsPublicClient } from "./client";
 export async function generateMetadata({
   params,
 }: {
-  params: { order_id: string };
+  params: Promise<{ order_id: string }>;
 }): Promise<Metadata> {
   const { order_id } = await params;
 

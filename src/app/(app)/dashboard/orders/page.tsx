@@ -174,7 +174,5 @@ export default async function OrdersPage() {
     },
   });
 
-  console.log(orders);
-
   return <OrdersPageClient data={orders} cardData={cardData} />;
 }

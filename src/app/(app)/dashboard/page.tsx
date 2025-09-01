@@ -40,7 +40,7 @@ function Dashboard({ data }: { data: DashboardData }) {
         {/* Top Metrics */}
         <StatsCards data={data} />
 
-        <StatsChart data={data} />
+        <StatsChart />
 
         <OrdersAndProductsTable data={data} />
       </div>

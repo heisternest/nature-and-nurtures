@@ -2,17 +2,19 @@
 
 interface SuccessButtonsProps {
   errorState?: boolean;
+  orderId?: string;
 }
 
 export default function SuccessButtons({
   errorState = false,
+  orderId,
 }: SuccessButtonsProps) {
   const handleContinueShopping = () => {
     window.location.href = "/";
   };
 
-  const handleViewOrders = () => {
-    window.location.href = "/dashboard";
+  const handleViewOrders = (orderId?: string) => {
+    if (orderId) window.location.href = `/details/${orderId}`;
   };
 
   if (errorState) {
@@ -35,7 +37,7 @@ export default function SuccessButtons({
         CONTINUE SHOPPING
       </button>
       <button
-        // onClick={handleViewOrders}
+        onClick={() => handleViewOrders(orderId)}
         className="w-full border border-gray-900 text-gray-900 rounded-full py-3 font-semibold hover:bg-gray-100 transition"
       >
         VIEW ORDERS
