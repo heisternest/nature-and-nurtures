@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
 export async function SaveCategory(
   id: string,
@@ -20,6 +21,8 @@ export async function SaveCategory(
       imageUrl: data.imageUrl,
     },
   });
+
+  revalidatePath("/dashboard/categories");
 
   return {
     success: true,

@@ -1,12 +1,25 @@
 "use client";
 
+import { deleteCategory } from "@/actions/dashboard";
 import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Category } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const columns: ColumnDef<Category>[] = [
   {
@@ -29,6 +42,13 @@ const columns: ColumnDef<Category>[] = [
   {
     accessorKey: "description",
     header: "Description",
+    cell: ({ row }) => {
+      return (
+        <span className="text-muted-foreground w-60 block overflow-hidden text-ellipsis whitespace-nowrap">
+          {row.getValue("description")}
+        </span>
+      );
+    },
   },
 
   {
@@ -44,13 +64,73 @@ const columns: ColumnDef<Category>[] = [
     id: "edit",
     cell: ({ row }) => {
       return (
-        <Link href={`/dashboard/categories/${row.original.id}/edit`}>
-          <Button variant="outline">Edit</Button>
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href={`/dashboard/categories/${row.original.id}/edit`}>
+            <Button variant="outline">Edit</Button>
+          </Link>
+
+          <DeleteCategoryButton category={row.original} />
+        </div>
       );
     },
   },
 ];
+
+function DeleteCategoryButton({ category }: { category: Category }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      const result = await deleteCategory(category.id);
+      if (result.success) {
+        toast.success("Category deleted successfully");
+        // Revalidation is handled server-side, but we refresh for immediate UI update
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to delete category");
+      }
+    } catch {
+      toast.error("Failed to delete category");
+    } finally {
+      setIsDeleting(false);
+      setIsOpen(false);
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button variant="destructive" size="sm">
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Delete Category</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to delete &quot;{category.name}&quot;? This
+            action cannot be undone.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setIsOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export default function CategoriesPageClient({ data }: { data: Category[] }) {
   return (
