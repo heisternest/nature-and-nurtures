@@ -1,0 +1,47 @@
+import { Footer } from "@/components/shared/footer";
+import Header from "@/components/shared/header";
+import prisma from "@/lib/db";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+
+type TOSData = {
+  title: string;
+  content: string;
+};
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description: "Terms of Service for Nature & Nurtures",
+};
+
+export default async function TOSPage() {
+  const tosData = await prisma.pageContent.findUnique({
+    where: { pageType: "TOS" },
+  });
+
+  if (!tosData) {
+    notFound();
+  }
+
+  const data = tosData.content as TOSData;
+
+  return (
+    <div>
+      <Header />
+      <div className="min-h-screen bg-white">
+        <div className="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+          <div className="prose prose-lg max-w-none">
+            <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
+              {data.title}
+            </h1>
+            <div
+              className="text-gray-700 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: data.content }}
+            />
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+}

@@ -43,10 +43,12 @@ export function FooterClient({ footerData }: { footerData: any }) {
             <div>
               <div className="font-semibold mb-4">LEGAL</div>
               <ul className="space-y-2 text-sm text-gray-700">
-                <li className="disabled cursor-not-allowed">
-                  TERMS OF SERVICE
+                <li className="">
+                  <Link href="/tos">TERMS OF SERVICE</Link>
                 </li>
-                <li className="cursor-not-allowed">PRIVACY POLICY</li>
+                <li className="">
+                  <Link href="/privacy">PRIVACY POLICY</Link>
+                </li>
               </ul>
             </div>
           </div>
