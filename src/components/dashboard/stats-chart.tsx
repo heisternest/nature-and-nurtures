@@ -1,8 +1,6 @@
 "use client";
 
-import { getRevenueByDevice, getSalesByLocation } from "@/actions/dashboard";
-import { Download } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Bar,
   BarChart,
@@ -15,34 +13,22 @@ import {
 
 // Main App Component
 
-export function StatsChart() {
-  const [revenueData, setRevenueData] = useState<
-    Array<{ name: string; total: number }>
-  >([]);
-  const [salesByLocation, setSalesByLocation] = useState();
-  const [loading, setLoading] = useState(true);
+interface StatsChartProps {
+  revenueData: Array<{ name: string; total: number }>;
+  salesByLocation: Array<{
+    name: string;
+    value: number;
+    change: number;
+    color: string;
+  }>;
+  loading?: boolean;
+}
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [revenueResult, salesResult] = await Promise.all([
-          getRevenueByDevice(),
-          getSalesByLocation(),
-          // getStoreVisitsData(),
-        ]);
-
-        setRevenueData(revenueResult);
-        setSalesByLocation(salesResult as any);
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+export function StatsChart({
+  revenueData,
+  salesByLocation,
+  loading = false,
+}: StatsChartProps) {
   if (loading) {
     return (
       <div className="text-gray-900 mb-10">
@@ -221,6 +207,26 @@ function SalesByLocationCard({
     color: string;
   }>;
 }) {
+  if (!salesData || salesData.length === 0) {
+    return (
+      <Card>
+        <CardHeader className="flex justify-between items-center">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800">
+              Sales by Location
+            </h3>
+            <p className="text-sm text-gray-500">Income in the last 28 days</p>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center h-64 text-gray-500">
+            No data available
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader className="flex justify-between items-center">
@@ -230,10 +236,6 @@ function SalesByLocationCard({
           </h3>
           <p className="text-sm text-gray-500">Income in the last 28 days</p>
         </div>
-        <Button>
-          <Download className="w-4 h-4 mr-2" />
-          Export
-        </Button>
       </CardHeader>
       <CardContent>
         <ul className="space-y-4">

@@ -5,13 +5,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import z from "zod";
 import { DataTable } from "../data-table";
 import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Input } from "../ui/input";
 
 const bestSellingColumns: ColumnDef<TableRow>[] = [
   { accessorKey: "header", header: "Product" },
-  { accessorKey: "type", header: "Icon" },
   { accessorKey: "limit", header: "Qty" },
   { accessorKey: "target", header: "Sales" },
 ];
@@ -106,15 +103,9 @@ export function OrdersAndProductsTable({ data }: { data: DashboardData }) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">Recent Orders</CardTitle>
-            <Button variant="outline" size="sm">
-              Export
-            </Button>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="mb-4">
-            <Input placeholder="Filter orders..." className="max-w-sm" />
-          </div>
           <DataTable data={recentOrdersTable} columns={recentOrdersColumns} />
           <p className="text-xs text-gray-500 mt-4">
             Showing 1 to {recentOrdersTable.length} of{" "}
@@ -128,15 +119,9 @@ export function OrdersAndProductsTable({ data }: { data: DashboardData }) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">Best Selling Products</CardTitle>
-            <Button variant="outline" size="sm">
-              Export
-            </Button>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="mb-4">
-            <Input placeholder="Filter products..." className="max-w-sm" />
-          </div>
           <DataTable data={bestSellingTable} columns={bestSellingColumns} />
           <p className="text-xs text-gray-500 mt-4">
             Showing 1 to {bestSellingTable.length} of {bestSellingTable.length}{" "}

@@ -1,4 +1,8 @@
-import { getDashboardStats } from "@/actions/dashboard";
+import {
+  getDashboardStats,
+  getRevenueByDevice,
+  getSalesByLocation,
+} from "@/actions/dashboard";
 import { StatsCards } from "@/components/dashboard/stats-card";
 import { StatsChart } from "@/components/dashboard/stats-chart";
 import { OrdersAndProductsTable } from "@/components/dashboard/top-table";
@@ -13,7 +17,16 @@ export const metadata: Metadata = {
 export default async function Page() {
   const dashboardData = await getDashboardStats();
 
-  return <Dashboard data={dashboardData} />;
+  const revenueByDevice = await getRevenueByDevice();
+  const salesByLocation = await getSalesByLocation();
+
+  return (
+    <Dashboard
+      data={dashboardData}
+      revenueByDevice={revenueByDevice}
+      salesByLocation={salesByLocation}
+    />
+  );
 }
 
 interface DashboardData {
@@ -40,14 +53,26 @@ interface DashboardData {
   customersData: Array<{ name: string; value: number }>;
 }
 
-function Dashboard({ data }: { data: DashboardData }) {
+function Dashboard({
+  data,
+  revenueByDevice,
+  salesByLocation,
+}: {
+  data: DashboardData;
+  revenueByDevice: any;
+  salesByLocation: any;
+}) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="p-6">
         {/* Top Metrics */}
         <StatsCards data={data} />
 
-        <StatsChart />
+        <StatsChart
+          revenueData={revenueByDevice}
+          salesByLocation={salesByLocation}
+          loading={false}
+        />
 
         <OrdersAndProductsTable data={data} />
       </div>
