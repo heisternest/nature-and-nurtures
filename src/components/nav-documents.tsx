@@ -13,7 +13,6 @@ import {
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -29,7 +28,6 @@ export function NavDocuments({
   }[];
   title: string;
 }) {
-  const { isMobile } = useSidebar();
   const pathname = usePathname();
 
   return (
