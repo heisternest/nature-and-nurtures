@@ -182,13 +182,13 @@ export default function ProductPageClient({
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <StatCard
-            title="Total Sales"
+            title="Total Stock Value"
             value={formatCurrency(totalValue)}
             change="0"
             changeType="positive"
           />
           <StatCard
-            title="Number of Sales"
+            title="Number of Stock"
             value={totalStock.toString()}
             change="0"
             changeType="positive"
@@ -214,30 +214,8 @@ export default function ProductPageClient({
             <input
               type="text"
               placeholder="Search products..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-black focus:border-black"
+              className="w-80 pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-black focus:border-black"
             />
-          </div>
-          <div className="flex items-center gap-2 w-full md:w-auto flex-wrap">
-            <Dropdown label="Status" />
-            <Dropdown label="Category" />
-            <Dropdown label="Price: $100-$200" />
-            <button className="flex items-center text-sm bg-white border border-gray-300 rounded-md px-3 py-2">
-              Columns
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="ml-2 h-4 w-4"
-              >
-                <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18" />
-              </svg>
-            </button>
           </div>
         </div>
 

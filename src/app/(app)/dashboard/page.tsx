@@ -2,6 +2,13 @@ import { getDashboardStats } from "@/actions/dashboard";
 import { StatsCards } from "@/components/dashboard/stats-card";
 import { StatsChart } from "@/components/dashboard/stats-chart";
 import { OrdersAndProductsTable } from "@/components/dashboard/top-table";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description:
+    "View dashboard statistics, revenue, orders, and product performance.",
+};
 
 export default async function Page() {
   const dashboardData = await getDashboardStats();

@@ -7,7 +7,6 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   Edit3Icon,
-  PlusCircle,
   Search,
   TrashIcon,
 } from "lucide-react";
@@ -220,10 +219,6 @@ export function BlogClient({ data }: { data: any }) {
                       </TabsTrigger>
                     ))}
                   </TabsList>
-
-                  <button className="ml-2 px-3 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md flex items-center">
-                    <PlusCircle className="w-4 h-4 mr-1" /> Add
-                  </button>
                 </div>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                   <div className="relative flex-grow sm:flex-grow-0">

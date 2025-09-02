@@ -47,9 +47,21 @@ export function NavMain({
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuLabel>Quic Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Create Product</DropdownMenuItem>
-                <DropdownMenuItem>Create Category</DropdownMenuItem>
-                <DropdownMenuItem>Create Blog</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => router.push("/dashboard/products/create")}
+                >
+                  Create Product
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => router.push("/dashboard/categories/create")}
+                >
+                  Create Category
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => router.push("/dashboard/blog/create")}
+                >
+                  Create Blog
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>

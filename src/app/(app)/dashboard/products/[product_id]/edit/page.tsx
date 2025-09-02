@@ -1,9 +1,28 @@
-"use server";
-
 import prisma from "@/lib/db";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductData } from "../../create/type";
 import { ProductEditForm } from "./product-form";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ product_id: string }>;
+}): Promise<Metadata> {
+  const param = await params;
+  const product = await prisma.product.findUnique({
+    where: {
+      id: param.product_id,
+    },
+    select: {
+      name: true,
+    },
+  });
+  return {
+    title: `Edit ${product?.name || "Product"}`,
+    description: "Edit product details in the dashboard.",
+  };
+}
 
 export default async function EditProductPage({
   params,

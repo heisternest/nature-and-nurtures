@@ -101,12 +101,6 @@ export default function SignInPage() {
                     Remember me
                   </Label>
                 </div>
-                <a
-                  href="#"
-                  className="text-sm text-brand-secondary hover:underline"
-                >
-                  Forgot password?
-                </a>
               </div>
 
               <SubmitButton />

@@ -7,14 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { OrderStatus } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  ChevronDown,
-  FileUp,
-  ListFilter,
-  MoreHorizontal,
-  PlusCircle,
-  Search,
-} from "lucide-react";
+import { ListFilter, MoreHorizontal, PlusCircle, Search } from "lucide-react";
 import Link from "next/link";
 import { Line, LineChart, ResponsiveContainer } from "recharts";
 
@@ -146,25 +139,11 @@ export function OrdersPageClient({
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-semibold text-gray-900">Orders</h1>
           <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm" className="hidden sm:flex">
-              <FileUp className="mr-2 h-4 w-4" />
-              Export
-            </Button>
-            <Button variant="outline" size="sm" className="hidden sm:flex">
-              More actions <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
             <Button size="sm">
               <PlusCircle className="mr-2 h-4 w-4" />
               Create order
             </Button>
           </div>
-        </div>
-
-        {/* Date Picker - Simplified */}
-        <div className="mb-6">
-          <Button variant="outline" size="sm">
-            Jan 1 - Jan 30, 2024 <ChevronDown className="ml-2 h-4 w-4" />
-          </Button>
         </div>
 
         {/* Stats Cards */}

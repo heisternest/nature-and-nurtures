@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Urbanist } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -22,6 +23,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={urbanist.variable}>
       <body className={`${urbanist.variable} ${urbanist.variable} antialiased`}>
+        <NextTopLoader />
+
         <Toaster />
         {children}
       </body>
