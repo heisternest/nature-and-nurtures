@@ -5,6 +5,8 @@ import {
   IconCategory,
   IconChartBar,
   IconDashboard,
+  IconEyeClosed,
+  IconFileAi,
   IconHelp,
   IconListDetails,
   IconReport,
@@ -64,6 +66,16 @@ const data = {
       name: "FAQ",
       url: "/dashboard/page-builder/faq",
       icon: IconHelp,
+    },
+    {
+      name: "Terms Of Service",
+      url: "/dashboard/page-builder/tos",
+      icon: IconFileAi,
+    },
+    {
+      name: "Privacy Policy",
+      url: "/dashboard/page-builder/privacy",
+      icon: IconEyeClosed,
     },
     {
       name: "Footer",
