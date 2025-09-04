@@ -76,14 +76,6 @@ export function CategoryShowcaseClient({
               thousands of brands.
             </h1>
           </div>
-          <div className="mt-6 md:mt-0 text-left flex-shrink-0">
-            <p className=" text-neutral-500 tracking-wider">
-              GET 15% DISCOUNT ON YOUR FIRST ORDER!
-            </p>
-            <button className="mt-4 border border-neutral-800 rounded-full px-8 py-3 text-sm font-semibold hover:bg-neutral-800 hover:text-white transition-colors duration-300">
-              SHOP NOW
-            </button>
-          </div>
         </header>
 
         <Carousel

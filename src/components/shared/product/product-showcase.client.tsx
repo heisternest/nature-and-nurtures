@@ -42,12 +42,6 @@ export const ProductShowcaseClient = ({ products }: { products: any }) => {
       <div className="max-w-7xl mx-auto my-20 overflow-hidden">
         {/* Header */}
         <div className="bg-white font-serif p-8 flex items-center justify-between w-full mb-10">
-          <div className="flex-shrink-0 ">
-            <button className="border border-gray-800 text-gray-800 py-3 px-8 rounded-full hover:bg-gray-100 transition duration-300 text-sm tracking-widest">
-              EXPLORE COLLECTION
-            </button>
-          </div>
-
           {/* Central text block with "Explore Face Wash" and the curved arrow */}
           <div className="text-center relative">
             <h2 className="text-5xl text-gray-300">Explore</h2>

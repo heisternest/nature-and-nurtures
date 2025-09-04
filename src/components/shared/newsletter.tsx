@@ -40,7 +40,7 @@ export const Newsletter = () => {
         </form>
         <p className="mt-6 text-center text-lg text-neutral-700">
           WE CARE ABOUT YOUR DATA. READ OUR{" "}
-          <Link href="/privacy-policy" className="underline">
+          <Link href="/privacy" className="underline">
             PRIVACY POLICY
           </Link>
           .

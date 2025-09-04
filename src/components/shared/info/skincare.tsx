@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const SkincareSection: React.FC = () => (
   <section className="py-16 sm:py-24">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,9 +16,12 @@ export const SkincareSection: React.FC = () => (
             FEATHERLIGHT FEEL EXPERIENCE UNPARALLELED COMFORT WITH OUR
             BREATHABLE HIJABS, PERFECT FOR ANY SEASON.
           </p>
-          <button className="mt-8 border border-neutral-800 rounded-full px-8 py-3 text-sm font-semibold hover:bg-neutral-800 hover:text-white transition-colors duration-300">
+          <Link
+            href={"/products"}
+            className="mt-12 border border-neutral-800 rounded-full px-8 py-3 text-sm font-semibold hover:bg-neutral-800 hover:text-white transition-colors duration-300"
+          >
             EXPLORE PRODUCTS
-          </button>
+          </Link>
         </div>
 
         {/* Left Image - Product in hands */}
