@@ -12,18 +12,13 @@ import { SearchDrawer } from "../search-drawer";
 export function HeaderClient({ data }: { data: any }) {
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState<
-    null | "explore" | "types" | "skinCare" | "bestsellers"
-  >(null);
+  const [menuOpen, setMenuOpen] = useState<null | "explore">(null);
 
   const { items } = useCartStore();
 
-  // Prepare dynamic megamenu content from `data` (categories with products)
-  // Assumptions:
-  // - `data` is Category[] where each category has `id`, `name`, `imageUrl`, and `products` array
-  // - each product has `id`, `name`, `slug`, `type`, `discount`, and optional image URLs inside `images` array
   const categories = Array.isArray(data) ? data : [];
 
+  // Flatten all products
   const allProducts = categories.flatMap((c: any) =>
     (c.products || []).map((p: any) => ({
       ...p,
@@ -33,42 +28,14 @@ export function HeaderClient({ data }: { data: any }) {
     }))
   );
 
-  // Featured: top 4 products by discount, then recent (fallback to first products)
+  // Featured products: top 4 by discount
   const megaMenuFeatured = allProducts
     .slice()
     .sort((a: any, b: any) => (b.discount || 0) - (a.discount || 0))
     .slice(0, 4);
 
-  // Product types grouped by product.type
-  const typesMap: Record<string, any[]> = {};
-  allProducts.forEach((p: any) => {
-    const t = p.type || "Other";
-    if (!typesMap[t]) typesMap[t] = [];
-    if (typesMap[t].length < 6) typesMap[t].push(p);
-  });
-  const megaMenuTypes = Object.keys(typesMap).map((title) => ({
-    title,
-    items: typesMap[title],
-  }));
-
-  // Skin Care & Body: prefer categories with 'skin' or 'body' in the name, else fall back to first 3 categories
-  const skinCareCategories = categories.filter((c: any) =>
-    /skin|body/i.test(c.name)
-  );
-  const fallbackSkin = categories.slice(0, 3);
-  const skinSource = skinCareCategories.length
-    ? skinCareCategories
-    : fallbackSkin;
-  const megaMenuSkinCare = skinSource.map((c: any) => ({
-    title: c.name,
-    items: (c.products || []).slice(0, 6).map((p: any) => p),
-  }));
-
-  // Images: use category images when available
-  const megaMenuImages = categories
-    .filter((c: any) => c.imageUrl)
-    .slice(0, 3)
-    .map((c: any) => ({ src: c.imageUrl, label: c.name }));
+  // Limit categories displayed in mega menu (e.g., top 4)
+  const megaMenuCategories = categories.slice(0, 4);
 
   const showDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
@@ -120,7 +87,7 @@ export function HeaderClient({ data }: { data: any }) {
                               <li key={item.id}>
                                 <Link
                                   href={`/product/${encodeURIComponent(
-                                    item.slug || item.id
+                                    item.id
                                   )}`}
                                   className="text-lg text-gray-900 hover:text-[#7c2943] font-normal transition-colors"
                                 >
@@ -135,22 +102,26 @@ export function HeaderClient({ data }: { data: any }) {
                           )}
                         </ul>
                       </div>
-                      {/* Product Type */}
-                      <div className="min-w-[260px]">
-                        <h4 className="font-bold mb-4 text-xs tracking-widest text-[#7c2943]">
-                          PRODUCT TYPE
-                        </h4>
-                        {megaMenuTypes.map((section: any) => (
-                          <div key={section.title} className="mb-4">
-                            <div className="text-xl mb-2 text-gray-900">
-                              {section.title}
-                            </div>
-                            <ul className="ml-2 pl-2 border-l border-[#7c2943] space-y-1">
-                              {section.items.map((item: any) => (
+
+                      {/* Categories */}
+                      {megaMenuCategories.map((category: any) => (
+                        <div key={category.id} className="min-w-[220px]">
+                          <Link
+                            href={`/category/${encodeURIComponent(
+                              category.id
+                            )}`}
+                            className="font-serif text-xl mb-2 text-gray-900 hover:text-[#7c2943] block"
+                          >
+                            {category.name}
+                          </Link>
+                          <ul className="ml-2 pl-2 border-l border-[#7c2943] space-y-1">
+                            {(category.products || [])
+                              .slice(0, 6)
+                              .map((item: any) => (
                                 <li key={item.id}>
                                   <Link
                                     href={`/product/${encodeURIComponent(
-                                      item.slug || item.id
+                                      item.id
                                     )}`}
                                     className="text-gray-900 hover:text-[#7c2943] text-base font-normal transition-colors"
                                   >
@@ -158,58 +129,34 @@ export function HeaderClient({ data }: { data: any }) {
                                   </Link>
                                 </li>
                               ))}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-                      {/* Skin Care & Body */}
-                      <div className="min-w-[220px]">
-                        {megaMenuSkinCare.map((section: any) => (
-                          <div key={section.title} className="mb-4">
-                            <div className="font-serif text-xl mb-2 text-gray-900">
-                              {section.title}
-                            </div>
-                            <ul className="ml-2 pl-2 border-l border-[#7c2943] space-y-1">
-                              {section.items.length ? (
-                                section.items.map((item: any) => (
-                                  <li key={item.id}>
-                                    <Link
-                                      href={`/product/${encodeURIComponent(
-                                        item.slug || item.id
-                                      )}`}
-                                      className="text-gray-900 hover:text-[#7c2943] text-base font-normal transition-colors"
-                                    >
-                                      {item.name}
-                                    </Link>
-                                  </li>
-                                ))
-                              ) : (
-                                <li className="text-gray-500">No products</li>
-                              )}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-                      {/* Images */}
+                          </ul>
+                        </div>
+                      ))}
+
+                      {/* Category Images */}
                       <div className="flex flex-col items-center justify-start space-y-6">
-                        {megaMenuImages.map((img: any) => (
-                          <div
-                            key={img.label}
-                            className="flex flex-col items-center"
-                          >
-                            <Image
-                              src={img.src}
-                              alt={img.label}
-                              width={160}
-                              height={128}
-                              className="w-40 h-32 object-cover rounded"
-                              unoptimized
-                            />
-                            <span className="mt-2 text-sm text-gray-700 text-center">
-                              {img.label}
-                            </span>
-                          </div>
-                        ))}
+                        {categories
+                          .filter((c: any) => c.imageUrl)
+                          .slice(0, 3)
+                          .map((c: any) => (
+                            <Link
+                              key={c.id}
+                              href={`/category/${encodeURIComponent(c.id)}`}
+                              className="flex flex-col items-center"
+                            >
+                              <Image
+                                src={c.imageUrl}
+                                alt={c.name}
+                                width={160}
+                                height={128}
+                                className="w-40 h-32 object-cover rounded"
+                                unoptimized
+                              />
+                              <span className="mt-2 text-sm text-gray-700 text-center">
+                                {c.name}
+                              </span>
+                            </Link>
+                          ))}
                       </div>
                     </div>
                   </motion.div>

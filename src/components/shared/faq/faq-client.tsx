@@ -66,12 +66,12 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
 
 export const FAQSectionClient = ({ data }: any) => {
   // State to manage which accordion sections are open
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-    "RADICAL TRANSPARENCY": true,
-    "CLEAN, BEYOND REPROACH": false,
-    "CONSCIOUS & RESPONSIBLE": true,
-    "POTENT & MULTI TASKING": false,
-  });
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>(
+    data.accordionItems.reduce((acc: any, item: any, index: number) => {
+      acc[item.title] = index === 0 || index === 2;
+      return acc;
+    }, {})
+  );
 
   // State to trigger animations on component mount
   const [isMounted, setIsMounted] = useState(false);
@@ -115,9 +115,12 @@ export const FAQSectionClient = ({ data }: any) => {
           >
             <div className="p-4">
               <h1 className="text-4xl md:text-5xl font-light text-gray-800 mb-8 leading-tight">
-                Clean, Conscious,
+                {data.headline_part1}
                 <br />
-                Performance <span className="font-serif italic">Skincare.</span>
+                {data.headline_part2}{" "}
+                <span className="font-serif italic">
+                  {data.headline_part3_italic}
+                </span>
               </h1>
 
               <div>

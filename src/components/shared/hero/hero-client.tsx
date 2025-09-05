@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function HeroClient({ data }: any) {
   return (
     <section
@@ -20,8 +22,8 @@ export default function HeroClient({ data }: any) {
             <span className="italic">{data.title_italic_2}</span>
           </h1>
           <p className="text-sm max-w-md">{data.description}</p>
-          <a
-            href="#"
+          <Link
+            href={"/products"}
             className="inline-flex items-center bg-white rounded-full px-6 py-3 text-xs font-semibold uppercase tracking-wider
                        transform transition-transform duration-200 hover:scale-105 hover:bg-gray-100"
           >
@@ -32,7 +34,7 @@ export default function HeroClient({ data }: any) {
             >
               →
             </span>
-          </a>
+          </Link>
         </div>
 
         <img

@@ -1,11 +1,9 @@
-import Link from "next/link";
-
 export const SkincareSection: React.FC = () => (
   <section className="py-16 sm:py-24">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         {/* Text Content */}
-        <div className="lg:col-span-5 relative">
+        <div className="lg:col-span-5 ">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light leading-tight">
             Clean, Beyond Reproach{" "}
             <em className="italic font-serif">Skincare.</em>
@@ -16,12 +14,6 @@ export const SkincareSection: React.FC = () => (
             FEATHERLIGHT FEEL EXPERIENCE UNPARALLELED COMFORT WITH OUR
             BREATHABLE HIJABS, PERFECT FOR ANY SEASON.
           </p>
-          <Link
-            href={"/products"}
-            className="mt-12 border border-neutral-800 rounded-full px-8 py-3 text-sm font-semibold hover:bg-neutral-800 hover:text-white transition-colors duration-300"
-          >
-            EXPLORE PRODUCTS
-          </Link>
         </div>
 
         {/* Left Image - Product in hands */}

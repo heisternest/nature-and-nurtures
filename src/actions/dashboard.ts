@@ -1,7 +1,6 @@
 "use server";
 
 import prisma from "@/lib/db";
-import { revalidatePath } from "next/cache";
 
 export async function getDashboardStats() {
   try {
@@ -163,7 +162,6 @@ export async function getDashboardStats() {
           name: product?.name || "Unknown Product",
           sales: product ? `$${product.price.toFixed(2)}` : "$0.00",
           quantity: item._sum.quantity || 0,
-          image: "📦", // Placeholder emoji
         };
       }),
       revenueData,
@@ -288,102 +286,5 @@ export async function getRevenueByDevice() {
   } catch (error) {
     console.error("Error fetching revenue by device:", error);
     throw new Error("Failed to fetch revenue by device");
-  }
-}
-
-export async function getStoreVisitsData() {
-  try {
-    // This is a placeholder since we don't have visit source data
-    // In a real app, you'd have an analytics table or use a service like Google Analytics
-    return [
-      { name: "Direct", value: 400 },
-      { name: "Social", value: 300 },
-      { name: "Email", value: 200 },
-      { name: "Referrals", value: 278 },
-      { name: "Other", value: 189 },
-    ];
-  } catch (error) {
-    console.error("Error fetching store visits data:", error);
-    throw new Error("Failed to fetch store visits data");
-  }
-}
-
-export async function saveFooterSocialLinks(
-  socialLinks: Array<{ icon: string; url: string }>
-) {
-  try {
-    await prisma.pageContent.upsert({
-      where: {
-        pageType: "footer",
-      },
-      update: {
-        content: socialLinks,
-      },
-      create: {
-        pageType: "footer",
-        content: socialLinks,
-      },
-    });
-
-    return { success: true, message: "Footer social links saved successfully" };
-  } catch (error) {
-    console.error("Error saving footer social links:", error);
-    throw new Error("Failed to save footer social links");
-  }
-}
-
-export async function getFooterSocialLinks() {
-  try {
-    const footerContent = await prisma.pageContent.findUnique({
-      where: {
-        pageType: "footer",
-      },
-    });
-
-    if (footerContent && footerContent.content) {
-      return footerContent.content as Array<{ icon: string; url: string }>;
-    }
-
-    return [];
-  } catch (error) {
-    console.error("Error fetching footer social links:", error);
-    throw new Error("Failed to fetch footer social links");
-  }
-}
-
-export async function deleteCategory(id: string) {
-  try {
-    // Check if category has products
-    const productCount = await prisma.product.count({
-      where: {
-        categoryId: id,
-      },
-    });
-
-    if (productCount > 0) {
-      return {
-        success: false,
-        error:
-          "Cannot delete category with existing products. Please reassign or delete the products first.",
-      };
-    }
-
-    await prisma.category.delete({
-      where: {
-        id,
-      },
-    });
-
-    revalidatePath("/dashboard/categories");
-
-    return {
-      success: true,
-    };
-  } catch (error) {
-    console.error("Error deleting category:", error);
-    return {
-      success: false,
-      error: "Failed to delete category",
-    };
   }
 }

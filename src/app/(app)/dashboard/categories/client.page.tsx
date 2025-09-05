@@ -1,6 +1,5 @@
 "use client";
 
-import { deleteCategory } from "@/actions/dashboard";
 import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,6 +19,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { deleteCategory } from "./action";
 
 const columns: ColumnDef<Category>[] = [
   {

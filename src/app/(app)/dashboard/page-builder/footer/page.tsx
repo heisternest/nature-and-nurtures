@@ -1,5 +1,5 @@
-import { getFooterSocialLinks } from "@/actions/dashboard";
 import { Metadata } from "next";
+import { getFooterSocialLinks } from "./action";
 import { FooterForm } from "./footer-form";
 
 export const metadata: Metadata = {

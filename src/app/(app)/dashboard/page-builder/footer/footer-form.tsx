@@ -1,6 +1,5 @@
 "use client";
 
-import { saveFooterSocialLinks } from "@/actions/dashboard";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -33,6 +32,7 @@ import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { saveFooterSocialLinks } from "./action";
 
 const socialMediaSchema = z.object({
   icon: z.string().min(1, "Icon is required"),
