@@ -1,6 +1,16 @@
 "use client";
 
 import { DataTable } from "@/components/data-table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Product } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import {
@@ -13,6 +23,8 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
+import { deleteProduct } from "./action";
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat("en-US", {
@@ -37,6 +49,44 @@ export default function ProductPageClient({
   pagination: PaginationMeta;
   search: string;
 }) {
+  const [localProducts, setLocalProducts] = useState<Product[]>(productsData);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    setLocalProducts(productsData);
+  }, [productsData]);
+
+  const handleDelete = async (id: string) => {
+    try {
+      setDeleting(true);
+      await deleteProduct(id);
+
+      // Close the alert dialog
+      setIsAlertOpen(false);
+
+      // Show success message
+      toast.success("Product deleted successfully");
+
+      // Revalidate/refresh the page
+      router.refresh();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Something went wrong"
+      );
+    } finally {
+      setDeleting(false);
+      setDeleteId(null);
+    }
+  };
+
+  const handleDeleteClick = (id: string) => {
+    setDeleteId(id);
+    setIsAlertOpen(true);
+  };
+
   const columns = useMemo<ColumnDef<Product>[]>(
     () => [
       {
@@ -48,12 +98,14 @@ export default function ProductPageClient({
         ),
         cell: ({ row }) => (
           <div className="flex items-center w-60 truncate">
-            {row.original.images?.[0] && (
+            {row.original.images?.[0] ? (
               <img
                 src={row.original.images[0]}
                 alt={row.original.name}
                 className="w-10 h-10 rounded-md mr-3"
               />
+            ) : (
+              <div className="w-10 h-10 rounded-md mr-3 bg-gray-200 flex items-center justify-center text-gray-500"></div>
             )}
             {row.original.name}
           </div>
@@ -103,7 +155,10 @@ export default function ProductPageClient({
             <Link href={`/dashboard/products/${row.original.id}/edit`}>
               <Edit3Icon className="text-gray-500 hover:text-gray-700 h-4 w-4" />
             </Link>
-            <TrashIcon className="ml-4 inline-block h-4 w-4 text-red-500 cursor-pointer" />
+            <TrashIcon
+              className="ml-4 inline-block h-4 w-4 text-red-500 cursor-pointer hover:text-red-700"
+              onClick={() => handleDeleteClick(row.original.id)}
+            />
           </div>
         ),
       },
@@ -111,7 +166,6 @@ export default function ProductPageClient({
     []
   );
 
-  const router = useRouter();
   const [searchValue, setSearchValue] = useState(search);
 
   // Sync searchValue with search prop when it changes
@@ -136,6 +190,9 @@ export default function ProductPageClient({
     );
   };
 
+  // Find the product to delete for the dialog
+  const productToDelete = localProducts.find((p) => p.id === deleteId);
+
   return (
     <div className="bg-gray-50 min-h-screen p-4 sm:p-6 lg:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
@@ -143,7 +200,6 @@ export default function ProductPageClient({
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800">Products</h1>
           <Link
-            // onClick={() => router.push("/dashboard/products/create")}
             href={"/dashboard/products/create"}
             className="mt-4 md:mt-0 flex items-center bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
           >
@@ -173,7 +229,7 @@ export default function ProductPageClient({
         <div className="bg-white border border-gray-200 rounded-lg overflow-x-auto">
           <DataTable
             key={`${search}-${pagination.page}-${pagination.limit}`}
-            data={productsData}
+            data={localProducts}
             columns={columns}
           />
         </div>
@@ -201,6 +257,36 @@ export default function ProductPageClient({
             </button>
           </div>
         </div>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Product</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete <b>{productToDelete?.name}</b>?
+                This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel
+                disabled={deleting}
+                onClick={() => {
+                  setIsAlertOpen(false);
+                  setDeleteId(null);
+                }}
+              >
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => deleteId && handleDelete(deleteId)}
+                disabled={deleting}
+              >
+                {deleting ? "Deleting..." : "Delete"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

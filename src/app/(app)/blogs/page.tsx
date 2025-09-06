@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Blogs | Nature & Nurtures",
   description: "Read our latest blogs about nature and nurturing",
 };
+export const revalidate = 0;
 
 async function getPublishedBlogs() {
   try {

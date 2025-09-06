@@ -7,6 +7,8 @@ import { SkincareSection } from "@/components/shared/info/skincare";
 import { Newsletter } from "@/components/shared/newsletter";
 import { ProductShowcase } from "@/components/shared/product/product-showcase";
 
+export const revalidate = 0;
+
 // Page metadata for Next.js App Router
 export const metadata = {
   title: "Nature and Nurtures – Natural Skincare & Wellness",
