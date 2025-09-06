@@ -101,12 +101,16 @@ export function ProductPage({ product }: { product: any }) {
             <span className="text-3xl font-bold text-gray-900">
               ${product.price}
             </span>
-            <span className="text-lg text-gray-500 line-through">
-              ${product.originalPrice}
-            </span>
-            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-medium">
-              -{product.discount}%
-            </span>
+            {product.originalPrice && (
+              <>
+                <span className="text-lg text-gray-500 line-through">
+                  ${product.originalPrice}
+                </span>
+                <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-medium">
+                  -{product.discount}%
+                </span>
+              </>
+            )}
           </div>
 
           {/* Description */}
