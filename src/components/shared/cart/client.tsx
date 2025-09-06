@@ -22,6 +22,7 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const subtotal = getTotalPrice();
+  const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
 
   const handleCheckout = async () => {
     if (items.length === 0) return;
@@ -53,9 +54,13 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
   return (
     <Sheet open={open} onOpenChange={(o) => !o && closeDrawer()}>
       <SheetContent side="right" className="p-0 w-full min-w-xl">
-        <SheetHeader className="border-b">
+        <SheetHeader className="border-b flex items-center justify-between px-8 py-4">
           <SheetTitle>Shopping Cart</SheetTitle>
+          <span className="text-sm text-gray-500">
+            {totalItems} {totalItems === 1 ? "item" : "items"}
+          </span>
         </SheetHeader>
+
         <div className="flex-1 overflow-y-auto px-8 py-4">
           {items.map((item) => (
             <div
@@ -85,7 +90,6 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
                   </div>
                 </div>
                 <div className="flex items-center mt-4">
-                  {/* Replace Select with your own or shadcn select if needed */}
                   <select
                     defaultValue={item.quantity}
                     onChange={(e) =>
@@ -110,10 +114,11 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
             </div>
           ))}
         </div>
-        <SheetFooter className="border-t">
+
+        <SheetFooter className="border-t px-8 py-4">
           <div className="flex items-center justify-between mb-2">
             <span className="font-semibold text-base tracking-wide">
-              SUBTOTAL
+              {totalItems} {totalItems === 1 ? "item" : "items"}
             </span>
             <span className="font-semibold text-lg">
               ${subtotal.toFixed(2)}

@@ -1,5 +1,3 @@
-"use server";
-
 import prisma from "@/lib/db";
 import HeroClient from "./hero-client";
 export const revalidate = 0;
