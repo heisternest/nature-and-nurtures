@@ -22,7 +22,7 @@ export default async function Page() {
 
   return (
     <Dashboard
-      data={dashboardData}
+      data={dashboardData as any}
       revenueByDevice={revenueByDevice}
       salesByLocation={salesByLocation}
     />
