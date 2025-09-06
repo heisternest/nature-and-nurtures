@@ -3,7 +3,10 @@ import Header from "@/components/shared/header";
 import prisma from "@/lib/db";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+export const revalidate = 0;
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 type TOSData = {
   title: string;
   content: string;

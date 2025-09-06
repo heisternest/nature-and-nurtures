@@ -1,7 +1,10 @@
 import prisma from "@/lib/db";
 import { Metadata } from "next";
 import { TOSBuilderForm } from "./tos-builder";
+export const revalidate = 0;
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 export const metadata: Metadata = {
   title: "Dashboard - TOS Page Builder",
   description:

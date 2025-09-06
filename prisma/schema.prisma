@@ -25,8 +25,8 @@ model Product {
 
   // Pricing
   price         Float
-  originalPrice Float
-  discount      Int?  @default(0) // percentage
+  originalPrice Float?
+  discount      Int?   @default(0) // percentage
 
   // Description and content
   description  String?

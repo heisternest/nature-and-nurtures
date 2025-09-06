@@ -1,7 +1,10 @@
 import prisma from "@/lib/db";
 import { Metadata } from "next";
 import { PrivacyBuilderForm } from "./privacy-builder";
+export const revalidate = 0;
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 export const metadata: Metadata = {
   title: "Dashboard - Privacy Policy Page Builder",
   description:
