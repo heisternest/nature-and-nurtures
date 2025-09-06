@@ -10,6 +10,7 @@ import {
   Search,
   TrashIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer } from "recharts";
@@ -322,17 +323,21 @@ const columns: ColumnDef<Post>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div className="flex  gap-2">
-        <button
-          onClick={() =>
-            (window.location.href = `/dashboard/blogs/edit/${row.original.id}`)
-          }
+        <Link
+          // onClick={() =>
+          //   (window.location.href = `/dashboard/blogs/edit/${row.original.id}`)
+          // }
+          href={`/dashboard/blogs/edit/${row.original.id}`}
           className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full"
         >
           <Edit3Icon className="w-4 h-4" />
-        </button>
-        <button className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full">
+        </Link>
+        <Link
+          href={`/dashboard/blogs/delete/${row.original.id}`}
+          className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full"
+        >
           <TrashIcon className="w-4 h-4 text-red-600" />
-        </button>
+        </Link>
       </div>
     ),
   },

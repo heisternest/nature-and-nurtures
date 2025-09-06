@@ -14,7 +14,6 @@ async function getPublishedBlogs() {
     const blogs = await prisma.blog.findMany({
       where: {
         status: "published",
-        visibility: "public",
       },
       orderBy: {
         createdAt: "desc",

@@ -21,25 +21,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/utils/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Calendar,
   Eye,
   FileText,
   FolderOpen,
-  Globe,
   ImageIcon,
-  Lock,
   Plus,
   Save,
   Send,
@@ -75,6 +65,10 @@ export function BlogForm() {
   const [showPreview, setShowPreview] = React.useState(false);
   const [newCategory, setNewCategory] = React.useState("");
   const [newTag, setNewTag] = React.useState("");
+  const [loading, setLoading] = React.useState<{
+    draft: boolean;
+    publish: boolean;
+  }>({ draft: false, publish: false });
 
   const availableCategories = [
     // fashion related categories
@@ -91,35 +85,25 @@ export function BlogForm() {
   const router = useRouter();
 
   const onSubmit = async (data: BlogFormValues) => {
-    // const { error } = await supabase
-    //   .from("Blog")
-    //   .upsert([
-    //     {
-    //       title: data.title,
-    //       content: data.content,
-    //       excerpt: data.excerpt,
-    //       categories: data.categories,
-    //       tags: data.tags,
-    //       featuredImage: data.featuredImage,
-    //       status: data.status,
-    //       metaDescription: data.metaDescription,
-    //       slug: data.slug,
-    //       visibility: data.visibility,
-    //     },
-    //   ])
-    //   .eq("slug", data.slug)
-    //   .select("*")
-    //   .single();
     // if id is available then update else insert
-    const { error } = await supabase.from("Blog").upsert({
-      id: id || undefined,
-      ...data,
-    });
-    if (error) {
-      toast.error(`Error saving post: ${error.message}`);
-    } else {
-      toast.success(`Post saved as ${data.status}`);
-      router.push("/dashboard/blogs");
+    const isDraft = data.status === "draft";
+    setLoading((prev) => ({ ...prev, [isDraft ? "draft" : "publish"]: true }));
+    try {
+      const { error } = await supabase.from("Blog").upsert({
+        id: id || undefined,
+        ...data,
+      });
+      if (error) {
+        toast.error(`Error saving post: ${error.message}`);
+      } else {
+        toast.success(`Post saved as ${data.status}`);
+        router.push("/dashboard/blogs");
+      }
+    } finally {
+      setLoading((prev) => ({
+        ...prev,
+        [isDraft ? "draft" : "publish"]: false,
+      }));
     }
   };
 
@@ -195,13 +179,15 @@ export function BlogForm() {
           featuredImage: data.featuredImage || "",
           status: data.status || "draft",
           metaDescription: data.metaDescription || "",
-          slug: data.slug || generateSlug(data.title || ""),
           visibility: data.visibility || "public",
+          slug: data.slug || generateSlug(data.title || ""),
         });
       }
     }
     fetchBlog();
   }, [form, id]);
+
+  console.log(form.formState.errors);
 
   return (
     <Form {...form}>
@@ -237,8 +223,29 @@ export function BlogForm() {
                   }}
                   type="button"
                   className="border-gray-300"
+                  disabled={loading.draft}
                 >
-                  <Save className="w-4 h-4 mr-2" />
+                  {loading.draft ? (
+                    <span className="mr-2 animate-spin">
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8z"
+                        />
+                      </svg>
+                    </span>
+                  ) : (
+                    <Save className="w-4 h-4 mr-2" />
+                  )}
                   Save Draft
                 </Button>
                 <Button
@@ -247,9 +254,29 @@ export function BlogForm() {
                     form.handleSubmit(onSubmit)();
                   }}
                   type="button"
-                  className="bg-brand-secondary hover:bg-brand-secondary/80"
+                  disabled={loading.publish}
                 >
-                  <Send className="w-4 h-4 mr-2" />
+                  {loading.publish ? (
+                    <span className="mr-2 animate-spin">
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8z"
+                        />
+                      </svg>
+                    </span>
+                  ) : (
+                    <Send className="w-4 h-4 mr-2" />
+                  )}
                   Publish
                 </Button>
               </div>
@@ -364,90 +391,6 @@ export function BlogForm() {
             {/* Sidebar */}
             <div className="w-full lg:w-80 space-y-6 lg:sticky lg:top-24">
               {/* Publish Settings */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <Settings className="w-5 h-5 mr-2" />
-                    Publish
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="flex items-center justify-between">
-                          <FormLabel className="text-sm text-gray-600">
-                            Status:
-                          </FormLabel>
-                          <FormControl>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
-                              <SelectTrigger className="w-32">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="draft">Draft</SelectItem>
-                                <SelectItem value="published">
-                                  Published
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="visibility"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="flex items-center justify-between">
-                          <FormLabel className="text-sm text-gray-600">
-                            Visibility:
-                          </FormLabel>
-                          <FormControl>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
-                              <SelectTrigger className="w-32">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="public">
-                                  <div className="flex items-center">
-                                    <Globe className="w-4 h-4 mr-2" />
-                                    Public
-                                  </div>
-                                </SelectItem>
-                                <SelectItem value="private">
-                                  <div className="flex items-center">
-                                    <Lock className="w-4 h-4 mr-2" />
-                                    Private
-                                  </div>
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Publish immediately
-                  </div>
-                </CardContent>
-              </Card>
 
               {/* Featured Image */}
               <Card>
