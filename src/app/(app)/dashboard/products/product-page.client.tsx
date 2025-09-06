@@ -142,13 +142,14 @@ export default function ProductPageClient({
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800">Products</h1>
-          <button
-            onClick={() => router.push("/dashboard/products/create")}
+          <Link
+            // onClick={() => router.push("/dashboard/products/create")}
+            href={"/dashboard/products/create"}
             className="mt-4 md:mt-0 flex items-center bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
           >
             <PlusCircle className="h-5 w-5 mr-2" />
             Add Product
-          </button>
+          </Link>
         </div>
 
         {/* Filters */}
