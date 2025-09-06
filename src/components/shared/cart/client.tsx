@@ -90,19 +90,29 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
                   </div>
                 </div>
                 <div className="flex items-center mt-4">
-                  <select
-                    defaultValue={item.quantity}
-                    onChange={(e) =>
-                      updateQuantity(item.id, parseInt(e.target.value))
-                    }
-                    className="border rounded px-2 py-1 w-16"
+                  {/* Decrement Button */}
+                  <button
+                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    className="border px-2 py-1 rounded-full text-gray-500 hover:text-black"
+                    disabled={item.quantity <= 1}
                   >
-                    {[1, 2, 3].map((qty) => (
-                      <option key={qty} value={qty}>
-                        {qty}
-                      </option>
-                    ))}
-                  </select>
+                    −
+                  </button>
+
+                  {/* Current Quantity */}
+                  <span className="mx-2 text-base font-semibold">
+                    {item.quantity}
+                  </span>
+
+                  {/* Increment Button */}
+                  <button
+                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    className="border px-2 py-1 rounded-full text-gray-500 hover:text-black"
+                  >
+                    +
+                  </button>
+
+                  {/* Remove Item Button */}
                   <button
                     className="ml-4 text-gray-400 hover:text-red-500"
                     onClick={() => removeFromCart(item.id)}

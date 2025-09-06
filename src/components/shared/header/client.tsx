@@ -179,7 +179,10 @@ export function HeaderClient({ data }: { data: any }) {
             />
             {items.length > 0 && (
               <span className="absolute -top-2 -right-2 text-xs bg-black text-white rounded-full px-1 min-w-[18px] h-[18px] flex items-center justify-center">
-                {items.length}
+                {
+                  // total quantity instead of items
+                  items.reduce((total, item) => total + item.quantity, 0)
+                }
               </span>
             )}
           </div>
