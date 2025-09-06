@@ -1,12 +1,12 @@
 "use client";
 import { DataTable } from "@/components/data-table";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowDownRight,
   ArrowUpRight,
   Edit3Icon,
+  PlusCircle,
   Search,
   TrashIcon,
 } from "lucide-react";
@@ -230,11 +230,14 @@ export function BlogClient({ data }: { data: any }) {
                       className="pl-9 pr-3 py-2 w-full sm:w-48 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
-                  <Button
-                    onClick={() => router.push("/dashboard/blogs/create")}
+
+                  <Link
+                    href="/dashboard/blogs/create"
+                    className="mt-4 md:mt-0 flex items-center bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
                   >
-                    Create Blog
-                  </Button>
+                    <PlusCircle className="h-5 w-5 mr-2" />
+                    Add Blog
+                  </Link>
                 </div>
               </div>
             </div>
