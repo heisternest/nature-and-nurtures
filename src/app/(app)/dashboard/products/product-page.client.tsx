@@ -42,12 +42,12 @@ export default function ProductPageClient({
       {
         accessorKey: "name",
         header: () => (
-          <div className="flex items-center">
+          <div className="flex items-center ">
             Product Name <ArrowUpDown className="ml-1 h-3 w-3" />
           </div>
         ),
         cell: ({ row }) => (
-          <div className="flex items-center">
+          <div className="flex items-center w-60 truncate">
             {row.original.images?.[0] && (
               <img
                 src={row.original.images[0]}
