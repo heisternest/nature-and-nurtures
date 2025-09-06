@@ -1,8 +1,3 @@
-interface ProductImage {
-  url: string;
-  alt: string;
-}
-
 interface ProductColor {
   name: string;
   hexColor: string;

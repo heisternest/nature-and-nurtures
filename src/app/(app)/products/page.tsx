@@ -35,9 +35,30 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function ProductsPage() {
+interface SearchParams {
+  search?: string;
+}
+
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    search: string | undefined;
+  }>;
+}) {
+  const search = (await searchParams).search;
   const initialProducts = await prisma.product.findMany({
-    where: { active: true },
+    where: {
+      active: true,
+      ...(search
+        ? {
+            OR: [
+              { name: { contains: search, mode: "insensitive" } },
+              { description: { contains: search, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+    },
     take: 10,
     include: {
       category: {
@@ -53,7 +74,17 @@ export default async function ProductsPage() {
   );
 
   const totalProducts = await prisma.product.count({
-    where: { active: true },
+    where: {
+      active: true,
+      ...(search
+        ? {
+            OR: [
+              { name: { contains: search, mode: "insensitive" } },
+              { description: { contains: search, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+    },
   });
 
   const hasMore = filteredProducts.length === 10 && totalProducts > 10;
