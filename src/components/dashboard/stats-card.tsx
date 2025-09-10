@@ -153,7 +153,7 @@ export function StatsCards({ data }: { data: DashboardData }) {
   return (
     <div className="mb-12">
       <div className=" mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Congrats Card */}
           <div className="md:col-span-1">
             <CongratsCard totalRevenue={data.totalRevenue} />
@@ -173,13 +173,6 @@ export function StatsCards({ data }: { data: DashboardData }) {
             percentage={-1.7} // You might want to calculate this dynamically
             data={data.salesData}
             chartColor="#8b5cf6" // violet-500
-          />
-          <StatCard
-            title="New Customers"
-            value={data.totalUsers.toString()}
-            percentage={36.5} // You might want to calculate this dynamically
-            data={data.customersData}
-            chartColor="#10b981" // emerald-500
           />
         </div>
       </div>

@@ -18,7 +18,6 @@ export async function getDashboardStats() {
     const totalProducts = await prisma.product.count();
 
     // Get total users
-    const totalUsers = await prisma.auth_users.count();
 
     // Get recent orders (last 10)
     const recentOrders = await prisma.order.findMany({
@@ -114,36 +113,12 @@ export async function getDashboardStats() {
       value: item._sum.amountTotal ? item._sum.amountTotal / 100 : 0,
     }));
 
-    // Get monthly customers data
-    const monthlyCustomers = await prisma.auth_users.groupBy({
-      by: ["created_at"],
-      _count: {
-        _all: true,
-      },
-      where: {
-        created_at: {
-          gte: sixMonthsAgo,
-        },
-      },
-      orderBy: {
-        created_at: "asc",
-      },
-    });
-
-    const customersData = monthlyCustomers.map((item: any) => ({
-      name: item.created_at
-        ? item.created_at.toLocaleDateString("en-US", { month: "short" })
-        : "Unknown",
-      value: item._count._all,
-    }));
-
     return {
       totalRevenue: totalRevenue._sum.amountTotal
         ? totalRevenue._sum.amountTotal / 100
         : 0,
       totalOrders,
       totalProducts,
-      totalUsers,
       recentOrders: recentOrders.map((order: any) => ({
         id: order.id,
         customer: order.customerName,
@@ -166,7 +141,6 @@ export async function getDashboardStats() {
       }),
       revenueData,
       salesData,
-      customersData,
     };
   } catch (error) {
     console.error("Error fetching dashboard stats:", error);

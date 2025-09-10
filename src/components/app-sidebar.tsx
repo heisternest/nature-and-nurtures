@@ -11,6 +11,7 @@ import {
   IconListDetails,
   IconReport,
   IconSettings,
+  IconTrademark,
 } from "@tabler/icons-react";
 import * as React from "react";
 
@@ -43,6 +44,11 @@ const data = {
       title: "Products",
       url: "/dashboard/products",
       icon: IconListDetails,
+    },
+    {
+      title: "Product Collections",
+      url: "/dashboard/collections",
+      icon: IconTrademark,
     },
     {
       title: "Orders",
