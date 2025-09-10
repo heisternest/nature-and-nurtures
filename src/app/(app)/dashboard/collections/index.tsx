@@ -1,6 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/data-table";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Plus } from "lucide-react";
 import Link from "next/link";
@@ -19,6 +21,7 @@ interface Collection {
   description: string | null;
   createdAt: Date;
   updatedAt: Date;
+  active: boolean;
   _count?: {
     products: number;
   };
@@ -45,7 +48,25 @@ const columns: ColumnDef<Collection>[] = [
     accessorKey: "_count.products",
     header: "Products",
     cell: ({ row }) => (
-      <div className="text-center">{row.original._count?.products || 0}</div>
+      <div className="">{row.original._count?.products || 0}</div>
+    ),
+  },
+  {
+    accessorKey: "active",
+    header: "Active",
+    cell: ({ row }) => (
+      <div>
+        <Badge
+          className={cn(
+            "px-2 py-1 font-medium",
+            row.getValue("active")
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+          )}
+        >
+          {row.getValue("active") ? "Active" : "Inactive"}
+        </Badge>
+      </div>
     ),
   },
   {

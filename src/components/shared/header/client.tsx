@@ -164,6 +164,12 @@ export function HeaderClient({ data }: { data: any }) {
               </AnimatePresence>
             </div>
           </nav>
+          <Link
+            href="/collections"
+            className="hidden md:block hover:text-gray-700"
+          >
+            COLLECTIONS
+          </Link>
         </div>
 
         {/* Icons */}

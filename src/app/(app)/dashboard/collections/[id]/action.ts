@@ -13,6 +13,7 @@ export const handleUpdate = async (data: CollectionData, id: string) => {
         products: {
           set: data.productIds?.map((id) => ({ id })) || [],
         },
+        active: data.active,
       },
     });
 

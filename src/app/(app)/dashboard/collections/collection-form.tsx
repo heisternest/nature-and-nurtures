@@ -31,9 +31,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -43,6 +44,7 @@ export interface CollectionData {
   name: string;
   description?: string | null;
   productIds?: string[];
+  active?: boolean;
 }
 
 interface CollectionFormProps {
@@ -82,6 +84,7 @@ export function CollectionForm({
       name: collection?.name || "",
       description: collection?.description ?? "",
       productIds: collection?.productIds || [],
+      active: collection?.active ?? true,
     },
   });
 
@@ -104,6 +107,7 @@ export function CollectionForm({
     }
   };
 
+  console.log(collection);
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
@@ -179,6 +183,28 @@ export function CollectionForm({
                     Optional description of what this collection represents
                   </FormDescription>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="active"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">Active</FormLabel>
+                    <FormDescription>
+                      Enable or disable this collection
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={isLoading}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />
@@ -265,6 +291,7 @@ export function CollectionForm({
                 Cancel
               </Button>
               <Button type="submit" disabled={isLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isLoading
                   ? "Saving..."
                   : collection

@@ -20,6 +20,7 @@ async function getCollections(): Promise<Collection[]> {
         name: true,
         description: true,
         createdAt: true,
+        active: true,
         updatedAt: true,
         _count: {
           select: {

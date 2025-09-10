@@ -16,6 +16,7 @@ async function getCollection(id: string) {
       select: {
         id: true,
         name: true,
+        active: true,
         description: true,
         products: {
           select: {
