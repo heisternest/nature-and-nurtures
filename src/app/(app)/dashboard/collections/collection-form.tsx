@@ -50,19 +50,15 @@ export interface CollectionData {
 interface CollectionFormProps {
   collection?: CollectionData & { id: string };
   onSubmit: any;
-  isLoading?: boolean;
 }
 
-export function CollectionForm({
-  collection,
-  onSubmit,
-  isLoading = false,
-}: CollectionFormProps) {
+export function CollectionForm({ collection, onSubmit }: CollectionFormProps) {
   const router = useRouter();
   const [products, setProducts] = useState<
     { id: string; name: string; sku: string }[]
   >([]);
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -89,6 +85,7 @@ export function CollectionForm({
   });
 
   const handleSubmit = async (data: CollectionData) => {
+    setIsLoading(true);
     try {
       const result = await onSubmit(data, collection?.id);
       if (result.ok) {
@@ -104,6 +101,8 @@ export function CollectionForm({
     } catch (error) {
       console.error("Error saving collection:", error);
       toast.error("An error occurred while saving the collection");
+    } finally {
+      setIsLoading(false);
     }
   };
 
