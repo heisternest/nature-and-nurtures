@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -16,32 +17,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Toggle } from "@/components/ui/toggle";
 import { Category } from "@prisma/client";
 import { Plus, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { SaveProduct } from "./action";
-import { ProductData } from "./type";
+import { ProductData } from "./create/type";
 
-export function ProductForm({ categories }: { categories: Category[] }) {
+export function ProductForm({
+  categories,
+  product,
+  SaveProduct,
+}: {
+  categories: Category[];
+  product?: ProductData;
+  SaveProduct: any;
+}) {
   const router = useRouter();
 
   const form = useForm<ProductData>({
     defaultValues: {
-      name: "",
-      category: "",
-      price: "",
-      originalPrice: "",
-      description: "",
-      sku: "",
-      stockQuantity: "0",
-      inStock: true,
-      images: [],
-      colors: [],
-      sizes: [],
-      features: [],
-      specifications: [],
+      ...product,
+      category: product
+        ? (product.category as unknown as { id: string }).id
+        : "",
     },
   });
 
@@ -51,13 +51,17 @@ export function ProductForm({ categories }: { categories: Category[] }) {
   const sizes = useFieldArray({ control, name: "sizes" });
   const features = useFieldArray({ control, name: "features" });
   const specifications = useFieldArray({ control, name: "specifications" });
-
+  const params = useParams<{ product_id: string }>();
   const onSubmit = async (values: ProductData) => {
     try {
       const payload = { ...values };
-      const result = await SaveProduct(payload);
+      const result = await SaveProduct(payload, params.product_id);
       if (!result.ok) throw new Error("Failed to save product");
-      toast("Product Created Successfully");
+      if (params?.product_id) {
+        toast("Product Updated Successfully");
+      } else {
+        toast("Product Created Successfully");
+      }
       router.push("/dashboard/products");
     } catch (err) {
       toast.error("Error submitting product");
@@ -242,6 +246,35 @@ export function ProductForm({ categories }: { categories: Category[] }) {
                 className="h-4 w-4 rounded border border-input bg-background"
               />
             </div>
+
+            <div className="flex items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <label htmlFor="active" className="text-base font-medium">
+                  Active
+                </label>
+                <p className="text-sm text-muted-foreground">
+                  Toggle whether the product is active (visible in storefront)
+                </p>
+              </div>
+              <Controller
+                control={control}
+                name="active"
+                defaultValue={
+                  product && product.active !== undefined
+                    ? product.active
+                    : true
+                }
+                render={({ field: { value, onChange } }) => (
+                  <Toggle
+                    pressed={!!value}
+                    onPressedChange={(v) => onChange(!!v)}
+                    aria-label={value ? "Active" : "Inactive"}
+                  >
+                    {value ? "Active" : "Inactive"}
+                  </Toggle>
+                )}
+              />
+            </div>
           </div>
 
           {/* Product Images */}
@@ -254,6 +287,8 @@ export function ProductForm({ categories }: { categories: Category[] }) {
               control={form.control}
               name="images"
               bucketName="ecom"
+              // value={product.images}
+              value={product?.images || []}
               type="multiple"
             />
           </div>
@@ -366,18 +401,11 @@ export function ProductForm({ categories }: { categories: Category[] }) {
                 className="flex gap-4 items-start p-4 border rounded-lg"
               >
                 <div className="flex-1 space-y-2">
-                  <input
-                    type="text"
-                    placeholder="Feature title"
-                    {...register(`features.${index}.title` as const)}
-                    defaultValue={field.title}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  />
-                  <textarea
+                  <Input
                     placeholder="Feature description"
                     {...register(`features.${index}.description` as const)}
                     defaultValue={field.description}
-                    className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex  w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   />
                 </div>
                 <Button
@@ -441,12 +469,62 @@ export function ProductForm({ categories }: { categories: Category[] }) {
             ))}
           </div>
 
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-medium">SEO Specifications</h3>
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="metaTitle" className="text-sm font-medium">
+                Meta Title
+              </label>
+              <Input
+                id="metaTitle"
+                {...register("metaTitle")}
+                type="text"
+                placeholder="SEO meta title"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+              <p className="text-xs text-muted-foreground">
+                Title for search engines (max 60 characters)
+              </p>
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="metaDescription" className="text-sm font-medium">
+                Meta Description
+              </label>
+              <textarea
+                id="metaDescription"
+                {...register("metaDescription")}
+                placeholder="SEO meta description"
+                className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+              <p className="text-xs text-muted-foreground">
+                Description for search engines (max 160 characters)
+              </p>
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="metaKeywords" className="text-sm font-medium">
+                Meta Keywords
+              </label>
+              <p className="text-xs text-muted-foreground">
+                Keywords for search engines (comma separated)
+              </p>
+              <Input
+                id="metaKeywords"
+                {...register("metaKeywords")}
+                type="text"
+                placeholder="e.g., organic, natural, skincare"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+            </div>
+          </div>
+
           <Button
             type="submit"
             className="w-full"
             disabled={formState.isSubmitting}
           >
-            {formState.isSubmitting ? "Creating Product..." : "Create Product"}
+            {formState.isSubmitting ? "Updating Product..." : "Update Product"}
           </Button>
         </form>
       </CardContent>

@@ -9,7 +9,7 @@ import { ProductPage } from "./client";
 
 async function getProduct(product_slug: string) {
   return prisma.product.findUnique({
-    where: { id: product_slug, active: true },
+    where: { slug: product_slug, active: true },
     include: {
       category: {
         select: { id: true, name: true },
@@ -30,10 +30,8 @@ export async function generateMetadata({
   const { product_slug } = await params;
 
   const product = await prisma.product.findUnique({
-    where: { id: product_slug, active: true },
-    select: {
-      name: true,
-      description: true,
+    where: { slug: product_slug, active: true },
+    include: {
       category: { select: { name: true } },
     },
   });
@@ -43,10 +41,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${product.name} - ${product.category?.name ?? "Product"}`,
-    description:
-      product.description ??
-      `View details of ${product.name} in our ${product.category?.name} collection.`,
+    title: product.metaTitle || product.name,
+    description: product.metaDescription || product.description,
   };
 }
 

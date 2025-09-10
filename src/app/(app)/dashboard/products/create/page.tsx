@@ -1,5 +1,6 @@
 import prisma from "@/lib/db";
-import { ProductForm } from "./product-form";
+import { ProductForm } from "../product-form";
+import { SaveProduct } from "./action";
 
 // add page metadata
 export async function generateMetadata() {
@@ -14,7 +15,7 @@ export default async function CreateProductPage() {
 
   return (
     <div>
-      <ProductForm categories={categories} />
+      <ProductForm SaveProduct={SaveProduct} categories={categories} />
     </div>
   );
 }

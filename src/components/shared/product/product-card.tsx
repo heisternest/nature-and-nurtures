@@ -12,7 +12,7 @@ interface Product {
 }
 
 export const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
-  <Link href={`/product/${product.id}`} className="p-4">
+  <Link href={`/products/${product.id}`} className="p-4">
     <div
       className="rounded-lg relative flex flex-col justify-end h-96 bg-center bg-cover text-left overflow-hidden"
       style={{ backgroundImage: `url(${product.images[0]})` }}

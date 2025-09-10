@@ -86,8 +86,8 @@ export function HeaderClient({ data }: { data: any }) {
                             megaMenuFeatured.map((item: any) => (
                               <li key={item.id}>
                                 <Link
-                                  href={`/product/${encodeURIComponent(
-                                    item.id
+                                  href={`/products/${encodeURIComponent(
+                                    item.slug
                                   )}`}
                                   className="text-lg text-gray-900 hover:text-[#7c2943] font-normal transition-colors"
                                 >
@@ -120,8 +120,8 @@ export function HeaderClient({ data }: { data: any }) {
                               .map((item: any) => (
                                 <li key={item.id}>
                                   <Link
-                                    href={`/product/${encodeURIComponent(
-                                      item.id
+                                    href={`/products/${encodeURIComponent(
+                                      item.slug
                                     )}`}
                                     className="text-gray-900 hover:text-[#7c2943] text-base font-normal transition-colors"
                                   >

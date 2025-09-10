@@ -11,6 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { imageThumbnailUrl } from "@/utils/image-otf";
 import { Product } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import {
@@ -100,7 +101,10 @@ export default function ProductPageClient({
           <div className="flex items-center w-60 truncate">
             {row.original.images?.[0] ? (
               <img
-                src={row.original.images[0]}
+                src={
+                  imageThumbnailUrl(row.original.images[0]) ||
+                  "/placeholder.svg"
+                }
                 alt={row.original.name}
                 className="w-10 h-10 rounded-md mr-3"
               />

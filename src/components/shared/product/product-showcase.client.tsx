@@ -12,7 +12,7 @@ import Link from "next/link";
 import React from "react";
 
 const ProductCard: React.FC<{ product: any }> = ({ product }) => (
-  <Link href={`/product/${product.id}`} className="p-4">
+  <Link href={`/products/${product.slug}`} className="p-4">
     <div
       className="rounded-lg relative flex flex-col justify-end h-96 bg-center bg-cover text-left overflow-hidden"
       style={{ backgroundImage: `url(${product.images[0]})` }}

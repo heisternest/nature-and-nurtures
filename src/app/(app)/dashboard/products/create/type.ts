@@ -33,4 +33,7 @@ export type ProductData = {
   sizes: ProductSize[];
   features: ProductFeature[];
   specifications: ProductSpecification[];
+  metaTitle?: string;
+  metaDescription?: string;
+  metaKeywords?: string;
 };

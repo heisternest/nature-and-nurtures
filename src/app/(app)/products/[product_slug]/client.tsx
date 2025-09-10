@@ -1,6 +1,7 @@
 "use client";
 
 import { useCartStore } from "@/lib/cart-store";
+import { imageThumbnailUrl } from "@/utils/image-otf";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -44,7 +45,7 @@ export function ProductPage({ product }: { product: any }) {
                 }`}
               >
                 <img
-                  src={image || "/placeholder.svg"}
+                  src={imageThumbnailUrl(image) || "/placeholder.svg"}
                   alt={`Product thumbnail ${index + 1}`}
                   width={80}
                   height={100}
@@ -310,8 +311,8 @@ export function ProductPage({ product }: { product: any }) {
                 About This Product
               </h3>
               <ul className="space-y-3 text-gray-600">
-                {product.features.map((item: any) => (
-                  <li key={item.id} className="flex items-start gap-2">
+                {product.features.map((item: any, index: number) => (
+                  <li key={index} className="flex items-start gap-2">
                     <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 flex-shrink-0"></span>
                     {item.description}
                   </li>

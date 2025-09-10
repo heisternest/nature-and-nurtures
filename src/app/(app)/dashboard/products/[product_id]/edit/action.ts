@@ -4,7 +4,7 @@ import prisma from "@/lib/db";
 import { stripeServer } from "@/lib/stripe/stripe-server";
 import { ProductData } from "../../create/type";
 
-export async function SaveProduct(id: string, data: ProductData) {
+export async function SaveProduct(data: ProductData, id: string) {
   if (!stripeServer) {
     throw new Error("Stripe not initialized");
   }
@@ -80,6 +80,9 @@ export async function SaveProduct(id: string, data: ProductData) {
             slug: `${data.name.replace(/\s+/g, "-").toLowerCase()}-${data.sku}`,
             images: data.images,
             description: data.description,
+            metaDescription: data.metaDescription,
+            metaTitle: data.metaTitle,
+            metaKeywords: data.metaKeywords?.split(",").map((k) => k.trim()),
             sku: data.sku,
             stockQuantity: parseInt(data.stockQuantity as string, 10),
             price: parseFloat(data.price as string),

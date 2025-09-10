@@ -5,6 +5,7 @@ export async function ProductShowcase() {
   const products = await prisma.product.findMany({
     where: { active: true },
     take: 6,
+    orderBy: { createdAt: "desc" },
     include: {
       category: {
         select: { name: true, id: true },

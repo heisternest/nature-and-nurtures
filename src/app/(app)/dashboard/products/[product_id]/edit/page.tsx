@@ -2,7 +2,8 @@ import prisma from "@/lib/db";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductData } from "../../create/type";
-import { ProductEditForm } from "./product-form";
+import { ProductForm } from "../../product-form";
+import { SaveProduct } from "./action";
 
 export async function generateMetadata({
   params,
@@ -51,7 +52,8 @@ export default async function EditProductPage({
 
   return (
     <div>
-      <ProductEditForm
+      <ProductForm
+        SaveProduct={SaveProduct}
         categories={categories}
         product={product as unknown as ProductData}
       />

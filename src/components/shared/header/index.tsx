@@ -11,8 +11,12 @@ export default async function Header() {
         where: {
           active: true,
         },
+        take: 3,
       },
     },
+    skip: 0,
+    take: 3,
+    orderBy: { createdAt: "desc" },
   });
   return <HeaderClient data={data} />;
 }
