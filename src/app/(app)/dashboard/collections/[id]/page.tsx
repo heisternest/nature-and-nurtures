@@ -68,7 +68,7 @@ export default async function EditCollectionPage({
           description: collection.description ?? undefined,
           productIds: collection.productIds,
         }}
-        onSubmit={handleUpdate}
+        submit={handleUpdate}
       />
     </div>
   );

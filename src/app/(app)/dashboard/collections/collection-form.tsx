@@ -49,10 +49,10 @@ export interface CollectionData {
 
 interface CollectionFormProps {
   collection?: CollectionData & { id: string };
-  onSubmit: any;
+  submit: any;
 }
 
-export function CollectionForm({ collection, onSubmit }: CollectionFormProps) {
+export function CollectionForm({ collection, submit }: CollectionFormProps) {
   const router = useRouter();
   const [products, setProducts] = useState<
     { id: string; name: string; sku: string }[]
@@ -87,7 +87,7 @@ export function CollectionForm({ collection, onSubmit }: CollectionFormProps) {
   const handleSubmit = async (data: CollectionData) => {
     setIsLoading(true);
     try {
-      const result = await onSubmit(data, collection?.id);
+      const result = await submit({ ...data }, collection?.id);
       if (result.ok) {
         toast.success(
           collection
