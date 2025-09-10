@@ -26,6 +26,11 @@ async function createCollection(data: CollectionData) {
   }
 }
 
+export const metadata = {
+  title: "Create Collection",
+  description: "Add a new product collection",
+};
+
 export default function CreateCollectionPage() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">

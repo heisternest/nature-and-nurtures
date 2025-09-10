@@ -39,6 +39,11 @@ async function getCollection(id: string) {
   }
 }
 
+export const metadata = {
+  title: "Edit Collection",
+  description: "Edit an existing product collection",
+};
+
 export default async function EditCollectionPage({
   params,
 }: EditCollectionPageProps) {
