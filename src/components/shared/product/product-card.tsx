@@ -8,7 +8,7 @@ interface Product {
   price: number;
   images: string[];
   category?: { name: string; id: string } | null;
-  type?: string;
+  type?: string | null;
 }
 
 export const ProductCard: React.FC<{ product: Product }> = ({ product }) => (

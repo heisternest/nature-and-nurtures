@@ -9,10 +9,18 @@ import { useState } from "react";
 import { CartClientDrawer } from "../cart/client";
 import { SearchDrawer } from "../search-drawer";
 
-export function HeaderClient({ data }: { data: any }) {
+export function HeaderClient({
+  data,
+  collections,
+}: {
+  data: any;
+  collections: any;
+}) {
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState<null | "explore">(null);
+  const [menuOpen, setMenuOpen] = useState<null | "explore" | "collections">(
+    null
+  );
 
   const { items } = useCartStore();
 
@@ -163,13 +171,47 @@ export function HeaderClient({ data }: { data: any }) {
                 )}
               </AnimatePresence>
             </div>
+
+            <div
+              className="relative group"
+              onMouseEnter={() => setMenuOpen("collections")}
+              onMouseLeave={() => setMenuOpen(null)}
+            >
+              <button className="hover:text-gray-700">COLLECTIONS ▾</button>
+              <AnimatePresence>
+                {menuOpen === "collections" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute left-0 top-full mt-2 w-56 bg-white shadow-lg border border-gray-100 rounded-md z-30"
+                  >
+                    <ul className="py-2">
+                      {collections.length ? (
+                        collections.map((collection: any) => (
+                          <li key={collection.id}>
+                            <Link
+                              href={`/collections/${encodeURIComponent(
+                                collection.id
+                              )}`}
+                              className="block px-4 py-2 text-gray-900 hover:bg-[#7c2943] hover:text-white transition-colors"
+                            >
+                              {collection.name}
+                            </Link>
+                          </li>
+                        ))
+                      ) : (
+                        <li className="px-4 py-2 text-gray-500">
+                          No collections
+                        </li>
+                      )}
+                    </ul>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </nav>
-          <Link
-            href="/collections"
-            className="hidden md:block hover:text-gray-700"
-          >
-            COLLECTIONS
-          </Link>
         </div>
 
         {/* Icons */}

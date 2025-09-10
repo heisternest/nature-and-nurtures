@@ -18,5 +18,14 @@ export default async function Header() {
     take: 3,
     orderBy: { createdAt: "desc" },
   });
-  return <HeaderClient data={data} />;
+
+  const collections = await prisma.productCollection.findMany({
+    where: { active: true },
+    include: {
+      _count: { select: { products: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return <HeaderClient data={data} collections={collections} />;
 }
