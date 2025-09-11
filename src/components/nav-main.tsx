@@ -59,7 +59,7 @@ export function NavMain({
                   Create Category
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => router.push("/dashboard/blog/create")}
+                  onClick={() => router.push("/dashboard/blogs/create")}
                 >
                   Create Blog
                 </DropdownMenuItem>
