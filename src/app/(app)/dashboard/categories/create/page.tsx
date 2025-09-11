@@ -24,8 +24,9 @@ const categorySchema = z.object({
   description: z.string().min(1, { message: "Description is required" }),
   imageUrl: z
     .string()
-    .nonempty({ message: "Image is required" })
-    .url({ message: "Image must be a valid URL" }),
+    .url({ message: "Image must be a valid URL" })
+    .optional()
+    .nullable(),
   active: z.boolean(),
 });
 
@@ -100,7 +101,7 @@ export default function CategoryCreate() {
             name="imageUrl"
             control={form.control}
             bucketName="ecom"
-            value={form.watch("imageUrl")}
+            value={form.watch("imageUrl") ?? undefined}
             type="single"
           />
 
