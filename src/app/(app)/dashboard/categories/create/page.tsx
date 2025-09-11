@@ -23,7 +23,6 @@ const categorySchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   imageUrl: z.string().optional().nullable(),
-  active: z.boolean(),
 });
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
@@ -35,7 +34,6 @@ export default function CategoryCreate() {
       name: "",
       description: "",
       imageUrl: "",
-      active: true,
     },
   });
 
@@ -100,7 +98,9 @@ export default function CategoryCreate() {
           />
 
           <div className="flex items-center gap-2">
-            <Button type="submit">Create Category</Button>
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? "Creating..." : "Create Category"}
+            </Button>
           </div>
         </form>
       </Form>
