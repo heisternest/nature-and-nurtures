@@ -316,9 +316,6 @@ export function BlogForm() {
                         </FormLabel>
                         <FormControl>
                           <div className="flex items-center text-sm">
-                            <span className="text-gray-500 mr-2">
-                              yoursite.com/
-                            </span>
                             <Input
                               placeholder="post-slug"
                               {...field}
