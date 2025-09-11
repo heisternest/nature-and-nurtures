@@ -1,3 +1,4 @@
+import { GlobalAlertDialog } from "@/hooks/alert-dialog/component";
 import type { Metadata } from "next";
 import { Urbanist } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
@@ -24,6 +25,7 @@ export default function RootLayout({
     <html lang="en" className={urbanist.variable}>
       <body className={`${urbanist.variable} ${urbanist.variable} antialiased`}>
         <NextTopLoader />
+        <GlobalAlertDialog />
 
         <Toaster />
         {children}

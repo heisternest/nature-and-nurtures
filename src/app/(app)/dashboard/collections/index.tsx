@@ -10,10 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAlertDialog } from "@/hooks/alert-dialog/use-alert-dialog";
 import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
-import { Edit, Plus } from "lucide-react";
+import { Edit, Plus, Trash } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
+import { deleteCollection } from "./action";
 
 interface Collection {
   id: string;
@@ -25,6 +28,42 @@ interface Collection {
   _count?: {
     products: number;
   };
+}
+
+function CollectionActions({ id, onDelete }: { id: string; onDelete: any }) {
+  const { openDialog } = useAlertDialog();
+
+  return (
+    <div className="flex items-center gap-2">
+      <Link href={`/dashboard/collections/${id}`}>
+        <Button variant="ghost" size="sm">
+          <Edit className="h-4 w-4 mr-2" />
+        </Button>
+      </Link>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() =>
+          openDialog({
+            title: "Delete Collection",
+            description:
+              "Are you sure you want to delete this collection? This action cannot be undone.",
+            onConfirm: async () => {
+              const res = await onDelete(id);
+              if (res.success) {
+                toast.success(res.message);
+                window.location.reload();
+              } else {
+                toast.error(res.message);
+              }
+            },
+          })
+        }
+      >
+        <Trash className="h-4 w-4 mr-2 text-red-600" />
+      </Button>
+    </div>
+  );
 }
 
 const columns: ColumnDef<Collection>[] = [
@@ -91,14 +130,7 @@ const columns: ColumnDef<Collection>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <Link href={`/dashboard/collections/${row.original.id}`}>
-          <Button variant="outline" size="sm">
-            <Edit className="h-4 w-4 mr-2" />
-            Edit
-          </Button>
-        </Link>
-      </div>
+      <CollectionActions id={row.original.id} onDelete={deleteCollection} />
     ),
   },
 ];
