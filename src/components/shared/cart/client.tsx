@@ -8,6 +8,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useCartStore } from "@/lib/cart-store";
+import { imageThumbnailUrl } from "@/utils/image-otf";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 
@@ -68,7 +69,7 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
               className="flex items-center py-4 border-b last:border-b-0"
             >
               <img
-                src={item.image}
+                src={imageThumbnailUrl(item.image, 100, 100)}
                 alt={item.name}
                 className="w-24 h-24 object-cover rounded-lg bg-[#f8f5f2] mr-6"
               />
