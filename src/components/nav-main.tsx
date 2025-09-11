@@ -46,7 +46,7 @@ export function NavMain({
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuLabel>Quic Actions</DropdownMenuLabel>
+                <DropdownMenuLabel>Quick Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => router.push("/dashboard/products/create")}
