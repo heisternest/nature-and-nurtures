@@ -71,6 +71,8 @@ export async function SaveProduct(data: ProductData, id: string) {
           tx.productSpecification.deleteMany({ where: { productId: id } }),
         ]);
 
+        console.log(data.metaKeywords);
+
         return tx.product.update({
           where: { id },
           data: {
@@ -82,7 +84,10 @@ export async function SaveProduct(data: ProductData, id: string) {
             description: data.description,
             metaDescription: data.metaDescription,
             metaTitle: data.metaTitle,
-            metaKeywords: data.metaKeywords?.split(",").map((k) => k.trim()),
+            metaKeywords:
+              typeof data.metaKeywords === "string"
+                ? data.metaKeywords.split(",").map((k) => k.trim())
+                : data.metaKeywords,
             sku: data.sku,
             stockQuantity: parseInt(data.stockQuantity as string, 10),
             price: parseFloat(data.price as string),
