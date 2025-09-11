@@ -249,12 +249,6 @@ export function HeroFormBuilder({ data }: { data?: any }) {
             value={heroData.buttonText}
             onChange={handleInputChange}
           />
-          <InputField
-            label="Button Link URL"
-            name="buttonLink"
-            value={heroData.buttonLink}
-            onChange={handleInputChange}
-          />
         </EditorSection>
 
         <EditorSection title="Media & Style" icon={<ImageIcon size={16} />}>
