@@ -11,6 +11,7 @@ interface Product {
   images: string[];
   category?: { name: string; id: string } | null;
   type?: string;
+  slug: string;
 }
 
 interface ProductsListClientProps {
