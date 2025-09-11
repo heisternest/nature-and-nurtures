@@ -7,6 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { imageThumbnailUrl } from "@/utils/image-otf";
 import { ChevronRight, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -15,7 +16,13 @@ const ProductCard: React.FC<{ product: any }> = ({ product }) => (
   <Link href={`/products/${product.slug}`} className="p-4">
     <div
       className="rounded-lg relative flex flex-col justify-end h-96 bg-center bg-cover text-left overflow-hidden"
-      style={{ backgroundImage: `url(${product.images[0]})` }}
+      style={{
+        backgroundImage: `url(${imageThumbnailUrl(
+          product.images[0],
+          200,
+          300
+        )})`,
+      }}
     >
       <div className="absolute top-4 left-4 text-xs font-semibold tracking-widest bg-white/80 px-3 py-1 rounded">
         {product.category.name}
