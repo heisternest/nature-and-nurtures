@@ -5,6 +5,7 @@ import React from "react";
 interface Product {
   id: string;
   name: string;
+  slug: string;
   price: number;
   images: string[];
   category?: { name: string; id: string } | null;
@@ -12,7 +13,7 @@ interface Product {
 }
 
 export const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
-  <Link href={`/products/${product.id}`} className="p-4">
+  <Link href={`/products/${product.slug}`} className="p-4">
     <div
       className="rounded-lg relative flex flex-col justify-end h-96 bg-center bg-cover text-left overflow-hidden"
       style={{ backgroundImage: `url(${product.images[0]})` }}

@@ -19,7 +19,7 @@ export default function NotFound() {
             Oops! The page you&apos;re looking for doesn&apos;t exist.
           </p>
           <Link href="/">
-            <div className="inline-block px-6 py-3 text-sm font-semibold text-white  rounded-lg shadow-md  transition-colors duration-300">
+            <div className="inline-block px-6 py-3 text-sm font-semibold text-black  rounded-lg shadow-md  transition-colors duration-300">
               Return Home
             </div>
           </Link>
