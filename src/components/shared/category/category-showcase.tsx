@@ -5,6 +5,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { imageThumbnailUrl } from "@/utils/image-otf";
 import { Category } from "@prisma/client";
 import Autoplay from "embla-carousel-autoplay";
 import Link from "next/link";
@@ -40,7 +41,7 @@ const ProductCard = ({ product }: any) => {
     <Link href={`/category/${product.id}`} className="p-2">
       <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden group">
         <img
-          src={product.imageUrl}
+          src={imageThumbnailUrl(product.imageUrl, 400, 600)}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
