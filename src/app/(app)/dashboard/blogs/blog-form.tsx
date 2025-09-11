@@ -312,7 +312,7 @@ export function BlogForm() {
                     render={({ field }) => (
                       <FormItem className="mt-4">
                         <FormLabel className="text-sm text-gray-600">
-                          Permalink
+                          Permalink / Slug
                         </FormLabel>
                         <FormControl>
                           <div className="flex items-center text-sm">
