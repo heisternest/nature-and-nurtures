@@ -33,7 +33,6 @@ export default function CategoryCreate() {
     defaultValues: {
       name: "",
       description: "",
-      imageUrl: "",
     },
   });
 
