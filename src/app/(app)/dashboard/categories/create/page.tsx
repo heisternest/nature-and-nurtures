@@ -22,11 +22,7 @@ import { CreateCategory } from "./action";
 const categorySchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   description: z.string().min(1, { message: "Description is required" }),
-  imageUrl: z
-    .string()
-    .url({ message: "Image must be a valid URL" })
-    .optional()
-    .nullable(),
+  imageUrl: z.string().optional().nullable(),
   active: z.boolean(),
 });
 
@@ -46,8 +42,6 @@ export default function CategoryCreate() {
   const router = useRouter();
 
   async function onSubmit(values: CategoryFormValues) {
-    // TODO: replace with actual API call
-    // Example: await fetch('/api/dashboard/categories', { method: 'POST', body: JSON.stringify(values) })
     try {
       const save = await CreateCategory(values);
       if (save.success) {
