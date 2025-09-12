@@ -165,15 +165,5 @@ export default async function OrdersPage() {
     },
   ];
 
-  const orders = await prisma.order.findMany({
-    include: {
-      _count: {
-        select: {
-          items: true,
-        },
-      },
-    },
-  });
-
-  return <OrdersPageClient data={orders} cardData={cardData} />;
+  return <OrdersPageClient cardData={cardData} />;
 }

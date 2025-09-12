@@ -1,58 +1,19 @@
 "use client";
 
-import { DataTable } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import DynamicDataTable from "@/components/ui/data-table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { OrderStatus } from "@prisma/client";
+import { supabaseClient } from "@/lib/supabase/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { Line, LineChart, ResponsiveContainer } from "recharts";
 
-function paymentColor(paymentStatus: string) {
-  switch (paymentStatus) {
-    case "refund":
-      return "text-red-600 bg-red-100 border-red-400";
-    case "complete":
-      return "text-green-600 bg-green-100 border-green-500";
-  }
-}
-
-function fulfillmentColor(fulfillmentStatus: string) {
-  switch (fulfillmentStatus) {
-    case "Fulfilled":
-      return "text-green-600 bg-green-100 border-green-500";
-    case "Unfulfilled":
-      return "text-red-600 bg-red-100 border-red-500";
-    default:
-      return "text-gray-600 bg-gray-100";
-  }
-}
-
-interface Order {
-  id: string;
-  date: string;
-  customerName: string;
-  customerEmail: string;
-  payment: string;
-  total: string;
-  delivery: string;
-  items: string;
-  order_type: string;
-  customerAddressLine1: string;
-  customerAddressLine2: string;
-  customerCity: string;
-  deliveryStatus: OrderStatus;
-  _count: {
-    items: number;
-  };
-}
-
-const columns: ColumnDef<Order>[] = [
+const columns: ColumnDef<any>[] = [
   {
     accessorKey: "id",
-    header: "ID",
+    header: "Order Id",
     cell: ({ row }) => (
       <Link
         className="text-blue-600 hover:underline"
@@ -65,8 +26,9 @@ const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "createdAt",
     header: "Date",
-    cell: ({ row }) => new Date(row.getValue("createdAt")).toLocaleDateString(),
+    cell: (info) => new Date(info.getValue() as string).toLocaleDateString(),
   },
+
   {
     accessorKey: "customerName",
     header: "Customer",
@@ -97,40 +59,16 @@ const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "status",
     header: "Payment",
-    cell: ({ row }) => (
-      <Badge className={paymentColor(row.getValue("status"))}>
-        {row.getValue("status")}
-      </Badge>
-    ),
-  },
-  {
-    accessorKey: "amountTotal",
-    header: "Total",
-    cell: ({ row }) => `$${(row.getValue("amountTotal") as number) / 100}`,
-  },
-  {
-    accessorKey: "_count.items",
-    header: "Items",
-    cell: ({ row }) => `${row.original._count.items} Items`,
+    cell: ({ row }) => <Badge>{row.getValue("status")}</Badge>,
   },
   {
     accessorKey: "deliveryStatus",
     header: "Delivery Status",
-    cell: ({ row }) => (
-      <Badge className={fulfillmentColor(row.getValue("deliveryStatus"))}>
-        {row.getValue("deliveryStatus")}
-      </Badge>
-    ),
+    cell: ({ row }) => <Badge>{row.getValue("deliveryStatus")}</Badge>,
   },
 ];
 
-export function OrdersPageClient({
-  data,
-  cardData,
-}: {
-  data: any;
-  cardData: any[];
-}) {
+export function OrdersPageClient({ cardData }: { cardData: any[] }) {
   return (
     <div className="bg-gray-50/50 min-h-screen p-4 sm:p-6 lg:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
@@ -197,7 +135,34 @@ export function OrdersPageClient({
               </div>
             </div>
             <TabsContent value="all" className="p-4">
-              <DataTable columns={columns} data={data} />
+              <DynamicDataTable<any>
+                supabase={supabaseClient}
+                table="orders"
+                select="*"
+                columns={columns}
+                searchableColumns={["customerName"]}
+                filterDefs={[
+                  {
+                    id: "id",
+                    type: "text",
+                    title: "Order Id",
+                    operator: "eq",
+                  },
+                  {
+                    id: "deliveryStatus",
+                    type: "select",
+
+                    title: "Delivery Status",
+                    options: [
+                      { label: "PROCESSING", value: "PROCESSING" },
+                      { label: "COMPLETED", value: "COMPLETED" },
+                      { label: "CANCELLED", value: "CANCELLED" },
+                      { label: "PENDING", value: "PENDING" },
+                    ],
+                  },
+                ]}
+                initialPagination={{ pageSize: 20 }}
+              />
             </TabsContent>
           </Tabs>
         </Card>
