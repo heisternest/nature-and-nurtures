@@ -18,16 +18,8 @@ export const metadata = {
     title: "Nature and Nurtures – Natural Skincare & Wellness",
     description:
       "Explore Nature and Nurtures for natural skincare, wellness products, and tips to nurture your skin and body naturally.",
-    url: "https://yourdomain.com",
     siteName: "Nature and Nurtures",
-    images: [
-      {
-        url: "https://yourdomain.com/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Nature and Nurtures",
-      },
-    ],
+
     locale: "en_US",
     type: "website",
   },

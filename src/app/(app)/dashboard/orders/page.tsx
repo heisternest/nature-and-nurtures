@@ -1,5 +1,6 @@
 import prisma from "@/lib/db";
 import { OrdersPageClient } from "./client";
+export const revalidate = 1;
 
 export default async function OrdersPage() {
   const now = new Date();
