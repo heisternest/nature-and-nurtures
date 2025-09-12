@@ -2,6 +2,11 @@ import prisma from "@/lib/db";
 import { OrdersPageClient } from "./client";
 export const revalidate = 1;
 
+export const metadata = {
+  title: "Orders | Dashboard | Nature and Nurtures",
+  description: "Manage and view all orders in your dashboard.",
+};
+
 export default async function OrdersPage() {
   const now = new Date();
   const startOfWeek = new Date(now);
