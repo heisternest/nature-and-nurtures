@@ -2,12 +2,11 @@
 
 import { DataTable } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { OrderStatus } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ListFilter, MoreHorizontal, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import Link from "next/link";
 import { Line, LineChart, ResponsiveContainer } from "recharts";
 
@@ -194,12 +193,6 @@ export function OrdersPageClient({
                       className="pl-8 pr-2 py-1.5 border rounded-md w-full sm:w-auto text-sm"
                     />
                   </div>
-                  <Button variant="outline" size="sm">
-                    <ListFilter className="mr-2 h-4 w-4" /> Filter
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
                 </div>
               </div>
             </div>

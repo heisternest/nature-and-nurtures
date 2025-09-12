@@ -136,6 +136,7 @@ async function SuccessContent({ sessionId }: { sessionId?: string }) {
           <p className="text-gray-600 mb-2">
             Thank you for your purchase. Your order has been confirmed.
           </p>
+          <p></p>
           <p className="text-sm text-gray-500 mb-6">Order #{order.id}</p>
           <SuccessButtons orderId={order.id} />
         </div>

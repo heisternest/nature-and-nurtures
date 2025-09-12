@@ -77,32 +77,6 @@ export async function POST(request: NextRequest) {
           type: "text",
           optional: true,
         },
-        {
-          key: "landmark",
-          label: {
-            type: "custom",
-            custom: "Landmark (Optional)",
-          },
-          type: "text",
-          optional: true,
-        },
-        {
-          key: "preferred_delivery_time",
-          label: {
-            type: "custom",
-            custom: "Preferred Delivery Time",
-          },
-          type: "dropdown",
-          dropdown: {
-            options: [
-              { label: "Morning (9 AM - 12 PM)", value: "morning" },
-              { label: "Afternoon (12 PM - 5 PM)", value: "afternoon" },
-              { label: "Evening (5 PM - 8 PM)", value: "evening" },
-              { label: "No preference", value: "nopreference" },
-            ],
-          },
-          optional: true,
-        },
       ],
 
       // Metadata to store additional customer information
