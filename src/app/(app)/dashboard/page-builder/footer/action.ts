@@ -1,46 +1,35 @@
 "use server";
 
-import prisma from "@/lib/db";
+import { supabaseClient } from "@/lib/supabase/client";
+import { FooterFormData } from "./schema";
 
-export async function saveFooterSocialLinks(
-  socialLinks: Array<{ icon: string; url: string }>
-) {
+export async function saveFooter(data: FooterFormData) {
   try {
-    await prisma.pageContent.upsert({
-      where: {
-        pageType: "footer",
-      },
-      update: {
-        content: socialLinks,
-      },
-      create: {
-        pageType: "footer",
-        content: socialLinks,
-      },
-    });
+    const { error } = await supabaseClient
+      .from("PageContent")
+      .upsert(
+        [
+          {
+            pageType: "footer",
+            content: data,
+          },
+        ],
+        {
+          onConflict: "pageType",
+        }
+      )
+      .select()
+      .single();
 
-    return { success: true, message: "Footer social links saved successfully" };
+    if (error) throw error;
+
+    return {
+      success: true,
+    };
   } catch (error) {
-    console.error("Error saving footer social links:", error);
-    throw new Error("Failed to save footer social links");
-  }
-}
-
-export async function getFooterSocialLinks() {
-  try {
-    const footerContent = await prisma.pageContent.findUnique({
-      where: {
-        pageType: "footer",
-      },
-    });
-
-    if (footerContent && footerContent.content) {
-      return footerContent.content as Array<{ icon: string; url: string }>;
-    }
-
-    return [];
-  } catch (error) {
-    console.error("Error fetching footer social links:", error);
-    throw new Error("Failed to fetch footer social links");
+    console.error(error);
+    return {
+      success: false,
+    };
   }
 }

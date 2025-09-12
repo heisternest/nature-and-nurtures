@@ -1,26 +1,33 @@
 "use server";
 
-import prisma from "@/lib/db";
+import { supabaseClient } from "@/lib/supabase/client";
+import { HeroData } from "./schema";
 
-export async function SaveHero(data: any) {
+export async function SaveHero(data: HeroData) {
   try {
-    const hero = await prisma.pageContent.upsert({
-      where: {
-        pageType: "HERO",
-      },
-      update: {
-        content: data,
-      },
-      create: {
-        pageType: "HERO",
-        content: data,
-      },
-    });
+    const { error } = await supabaseClient
+      .from("PageContent")
+      .upsert(
+        [
+          {
+            pageType: "HERO",
+            content: data,
+          },
+        ],
+        {
+          onConflict: "pageType",
+        }
+      )
+      .select()
+      .single();
+
+    if (error) throw error;
+
     return {
       success: true,
-      hero,
     };
   } catch (error) {
+    console.error(error);
     return {
       success: false,
     };

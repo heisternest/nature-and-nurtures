@@ -1,6 +1,7 @@
-import prisma from "@/lib/db";
+import { supabaseClient } from "@/lib/supabase/client";
 import { Metadata } from "next";
-import { TOSBuilderForm } from "./tos-builder";
+import { SaveTos } from "./action";
+import { TOSBuilder } from "./tos-builder";
 export const revalidate = 0;
 
 export const dynamic = "force-dynamic";
@@ -11,10 +12,13 @@ export const metadata: Metadata = {
     "Build and edit the Terms of Service page content in the dashboard.",
 };
 
-export default async function TOSBuilder() {
-  const data = await prisma.pageContent.findUnique({
-    where: { pageType: "TOS" },
-  });
-
-  return <TOSBuilderForm data={data ? (data.content as any) : null} />;
+export default async function Page() {
+  const {
+    data: { content: data },
+  } = await supabaseClient
+    .from("PageContent")
+    .select("*")
+    .eq("pageType", "TOS")
+    .single();
+  return <TOSBuilder data={data} saveTos={SaveTos} />;
 }

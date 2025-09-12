@@ -1,26 +1,32 @@
 "use server";
 
-import prisma from "@/lib/db";
+import { supabaseClient } from "@/lib/supabase/client";
 
 export async function SaveFAQ(data: any) {
   try {
-    const faq = await prisma.pageContent.upsert({
-      where: {
-        pageType: "FAQ",
-      },
-      update: {
-        content: data,
-      },
-      create: {
-        pageType: "FAQ",
-        content: data,
-      },
-    });
+    const { error } = await supabaseClient
+      .from("PageContent")
+      .upsert(
+        [
+          {
+            pageType: "FAQ",
+            content: data,
+          },
+        ],
+        {
+          onConflict: "pageType",
+        }
+      )
+      .select()
+      .single();
+
+    if (error) throw error;
+
     return {
       success: true,
-      faq,
     };
   } catch (error) {
+    console.error(error);
     return {
       success: false,
     };

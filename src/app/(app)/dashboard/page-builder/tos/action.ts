@@ -1,26 +1,33 @@
 "use server";
 
-import prisma from "@/lib/db";
+import { supabaseClient } from "@/lib/supabase/client";
+import { TOSFormData } from "./schema";
 
-export async function SaveTOS(data: any) {
+export async function SaveTos(data: TOSFormData) {
   try {
-    const tos = await prisma.pageContent.upsert({
-      where: {
-        pageType: "TOS",
-      },
-      update: {
-        content: data,
-      },
-      create: {
-        pageType: "TOS",
-        content: data,
-      },
-    });
+    const { error } = await supabaseClient
+      .from("PageContent")
+      .upsert(
+        [
+          {
+            pageType: "TOS",
+            content: data,
+          },
+        ],
+        {
+          onConflict: "pageType",
+        }
+      )
+      .select()
+      .single();
+
+    if (error) throw error;
+
     return {
       success: true,
-      tos,
     };
-  } catch {
+  } catch (error) {
+    console.error(error);
     return {
       success: false,
     };

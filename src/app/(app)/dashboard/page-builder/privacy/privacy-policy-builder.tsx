@@ -15,39 +15,38 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { TOSFormData, tosSchema } from "./schema";
+import { PrivacyFormData, privacySchema } from "./schema";
 
-const defaultTOS: TOSFormData = {
-  title: "Terms of Service",
-  content: "<p>Enter your terms of service here...</p>",
+const defaultPrivacy: PrivacyFormData = {
+  title: "Privacy Policy",
+  content: "<p>Enter your privacy policy content here...</p>",
 };
 
-export function TOSBuilder({
+export function PrivacyPolicyBuilder({
   data,
-  saveTos,
+  onSave,
 }: {
-  data: TOSFormData | null;
-  saveTos?: (data: TOSFormData) => Promise<{ success: boolean }>;
+  data: PrivacyFormData | null;
+  onSave?: (data: PrivacyFormData) => Promise<{ success: boolean }>;
 }) {
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<TOSFormData>({
-    resolver: zodResolver(tosSchema),
-    defaultValues: data || defaultTOS,
+  const form = useForm<PrivacyFormData>({
+    resolver: zodResolver(privacySchema),
+    defaultValues: data || defaultPrivacy,
   });
 
-  const onSubmit = async (values: TOSFormData) => {
+  const onSubmit = async (values: PrivacyFormData) => {
     setLoading(true);
     try {
-      // Replace this with your save logic
-      if (saveTos) {
-        const result = await saveTos(values);
+      if (onSave) {
+        const result = await onSave(values);
         if (!result.success) throw new Error("Failed to save");
-        toast.success("TOS saved successfully!");
+        toast.success("Privacy Policy saved successfully!");
         return;
       }
     } catch {
-      toast.error("Failed to save TOS");
+      toast.error("Failed to save Privacy Policy");
     } finally {
       setLoading(false);
     }

@@ -1,18 +1,18 @@
-import prisma from "@/lib/db";
-import { Metadata } from "next";
+import { supabaseClient } from "@/lib/supabase/client";
+import { SaveHero } from "./action";
 import { HeroFormBuilder } from "./hero-builder";
+export const revalidate = 0;
 
-export const metadata: Metadata = {
-  title: "Dashboard - Hero Page Builder",
-  description: "Build and edit the hero section content in the dashboard.",
-};
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export default async function Page() {
+  const {
+    data: { content: data },
+  } = await supabaseClient
+    .from("PageContent")
+    .select("*")
+    .eq("pageType", "HERO")
+    .single();
 
-export default async function HeroBuilder() {
-  const heroData = await prisma.pageContent.findUnique({
-    where: {
-      pageType: "HERO",
-    },
-  });
-
-  return <HeroFormBuilder data={heroData?.content} />;
+  return <HeroFormBuilder data={data} onSave={SaveHero} />;
 }

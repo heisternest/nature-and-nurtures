@@ -1,26 +1,32 @@
 "use server";
 
-import prisma from "@/lib/db";
+import { supabaseClient } from "@/lib/supabase/client";
 
 export async function SavePrivacy(data: any) {
   try {
-    const privacy = await prisma.pageContent.upsert({
-      where: {
-        pageType: "PRIVACY",
-      },
-      update: {
-        content: data,
-      },
-      create: {
-        pageType: "PRIVACY",
-        content: data,
-      },
-    });
+    const { error } = await supabaseClient
+      .from("PageContent")
+      .upsert(
+        [
+          {
+            pageType: "PRIVACY",
+            content: data,
+          },
+        ],
+        {
+          onConflict: "pageType",
+        }
+      )
+      .select()
+      .single();
+
+    if (error) throw error;
+
     return {
       success: true,
-      privacy,
     };
-  } catch {
+  } catch (error) {
+    console.error(error);
     return {
       success: false,
     };

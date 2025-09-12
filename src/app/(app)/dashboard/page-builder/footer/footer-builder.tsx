@@ -28,22 +28,10 @@ import {
   Twitter,
   Youtube,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
-import { saveFooterSocialLinks } from "./action";
-
-const socialMediaSchema = z.object({
-  icon: z.string().min(1, "Icon is required"),
-  url: z.string().url("Invalid URL"),
-});
-
-const footerSchema = z.object({
-  socialLinks: z.array(socialMediaSchema),
-});
-
-type FooterFormData = z.infer<typeof footerSchema>;
+import { FooterFormData, footerSchema } from "./schema";
 
 const socialIcons = [
   { value: "facebook", label: "Facebook", icon: Facebook },
@@ -55,17 +43,17 @@ const socialIcons = [
 ];
 
 interface FooterFormProps {
-  initialData: FooterFormData["socialLinks"];
+  data: FooterFormData["socialLinks"];
+  onsave?: (data: FooterFormData) => Promise<{ success: boolean }>;
 }
 
-export function FooterForm({ initialData }: FooterFormProps) {
+export function FooterForm({ data, onsave }: FooterFormProps) {
   const [isSaving, setIsSaving] = useState(false);
 
   const form = useForm<FooterFormData>({
     resolver: zodResolver(footerSchema),
     defaultValues: {
-      socialLinks:
-        initialData.length > 0 ? initialData : [{ icon: "", url: "" }],
+      socialLinks: data.length > 0 ? data : [{ icon: "", url: "" }],
     },
   });
 
@@ -74,23 +62,21 @@ export function FooterForm({ initialData }: FooterFormProps) {
     name: "socialLinks",
   });
 
-  useEffect(() => {
-    if (initialData && initialData.length > 0) {
-      form.reset({
-        socialLinks: initialData,
-      });
-    }
-  }, [initialData, form]);
-
   const onSubmit = async (data: FooterFormData) => {
+    if (!onsave) return;
     setIsSaving(true);
     try {
-      const result = await saveFooterSocialLinks(data.socialLinks);
-      console.log("Footer data saved successfully:", result);
-      toast.success("Footer data saved successfully!");
+      const { success } = await onsave(data);
+      if (success) {
+        form.reset(data);
+        setIsSaving(false);
+        toast.success("Footer saved successfully!");
+      } else {
+        throw new Error("Failed to save footer");
+      }
     } catch (error) {
-      console.error("Error saving footer data:", error);
-      toast.error("Failed to save footer data.");
+      console.error(error);
+      toast.error("There was an error saving the footer.");
     } finally {
       setIsSaving(false);
     }
