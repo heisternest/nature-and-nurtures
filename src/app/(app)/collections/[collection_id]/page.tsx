@@ -3,6 +3,7 @@ import Header from "@/components/shared/header";
 import { ProductCard } from "@/components/shared/product/product-card";
 import prisma from "@/lib/db";
 import type { Metadata } from "next";
+export const revalidate = 1;
 
 async function getCollection(collection_id: string) {
   const collection = await prisma.productCollection.findUnique({
