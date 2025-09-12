@@ -19,5 +19,6 @@ export default async function Page() {
     .select("*")
     .eq("pageType", "footer")
     .single();
-  return <FooterForm data={data} onsave={saveFooter} />;
+  console.log(data);
+  return <FooterForm data={data.socialLinks} onsave={saveFooter} />;
 }
