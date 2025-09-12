@@ -1,17 +1,73 @@
-import prisma from "@/lib/db";
-import { FAQSectionClient } from "./faq-client";
-export const revalidate = 0;
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { supabaseClient } from "@/lib/supabase/client";
 
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
+interface FAQItem {
+  title: string;
+  content: string;
+}
+
+interface FAQData {
+  headline: string;
+  accordionItems: FAQItem[];
+  imageUrl: string;
+}
+
 export async function FAQSection() {
-  const faqData = await prisma.pageContent.findUnique({
-    where: { pageType: "FAQ" },
-  });
+  const {
+    data: { content: data },
+  } = await supabaseClient
+    .from("PageContent")
+    .select("*")
+    .eq("pageType", "FAQ")
+    .single();
+
+  const faqData: FAQData = data;
 
   return (
-    <div>
-      <FAQSectionClient data={faqData?.content} />
-    </div>
+    <section className="bg-white w-full py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center">
+          {/* Left Column: Image */}
+          <div className="w-full">
+            <img
+              src={faqData.imageUrl}
+              alt="FAQ Image"
+              className="rounded-lg w-full object-cover"
+            />
+          </div>
+
+          {/* Right Column: Headline & Accordion */}
+          <div className="p-4">
+            <div dangerouslySetInnerHTML={{ __html: faqData.headline }}></div>
+
+            <Accordion
+              type="multiple"
+              defaultValue={
+                [
+                  faqData.accordionItems[0]?.title,
+                  faqData.accordionItems[2]?.title,
+                ].filter(Boolean) as string[]
+              }
+            >
+              {faqData.accordionItems.map((item) => (
+                <AccordionItem key={item.title} value={item.title}>
+                  <AccordionTrigger>{item.title}</AccordionTrigger>
+                  <AccordionContent>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {item.content}
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
