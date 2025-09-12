@@ -6,7 +6,6 @@ import DynamicDataTable from "@/components/ui/data-table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { supabaseClient } from "@/lib/supabase/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { Search } from "lucide-react";
 import Link from "next/link";
 import { Line, LineChart, ResponsiveContainer } from "recharts";
 
@@ -120,20 +119,6 @@ export function OrdersPageClient({ cardData }: { cardData: any[] }) {
         {/* Orders Table Section */}
         <Card>
           <Tabs defaultValue="all">
-            <div className="p-4 border-b">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="flex items-center space-x-2">
-                  <div className="relative">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
-                    <input
-                      type="search"
-                      placeholder="Search..."
-                      className="pl-8 pr-2 py-1.5 border rounded-md w-full sm:w-auto text-sm"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
             <TabsContent value="all" className="p-4">
               <DynamicDataTable<any>
                 supabase={supabaseClient}
