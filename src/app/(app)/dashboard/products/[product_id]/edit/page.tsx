@@ -1,62 +1,38 @@
 import prisma from "@/lib/db";
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { ProductData } from "../../create/type";
-import { ProductForm } from "../../product-form";
-import { SaveProduct } from "./action";
+import { saveProduct } from "../../action";
+import { ProductForm } from "../../form";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ product_id: string }>;
-}): Promise<Metadata> {
-  const param = await params;
-  const product = await prisma.product.findUnique({
-    where: {
-      id: param.product_id,
-    },
-    select: {
-      name: true,
-    },
-  });
-  return {
-    title: `Edit ${product?.name || "Product"}`,
-    description: "Edit product details in the dashboard.",
-  };
-}
-
-export default async function EditProductPage({
+export default async function CreateProductPage({
   params,
 }: {
   params: Promise<{ product_id: string }>;
 }) {
   const param = await params;
   const product = await prisma.product.findUnique({
-    where: {
-      id: param.product_id,
-    },
+    where: { id: param.product_id },
     include: {
-      category: { select: { id: true, name: true } },
+      collections: true,
+      category: true,
       colors: true,
-      sizes: true,
       features: true,
+      sizes: true,
       specifications: true,
     },
   });
 
-  const categories = await prisma.category.findMany();
-
   if (!product) {
-    notFound();
+    return <div>Product not found</div>;
   }
 
+  const categories = await prisma.category.findMany();
+  const collections = await prisma.productCollection.findMany();
+
   return (
-    <div>
-      <ProductForm
-        SaveProduct={SaveProduct}
-        categories={categories}
-        product={product as unknown as ProductData}
-      />
-    </div>
+    <ProductForm
+      categories={categories}
+      collections={collections}
+      SaveProduct={saveProduct}
+      product={product as any}
+    />
   );
 }

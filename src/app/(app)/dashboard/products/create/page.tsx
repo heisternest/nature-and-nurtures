@@ -1,21 +1,16 @@
 import prisma from "@/lib/db";
-import { ProductForm } from "../product-form";
-import { SaveProduct } from "./action";
-
-// add page metadata
-export async function generateMetadata() {
-  return {
-    title: "Create Product | Nature & Nurtures",
-    description: "Create a new product for your store",
-  };
-}
+import { saveProduct } from "../action";
+import { ProductForm } from "../form";
 
 export default async function CreateProductPage() {
   const categories = await prisma.category.findMany();
+  const collections = await prisma.productCollection.findMany();
 
   return (
-    <div>
-      <ProductForm SaveProduct={SaveProduct} categories={categories} />
-    </div>
+    <ProductForm
+      categories={categories}
+      collections={collections}
+      SaveProduct={saveProduct}
+    />
   );
 }
