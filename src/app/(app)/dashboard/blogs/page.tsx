@@ -14,7 +14,7 @@ const columns: ColumnDef<any>[] = [
     header: "Post Title",
     cell: (info) => (
       <Link
-        href={`/dashboard/blogs/${info.row.original.id}/edit`}
+        href={`/dashboard/blogs/edit/${info.row.original.id}`}
         className="font-medium text-blue-600 hover:underline flex items-center"
       >
         {info.getValue<string>()}
