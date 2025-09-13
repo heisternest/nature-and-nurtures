@@ -1,5 +1,8 @@
 "use client";
 
+import { Footer } from "@/components/shared/footer";
+import Header from "@/components/shared/header";
+
 interface SuccessButtonsProps {
   errorState?: boolean;
   orderId?: string;
@@ -29,19 +32,23 @@ export default function SuccessButtons({
   }
 
   return (
-    <div className="space-y-3">
-      <button
-        onClick={handleContinueShopping}
-        className="w-full bg-black text-white rounded-full py-3 font-semibold hover:bg-gray-900 transition"
-      >
-        CONTINUE SHOPPING
-      </button>
-      <button
-        onClick={() => handleViewOrders(orderId)}
-        className="w-full border border-gray-900 text-gray-900 rounded-full py-3 font-semibold hover:bg-gray-100 transition"
-      >
-        VIEW ORDERS
-      </button>
+    <div>
+      <Header />
+      <div className="space-y-3">
+        <button
+          onClick={handleContinueShopping}
+          className="w-full bg-black text-white rounded-full py-3 font-semibold hover:bg-gray-900 transition"
+        >
+          CONTINUE SHOPPING
+        </button>
+        <button
+          onClick={() => handleViewOrders(orderId)}
+          className="w-full border border-gray-900 text-gray-900 rounded-full py-3 font-semibold hover:bg-gray-100 transition"
+        >
+          VIEW ORDERS
+        </button>
+      </div>
+      <Footer />
     </div>
   );
 }
