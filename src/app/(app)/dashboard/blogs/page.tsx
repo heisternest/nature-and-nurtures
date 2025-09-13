@@ -5,7 +5,7 @@ import DynamicDataTable from "@/components/ui/data-table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { supabaseClient } from "@/lib/supabase/client";
 import type { ColumnDef } from "@tanstack/react-table";
-import { PlusCircle } from "lucide-react";
+import { ExternalLink, PlusCircle } from "lucide-react";
 import Link from "next/link";
 
 const columns: ColumnDef<any>[] = [
@@ -15,9 +15,11 @@ const columns: ColumnDef<any>[] = [
     cell: (info) => (
       <Link
         href={`/dashboard/blogs/${info.row.original.id}/edit`}
-        className="font-medium"
+        className="font-medium text-blue-600 hover:underline flex items-center"
       >
         {info.getValue<string>()}
+
+        <ExternalLink className="inline-block ml-1 h-4 w-4" />
       </Link>
     ),
   },
