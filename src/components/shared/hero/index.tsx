@@ -12,6 +12,8 @@ export async function HeroSection() {
     .eq("pageType", "HERO")
     .single();
 
+  console.log("Hero Data:", data);
+
   return (
     <section
       className="w-full "
@@ -25,14 +27,14 @@ export async function HeroSection() {
           <div className="flex items-center space-x-2">
             <span className="text-6xl">{data.icon}</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-light">
-            <span className="italic">{data.title_italic_1}</span>{" "}
-            <span className="font-bold">{data.title_bold_1}</span>
-            <br />
-            {data.title_normal_1}{" "}
-            <span className="italic">{data.title_italic_2}</span>
-          </h1>
-          <p className="text-sm max-w-md">{data.description}</p>
+          <div
+            className="prose prose-lg max-w-none text-4xl md:text-6xl font-light whitespace-pre-line"
+            dangerouslySetInnerHTML={{ __html: data.title }}
+          />
+          <div
+            className="prose prose-sm  text-sm max-w-md"
+            dangerouslySetInnerHTML={{ __html: data.description }}
+          />
           <Link
             href={"/products"}
             className="inline-flex items-center bg-white rounded-full px-6 py-3 text-xs font-semibold uppercase tracking-wider
@@ -48,11 +50,25 @@ export async function HeroSection() {
           </Link>
         </div>
 
-        <img
-          src={data.imageUrl}
-          alt="Hero"
-          className="w-full object-cover md:object-contain"
-        />
+        {data.videoUrl ? (
+          <div className="p-10">
+            <div className="aspect-w-16 aspect-h-9">
+              <iframe
+                width="560"
+                height="315"
+                src={data.videoUrl}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              ></iframe>
+            </div>
+          </div>
+        ) : (
+          <img
+            src={data.imageUrl}
+            alt="Hero"
+            className="w-full object-cover md:object-contain"
+          />
+        )}
       </div>
     </section>
   );
