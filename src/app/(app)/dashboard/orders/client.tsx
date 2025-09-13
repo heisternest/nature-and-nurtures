@@ -1,13 +1,14 @@
+// app/(dashboard)/contacts/page.tsx
 "use client";
-
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import DynamicDataTable from "@/components/ui/data-table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { supabaseClient } from "@/lib/supabase/client";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
+import { PlusCircle } from "lucide-react";
 import Link from "next/link";
-import { Line, LineChart, ResponsiveContainer } from "recharts";
 
 const columns: ColumnDef<any>[] = [
   {
@@ -67,53 +68,23 @@ const columns: ColumnDef<any>[] = [
   },
 ];
 
-export function OrdersPageClient({ cardData }: { cardData: any[] }) {
+export default function Page() {
   return (
     <div className="bg-gray-50/50 min-h-screen p-4 sm:p-6 lg:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold text-gray-900">Orders</h1>
-        </div>
+          <div>
+            <h1 className="text-2xl font-semibold text-gray-900">Orders</h1>
+            <p className="text-gray-600">Manage and track your orders</p>
+          </div>
 
-        {/* Stats Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
-          {cardData.map((card, index) => (
-            <Card key={index}>
-              <CardHeader>
-                <CardTitle>{card.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-3xl font-bold">{card.value}</p>
-                    <p
-                      className={`text-xs ${
-                        card.change.startsWith("-")
-                          ? "text-red-500"
-                          : "text-gray-500"
-                      }`}
-                    >
-                      {card.change}
-                    </p>
-                  </div>
-                  <div className="h-16 w-28 -mr-4 -mb-4">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={card.trend}>
-                        <Line
-                          type="monotone"
-                          dataKey="uv"
-                          stroke={card.stroke || "#8884d8"}
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          <Link href="/dashboard/orders/new">
+            <Button>
+              <PlusCircle className="h-4 w-4" />
+              Create Order
+            </Button>
+          </Link>
         </div>
 
         {/* Orders Table Section */}
@@ -125,7 +96,7 @@ export function OrdersPageClient({ cardData }: { cardData: any[] }) {
                 table="orders"
                 select="*"
                 columns={columns}
-                searchableColumns={["customerName"]}
+                searchableColumns={["customerName", "customerEmail"]}
                 filterDefs={[
                   {
                     id: "id",

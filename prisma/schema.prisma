@@ -20,6 +20,7 @@ model PageContent {
 model ProductCollection {
   id          String    @id @default(cuid())
   name        String    @unique
+  slug        String?   @unique
   description String?
   active      Boolean   @default(false)
   createdAt   DateTime  @default(now())
@@ -96,7 +97,9 @@ model ProductSize {
 model Category {
   id          String    @id @default(cuid())
   name        String    @unique
+  slug        String?   @unique
   description String?
+  active      Boolean   @default(false)
   createdAt   DateTime  @default(now())
   imageUrl    String?
   products    Product[]
@@ -229,10 +232,11 @@ model Order {
   orderType             String?
   preferredDeliveryTime String?
   stripePaymentIntent   String?
-  stripeSessionId       String      @unique
+  stripeSessionId       String?     @unique
   status                String
   deliveryStatus        OrderStatus @default(PENDING)
   items                 OrderItem[]
+  remarks               String?
 
   @@map("orders")
   @@schema("public")
@@ -241,12 +245,12 @@ model Order {
 model OrderItem {
   id          String   @id @default(cuid())
   quantity    Int
-  productName String
+  productName String?
   orderId     String
   productId   String?
   createdAt   DateTime @default(now())
-  totalPrice  Int
-  unitPrice   Int
+  totalPrice  Int?
+  unitPrice   Int?
   updatedAt   DateTime @updatedAt
   order       Order    @relation(fields: [orderId], references: [id])
   product     Product? @relation(fields: [productId], references: [id])
