@@ -1,174 +1,128 @@
-import prisma from "@/lib/db";
-import { OrdersPageClient } from "./client";
-export const revalidate = 1;
+// app/(dashboard)/contacts/page.tsx
+"use client";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import DynamicDataTable from "@/components/ui/data-table";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { supabaseClient } from "@/lib/supabase/client";
+import type { ColumnDef } from "@tanstack/react-table";
+import { PlusCircle } from "lucide-react";
+import Link from "next/link";
 
-export const metadata = {
-  title: "Orders | Dashboard | Nature and Nurtures",
-  description: "Manage and view all orders in your dashboard.",
-};
-
-export default async function OrdersPage() {
-  const now = new Date();
-  const startOfWeek = new Date(now);
-  startOfWeek.setDate(now.getDate() - now.getDay()); // Monday
-  startOfWeek.setHours(0, 0, 0, 0);
-
-  const startOfLastWeek = new Date(startOfWeek);
-  startOfLastWeek.setDate(startOfWeek.getDate() - 7);
-
-  const fiveDaysAgo = new Date(now);
-  fiveDaysAgo.setDate(now.getDate() - 5);
-  fiveDaysAgo.setHours(0, 0, 0, 0);
-
-  // Total orders this week and last week
-  const totalOrdersThisWeek = await prisma.order.count({
-    where: { createdAt: { gte: startOfWeek } },
-  });
-
-  const totalOrdersLastWeek = await prisma.order.count({
-    where: { createdAt: { gte: startOfLastWeek, lt: startOfWeek } },
-  });
-
-  // Total items this week and last week
-  const itemsThisWeekResult = await prisma.orderItem.aggregate({
-    _sum: { quantity: true },
-    where: { order: { createdAt: { gte: startOfWeek } } },
-  });
-  const itemsThisWeek = itemsThisWeekResult._sum.quantity || 0;
-
-  const itemsLastWeekResult = await prisma.orderItem.aggregate({
-    _sum: { quantity: true },
-    where: { order: { createdAt: { gte: startOfLastWeek, lt: startOfWeek } } },
-  });
-  const itemsLastWeek = itemsLastWeekResult._sum.quantity || 0;
-
-  // Returns this week and last week
-  const returnsThisWeek = await prisma.order.count({
-    where: {
-      deliveryStatus: { in: ["CANCELLED", "REFUNDED"] },
-      createdAt: { gte: startOfWeek },
-    },
-  });
-
-  const returnsLastWeek = await prisma.order.count({
-    where: {
-      deliveryStatus: { in: ["CANCELLED", "REFUNDED"] },
-      createdAt: { gte: startOfLastWeek, lt: startOfWeek },
-    },
-  });
-
-  // Fulfilled this week and last week
-  const fulfilledThisWeek = await prisma.order.count({
-    where: {
-      deliveryStatus: "DELIVERED",
-      createdAt: { gte: startOfWeek },
-    },
-  });
-
-  const fulfilledLastWeek = await prisma.order.count({
-    where: {
-      deliveryStatus: "DELIVERED",
-      createdAt: { gte: startOfLastWeek, lt: startOfWeek },
-    },
-  });
-
-  // Trends: last 5 days
-  const recentOrders = await prisma.order.findMany({
-    where: { createdAt: { gte: fiveDaysAgo } },
-    select: { createdAt: true, deliveryStatus: true },
-  });
-
-  const recentOrderItems = await prisma.orderItem.findMany({
-    where: { order: { createdAt: { gte: fiveDaysAgo } } },
-    select: { quantity: true, order: { select: { createdAt: true } } },
-  });
-
-  // Group by day
-  const groupByDay = (items: any[], dateField: string) => {
-    const groups: { [key: string]: number } = {};
-    items.forEach((item) => {
-      const date = new Date(item[dateField]);
-      const day = date.toISOString().split("T")[0];
-      groups[day] = (groups[day] || 0) + 1;
-    });
-    return groups;
-  };
-
-  const totalOrdersTrend = groupByDay(recentOrders, "createdAt");
-
-  const itemsTrend: { [key: string]: number } = {};
-  recentOrderItems.forEach((item) => {
-    const date = new Date(item.order.createdAt);
-    const day = date.toISOString().split("T")[0];
-    itemsTrend[day] = (itemsTrend[day] || 0) + item.quantity;
-  });
-
-  const returnsTrend = groupByDay(
-    recentOrders.filter((o) =>
-      ["CANCELLED", "REFUNDED"].includes(o.deliveryStatus)
+const columns: ColumnDef<any>[] = [
+  {
+    accessorKey: "id",
+    header: "Order Id",
+    cell: ({ row }) => (
+      <Link
+        className="text-blue-600 hover:underline"
+        href={`/dashboard/orders/${row.getValue("id")}`}
+      >
+        # {row.getValue("id")}
+      </Link>
     ),
-    "createdAt"
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Date",
+    cell: (info) => new Date(info.getValue() as string).toLocaleDateString(),
+  },
+
+  {
+    accessorKey: "customerName",
+    header: "Customer",
+    cell: ({ row }) => {
+      return (
+        <div className="flex flex-col ">
+          <p className="font-semibold">{row.original.customerName}</p>
+          <p className="text-gray-500">{row.original.customerEmail}</p>
+        </div>
+      );
+    },
+  },
+  {
+    header: "Address",
+    cell: ({ row }) => {
+      return (
+        <div className="flex flex-col ">
+          <p className="font-semibold">{row.original.customerAddressLine1}</p>
+          <p className="text-gray-500">
+            {row.original.customerAddressLine2}
+            {", "}
+            <span className="text-gray-500">{row.original.customerCity}</span>
+          </p>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Payment",
+    cell: ({ row }) => <Badge>{row.getValue("status")}</Badge>,
+  },
+  {
+    accessorKey: "deliveryStatus",
+    header: "Delivery Status",
+    cell: ({ row }) => <Badge>{row.getValue("deliveryStatus")}</Badge>,
+  },
+];
+
+export default function Page() {
+  return (
+    <div className="bg-gray-50/50 min-h-screen p-4 sm:p-6 lg:p-8 font-sans">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-semibold text-gray-900">Orders</h1>
+            <p className="text-gray-600">Manage and track your orders</p>
+          </div>
+
+          <Link href="/dashboard/orders/new">
+            <Button>
+              <PlusCircle className="h-4 w-4" />
+              Create Order
+            </Button>
+          </Link>
+        </div>
+
+        {/* Orders Table Section */}
+        <Card>
+          <Tabs defaultValue="all">
+            <TabsContent value="all" className="p-4">
+              <DynamicDataTable<any>
+                supabase={supabaseClient}
+                table="orders"
+                select="*"
+                columns={columns}
+                searchableColumns={["customerName", "customerEmail"]}
+                filterDefs={[
+                  {
+                    id: "id",
+                    type: "text",
+                    title: "Order Id",
+                    operator: "eq",
+                  },
+                  {
+                    id: "deliveryStatus",
+                    type: "select",
+
+                    title: "Delivery Status",
+                    options: [
+                      { label: "PROCESSING", value: "PROCESSING" },
+                      { label: "COMPLETED", value: "COMPLETED" },
+                      { label: "CANCELLED", value: "CANCELLED" },
+                      { label: "PENDING", value: "PENDING" },
+                    ],
+                  },
+                ]}
+                initialPagination={{ pageSize: 20 }}
+              />
+            </TabsContent>
+          </Tabs>
+        </Card>
+      </div>
+    </div>
   );
-
-  const fulfilledTrend = groupByDay(
-    recentOrders.filter((o) => o.deliveryStatus === "DELIVERED"),
-    "createdAt"
-  );
-
-  // Generate trend arrays for last 5 days
-  const generateTrend = (data: { [key: string]: number }) => {
-    const days = [];
-    for (let i = 4; i >= 0; i--) {
-      const date = new Date(now);
-      date.setDate(now.getDate() - i);
-      const day = date.toISOString().split("T")[0];
-      days.push({ name: `Day ${5 - i}`, uv: data[day] || 0 });
-    }
-    return days;
-  };
-
-  const totalOrdersTrendArray = generateTrend(totalOrdersTrend);
-  const itemsTrendArray = generateTrend(itemsTrend);
-  const returnsTrendArray = generateTrend(returnsTrend);
-  const fulfilledTrendArray = generateTrend(fulfilledTrend);
-
-  // Calculate changes
-  const calculateChange = (current: number, previous: number) => {
-    if (previous === 0) return current > 0 ? "+100%" : "0%";
-    const percent = (((current - previous) / previous) * 100).toFixed(1);
-    return (percent.startsWith("-") ? "" : "+") + percent + "%";
-  };
-
-  const cardData = [
-    {
-      title: "Total Orders",
-      value: totalOrdersThisWeek.toString(),
-      change:
-        calculateChange(totalOrdersThisWeek, totalOrdersLastWeek) +
-        " last week",
-      trend: totalOrdersTrendArray,
-    },
-    {
-      title: "Order items over time",
-      value: itemsThisWeek.toString(),
-      change: calculateChange(itemsThisWeek, itemsLastWeek) + " last week",
-      trend: itemsTrendArray,
-    },
-    {
-      title: "Returns Orders",
-      value: returnsThisWeek.toString(),
-      change: calculateChange(returnsThisWeek, returnsLastWeek) + " last week",
-      trend: returnsTrendArray,
-      stroke: "#ef4444",
-    },
-    {
-      title: "Fulfilled orders over time",
-      value: fulfilledThisWeek.toString(),
-      change:
-        calculateChange(fulfilledThisWeek, fulfilledLastWeek) + " last week",
-      trend: fulfilledTrendArray,
-    },
-  ];
-
-  return <OrdersPageClient cardData={cardData} />;
 }

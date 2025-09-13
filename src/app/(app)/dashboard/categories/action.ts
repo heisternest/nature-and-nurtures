@@ -1,41 +1,36 @@
 "use server";
 
 import prisma from "@/lib/db";
-import { revalidatePath } from "next/cache";
+import { CategoryFormValues } from "./schema";
 
-export async function deleteCategory(id: string) {
+export async function saveCategory(data: CategoryFormValues) {
   try {
-    // Check if category has products
-    const productCount = await prisma.product.count({
-      where: {
-        categoryId: id,
-      },
-    });
-
-    if (productCount > 0) {
-      return {
-        success: false,
-        error:
-          "Cannot delete category with existing products. Please reassign or delete the products first.",
-      };
+    if (data.id) {
+      await prisma.category.update({
+        where: { id: data.id },
+        data: {
+          name: data.name,
+          description: data.description,
+          imageUrl: data.imageUrl,
+          slug: data.slug,
+          active: data.active || false,
+        },
+      });
+      return { success: true, message: "Category updated successfully" };
+    } else {
+      await prisma.category.create({
+        data: {
+          name: data.name,
+          description: data.description,
+          imageUrl: data.imageUrl,
+          slug: data.slug,
+          active: data.active || false,
+        },
+      });
+      return { success: true, message: "Category created successfully" };
     }
-
-    await prisma.category.delete({
-      where: {
-        id,
-      },
-    });
-
-    revalidatePath("/dashboard/categories");
-
-    return {
-      success: true,
-    };
   } catch (error) {
-    console.error("Error deleting category:", error);
-    return {
-      success: false,
-      error: "Failed to delete category",
-    };
+    console.error("Error updating category:", error);
+    return { success: false, message: "Failed to update category" };
   }
 }

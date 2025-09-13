@@ -6,12 +6,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { createClient } from "@/utils/supabase/client";
-import { Plus, X } from "lucide-react";
+import { supabaseClient } from "@/lib/supabase/client";
+import { Loader2, Plus, X } from "lucide-react";
 import React, { useRef, useState } from "react";
 import { Control, FieldValues, Path, useController } from "react-hook-form";
-
-const supabase = createClient();
 
 interface UploadFile {
   uid: string;
@@ -35,13 +33,19 @@ type FileUploadType = "single" | "multiple";
 interface FileUploadProps<T extends FieldValues> {
   name: Path<T>;
   control: Control<T>;
-  bucketName: string;
+  bucketName?: string;
   value?: string | string[];
   type?: FileUploadType;
 }
 
 export function FileUpload<T extends FieldValues>(props: FileUploadProps<T>) {
-  const { name, control, bucketName, value, type = "multiple" } = props;
+  const {
+    name,
+    control,
+    bucketName = "ecom",
+    value,
+    type = "multiple",
+  } = props;
 
   const {
     field: { onChange },
@@ -74,8 +78,8 @@ export function FileUpload<T extends FieldValues>(props: FileUploadProps<T>) {
   }, [value, type]);
 
   const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as File);
+    if (!file.url && !file.preview && file.originFileObj) {
+      file.preview = await getBase64(file.originFileObj);
     }
     setPreviewImage(file.url || file.preview || "");
     setPreviewOpen(true);
@@ -85,50 +89,67 @@ export function FileUpload<T extends FieldValues>(props: FileUploadProps<T>) {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const files = Array.from(event.target.files || []);
-    const uploadedFiles: UploadFile[] = [];
+    const uploadingFiles: UploadFile[] = files.map((file) => ({
+      uid: `${Date.now()}-${file.name}`,
+      name: file.name,
+      originFileObj: file,
+      status: "uploading",
+    }));
 
-    for (const file of files) {
-      const filePath = `${Date.now()}-${file.name}`;
+    const updatedList: UploadFile[] =
+      type === "single"
+        ? [uploadingFiles[0]]
+        : [...fileList, ...uploadingFiles];
 
-      const { error } = await supabase.storage
+    setFileList(updatedList);
+
+    for (const file of uploadingFiles) {
+      const filePath = file.uid;
+      const { error } = await supabaseClient.storage
         .from(bucketName)
-        .upload(filePath, file, {
+        .upload(filePath, file.originFileObj as File, {
           cacheControl: "3600",
           upsert: false,
         });
 
       if (error) {
         console.error("Upload error:", error.message);
+        setFileList((prev) =>
+          prev.map((f) => (f.uid === file.uid ? { ...f, status: "error" } : f))
+        );
         continue;
       }
 
       const {
         data: { publicUrl },
-      } = supabase.storage.from(bucketName).getPublicUrl(filePath);
+      } = supabaseClient.storage.from(bucketName).getPublicUrl(filePath);
 
-      const preview = await getBase64(file);
+      const preview = await getBase64(file.originFileObj as File);
 
-      uploadedFiles.push({
-        uid: filePath,
-        name: file.name,
-        url: publicUrl,
-        originFileObj: file,
-        preview,
-        status: "done",
-      });
-    }
+      setFileList((prev) =>
+        prev.map((f) =>
+          f.uid === file.uid
+            ? {
+                ...f,
+                url: publicUrl,
+                preview,
+                status: "done",
+              }
+            : f
+        )
+      );
 
-    let updatedList;
-    if (type === "single") {
-      updatedList = [uploadedFiles[0]].filter(Boolean);
-    } else {
-      updatedList = [...fileList, ...uploadedFiles].slice(0, 8);
-    }
-    setFileList(updatedList);
-    if (type === "single") {
-      onChange(updatedList[0]?.url ?? "");
-    } else {
-      onChange(updatedList.map((f) => f.url));
+      if (type === "single") {
+        onChange(publicUrl);
+      } else {
+        const doneUrls = updatedList
+          .map((f) =>
+            f.uid === file.uid ? { ...f, url: publicUrl, status: "done" } : f
+          )
+          .filter((f) => f.status === "done")
+          .map((f) => f.url);
+        onChange(doneUrls);
+      }
     }
 
     if (fileInputRef.current) {
@@ -160,27 +181,36 @@ export function FileUpload<T extends FieldValues>(props: FileUploadProps<T>) {
   return (
     <>
       <div
-        // className="grid grid-cols-4 gap-4"
-        // if type is multiple then grid else none
-        className={` ${type === "multiple" ? "grid grid-cols-4 gap-4" : ""} ${
-          type === "single" ? "" : ""
-        }`}
+        className={` ${type === "multiple" ? "grid grid-cols-4 gap-4" : ""}`}
       >
         {fileList.map((file) => (
           <div key={file.uid} className="relative group">
             <div
-              className={`aspect-square border rounded-lg overflow-hidden bg-gray-50 ${
+              className={`aspect-square border rounded-lg overflow-hidden bg-gray-50 relative ${
                 type === "single" ? "w-44 h-44" : ""
               }`}
             >
-              <img
-                src={file.url || file.preview}
-                alt={file.name}
-                className={`object-cover cursor-pointer max-h-full w-full h-full ${
-                  type === "single" ? "w-44 h-44" : ""
-                }`}
-                onClick={() => handlePreview(file)}
-              />
+              {file.status === "uploading" && (
+                <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
+                  <Loader2 className="w-6 h-6 text-gray-500 animate-spin" />
+                </div>
+              )}
+
+              {file.url || file.preview ? (
+                <img
+                  src={file.url || file.preview}
+                  alt={file.name}
+                  className={`object-cover cursor-pointer w-full h-full ${
+                    type === "single" ? "w-44 h-44" : ""
+                  }`}
+                  onClick={() => handlePreview(file)}
+                />
+              ) : (
+                <div className="flex items-center justify-center w-full h-full text-gray-400 text-sm">
+                  {file.name}
+                </div>
+              )}
+
               <button
                 type="button"
                 onClick={() => handleRemove(file.uid)}

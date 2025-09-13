@@ -2,7 +2,8 @@
 
 import prisma from "@/lib/db";
 import { notFound } from "next/navigation";
-import { CategoryEdit } from "./category-form";
+import { saveCategory } from "../../action";
+import { CategoryForm } from "../../form";
 
 export default async function EditCategoryPage({
   params,
@@ -16,13 +17,14 @@ export default async function EditCategoryPage({
     },
   });
 
+  console.log("Category:", category);
   if (!category) {
     notFound();
   }
 
   return (
     <div>
-      <CategoryEdit category={category} />
+      <CategoryForm defaultValues={category as any} onSubmit={saveCategory} />
     </div>
   );
 }

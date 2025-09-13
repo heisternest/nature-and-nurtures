@@ -30,3 +30,21 @@ export function getEmbedUrl(url: string): string {
     return url;
   }
 }
+
+// ✅ helper slugify function
+function generateSlug(str: string) {
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+// ✅ helper unique suffix
+function uniqueSuffix() {
+  return Math.random().toString(36).substring(2, 6);
+}
+
+export function slugify(name: string) {
+  return generateSlug(name) + "-" + uniqueSuffix();
+}
