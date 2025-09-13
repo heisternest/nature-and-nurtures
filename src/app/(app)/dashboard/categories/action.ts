@@ -34,3 +34,15 @@ export async function saveCategory(data: CategoryFormValues) {
     return { success: false, message: "Failed to update category" };
   }
 }
+
+export async function deleteCategory(id: string) {
+  try {
+    await prisma.category.delete({
+      where: { id },
+    });
+    return { success: true, message: "Category deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting category:", error);
+    return { success: false, message: "Failed to delete category" };
+  }
+}

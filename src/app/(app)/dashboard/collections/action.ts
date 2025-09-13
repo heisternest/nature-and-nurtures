@@ -34,3 +34,15 @@ export async function saveCollection(data: CollectionFormValues) {
     return { success: false, message: "Failed to update collection" };
   }
 }
+
+export async function deleteCollection(id: string) {
+  try {
+    await prisma.productCollection.delete({
+      where: { id },
+    });
+    return { success: true, message: "Collection deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting collection:", error);
+    return { success: false, message: "Failed to delete collection" };
+  }
+}

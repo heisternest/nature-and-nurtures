@@ -62,7 +62,7 @@ model Product {
   sizes           ProductSize[]
   specifications  ProductSpecification[]
   tags            ProductTag[]
-  category        Category?              @relation(fields: [categoryId], references: [id])
+  category        Category?              @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   reviews         Review[]
   collections     ProductCollection[]
 
