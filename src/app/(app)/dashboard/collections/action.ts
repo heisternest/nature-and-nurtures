@@ -1,22 +1,36 @@
 "use server";
 
 import prisma from "@/lib/db";
+import { CollectionFormValues } from "./schema";
 
-export async function deleteCollection(collectionId: string) {
+export async function saveCollection(data: CollectionFormValues) {
   try {
-    const del = await prisma.productCollection.delete({
-      where: { id: collectionId },
-    });
-    return {
-      success: true,
-      message: "Collection deleted successfully",
-      collection: del,
-    };
+    if (data.id) {
+      await prisma.productCollection.update({
+        where: { id: data.id },
+        data: {
+          name: data.name,
+          description: data.description,
+          imageUrl: data.imageUrl,
+          slug: data.slug,
+          active: data.active || false,
+        },
+      });
+      return { success: true, message: "Collection updated successfully" };
+    } else {
+      await prisma.productCollection.create({
+        data: {
+          name: data.name,
+          description: data.description,
+          imageUrl: data.imageUrl,
+          slug: data.slug,
+          active: data.active || false,
+        },
+      });
+      return { success: true, message: "Collection created successfully" };
+    }
   } catch (error) {
-    console.error("Error deleting collection:", error);
-    return {
-      success: false,
-      message: "Failed to delete collection",
-    };
+    console.error("Error updating collection:", error);
+    return { success: false, message: "Failed to update collection" };
   }
 }

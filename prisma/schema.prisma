@@ -22,6 +22,7 @@ model ProductCollection {
   name        String    @unique
   slug        String?   @unique
   description String?
+  imageUrl    String?
   active      Boolean   @default(false)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
