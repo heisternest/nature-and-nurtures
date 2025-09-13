@@ -1,3 +1,5 @@
+import { Footer } from "@/components/shared/footer";
+import Header from "@/components/shared/header";
 import prisma from "@/lib/db";
 import { stripeServer } from "@/lib/stripe/stripe-server";
 import { redirect } from "next/navigation";
@@ -112,46 +114,52 @@ async function SuccessContent({ sessionId }: { sessionId?: string }) {
     }
 
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg
-              className="w-8 h-8 text-green-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Payment Successful!
-          </h1>
-          <p className="text-gray-600 mb-2">Thank you for your purchase.</p>
-          {order.items.map((item: any) => (
-            <div key={item.id} className="text-left mb-1">
-              <p className="font-semibold text-gray-800">{item.productName}</p>
-              <p className="text-sm text-gray-600">
-                Quantity: {item.quantity} | Price: $
-                {(item.unitPrice / 100).toFixed(2)}
+      <div>
+        <Header />
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg
+                className="w-8 h-8 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Payment Successful!
+            </h1>
+            <p className="text-gray-600 mb-2">Thank you for your purchase.</p>
+            {order.items.map((item: any) => (
+              <div key={item.id} className="text-left mb-1">
+                <p className="font-semibold text-gray-800">
+                  {item.productName}
+                </p>
+                <p className="text-sm text-gray-600">
+                  Quantity: {item.quantity} | Price: $
+                  {(item.unitPrice / 100).toFixed(2)}
+                </p>
+              </div>
+            ))}
+            <div>
+              <p className="font-semibold text-gray-900">
+                We will email you a receipt shortly. Your order is now freshly
+                being prepared. We will take care of it and ship it to you as
+                soon as possible.
               </p>
             </div>
-          ))}
-          <div>
-            <p className="font-semibold text-gray-900">
-              We will email you a receipt shortly. Your order is now freshly
-              being prepared. We will take care of it and ship it to you as soon
-              as possible.
-            </p>
+            <p className="text-sm text-gray-500 mb-6">Order #{order.id}</p>
+            <SuccessButtons orderId={order.id} />
           </div>
-          <p className="text-sm text-gray-500 mb-6">Order #{order.id}</p>
-          <SuccessButtons orderId={order.id} />
         </div>
+        <Footer />
       </div>
     );
   } catch (error) {
