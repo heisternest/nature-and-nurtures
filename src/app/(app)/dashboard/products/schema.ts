@@ -58,7 +58,6 @@ export const productSchema = z.object({
     .string()
     .max(160, "Meta description should not exceed 160 characters")
     .optional(),
-  metaKeywords: z.string().optional(),
 });
 
 export type ProductFormData = z.infer<typeof productSchema>;

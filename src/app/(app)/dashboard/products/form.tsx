@@ -89,7 +89,6 @@ export function ProductForm({
       specifications: product?.specifications || [],
       metaTitle: product?.metaTitle || "",
       metaDescription: product?.metaDescription || "",
-      metaKeywords: product?.metaKeywords || "",
     },
   });
 
@@ -764,26 +763,6 @@ export function ProductForm({
                     </FormControl>
                     <FormDescription>
                       Description for search engines (max 160 characters)
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="metaKeywords"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Meta Keywords</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="e.g., organic, natural, skincare"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Keywords for search engines (comma separated)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
