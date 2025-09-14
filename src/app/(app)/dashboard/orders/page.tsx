@@ -79,7 +79,7 @@ export default function Page() {
             <p className="text-gray-600">Manage and track your orders</p>
           </div>
 
-          <Link href="/dashboard/orders/new">
+          <Link href="/dashboard/orders/create">
             <Button>
               <PlusCircle className="h-4 w-4" />
               Create Order

@@ -6,7 +6,7 @@ import { CategoryProductClient } from "./client";
 
 async function getCategoryWithProducts(category_id: string) {
   return prisma.category.findUnique({
-    where: { id: category_id },
+    where: { id: category_id, active: true },
     include: {
       products: {
         include: {
