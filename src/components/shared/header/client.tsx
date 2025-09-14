@@ -195,7 +195,7 @@ export function HeaderClient({
                               href={`/collections/${encodeURIComponent(
                                 collection.slug
                               )}`}
-                              className="block px-4 py-2 text-gray-900 hover:bg-[#7c2943] hover:text-white transition-colors"
+                              className="block px-4 py-2 text-gray-900  hover:text-white transition-colors hover:bg-gray-900 w-full"
                             >
                               {collection.name}
                             </Link>
