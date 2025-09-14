@@ -50,3 +50,26 @@ export async function deleteCollection(id: string) {
     return { success: false, message: "Failed to delete collection" };
   }
 }
+
+export async function removeProductFromCollection(
+  collectionId: string,
+  productId: string
+) {
+  try {
+    await prisma.productCollection.update({
+      where: { id: collectionId },
+      data: {
+        products: {
+          disconnect: { id: productId },
+        },
+      },
+    });
+    return { success: true, message: "Product removed from collection" };
+  } catch (error) {
+    console.error("Error removing product from collection:", error);
+    return {
+      success: false,
+      message: "Failed to remove product from collection",
+    };
+  }
+}

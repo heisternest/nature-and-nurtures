@@ -18,6 +18,8 @@ export const collectionSchema = z.object({
     .string()
     .max(160, { message: "Meta description must be under 160 characters." })
     .optional(),
+
+  featured: z.boolean().default(false),
 });
 
 export type CollectionFormValues = z.infer<typeof collectionSchema>;

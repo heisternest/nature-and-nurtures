@@ -50,3 +50,29 @@ export async function deleteCategory(id: string) {
     return { success: false, message: "Failed to delete category" };
   }
 }
+
+export async function removeProductFromCategory(
+  categoryId: string,
+  productId: string
+) {
+  try {
+    await prisma.category.update({
+      where: { id: categoryId },
+      data: {
+        products: {
+          disconnect: { id: productId },
+        },
+      },
+    });
+    return {
+      success: true,
+      message: "Product removed from category successfully",
+    };
+  } catch (error) {
+    console.error("Error removing product from category:", error);
+    return {
+      success: false,
+      message: "Failed to remove product from category",
+    };
+  }
+}

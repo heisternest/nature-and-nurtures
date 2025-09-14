@@ -34,7 +34,7 @@ export function GlobalAlertDialog() {
   };
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={(open) => !open && closeDialog()}>
+    <AlertDialog open={isOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>

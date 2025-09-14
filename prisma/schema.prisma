@@ -18,17 +18,19 @@ model PageContent {
 }
 
 model ProductCollection {
-  id              String    @id @default(cuid())
-  name            String    @unique
-  slug            String?   @unique
+  id              String  @id @default(cuid())
+  name            String  @unique
+  slug            String? @unique
   description     String?
   imageUrl        String?
   metaTitle       String?
   metaDescription String?
-  active          Boolean   @default(false)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  products        Product[]
+  featured        Boolean @default(false)
+
+  active    Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
 
   @@map("product_collections")
   @@schema("public")
@@ -105,6 +107,7 @@ model Category {
   active          Boolean @default(false)
   metaTitle       String?
   metaDescription String?
+  featured        Boolean @default(false)
 
   createdAt DateTime  @default(now())
   imageUrl  String?
@@ -266,13 +269,14 @@ model OrderItem {
 }
 
 model Blog {
-  id              String         @id @default(cuid())
-  title           String         @db.VarChar(200)
-  content         String
-  excerpt         String?        @db.VarChar(300)
-  categories      String[]
-  tags            String[]
-  featuredImage   String?
+  id            String   @id @default(cuid())
+  title         String   @db.VarChar(200)
+  content       String
+  excerpt       String?  @db.VarChar(300)
+  categories    String[]
+  tags          String[]
+  featuredImage String?
+
   status          BlogStatus
   metaDescription String?        @db.VarChar(160)
   slug            String?        @unique

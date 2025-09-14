@@ -1,7 +1,13 @@
 import prisma from "@/lib/db";
 import Link from "next/link";
-import { deleteCollection } from "../action";
+import { deleteCollection, removeProductFromCollection } from "../action";
 import { CollectionViewClient } from "./view";
+
+export const revalidate = 1;
+export const metadata = {
+  title: "Collection Details | Nature and Nurtures",
+  description: "View details of the product collection.",
+};
 
 export default async function CategoryDisplayPage({
   params,
@@ -34,6 +40,7 @@ export default async function CategoryDisplayPage({
     <CollectionViewClient
       handleDelete={deleteCollection}
       collection={collection}
+      disconnectProduct={removeProductFromCollection}
     />
   );
 }

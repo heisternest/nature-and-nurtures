@@ -1,7 +1,13 @@
 import prisma from "@/lib/db";
 import Link from "next/link";
-import { deleteCategory } from "../action";
+import { deleteCategory, removeProductFromCategory } from "../action";
 import { CategoryViewClient } from "./view";
+
+export const revalidate = 1;
+export const metadata = {
+  title: "Category Details | Nature and Nurtures",
+  description: "View details of the product category.",
+};
 
 export default async function CategoryDisplayPage({
   params,
@@ -31,6 +37,10 @@ export default async function CategoryDisplayPage({
   }
 
   return (
-    <CategoryViewClient handleDelete={deleteCategory} category={category} />
+    <CategoryViewClient
+      handleDelete={deleteCategory}
+      category={category}
+      disconnectProduct={removeProductFromCategory}
+    />
   );
 }

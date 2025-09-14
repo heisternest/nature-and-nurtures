@@ -1,14 +1,15 @@
 import { create } from "zustand";
 
+// ✅ update your zustand store types
 interface AlertDialogState {
   isOpen: boolean;
   title: string;
   description: string;
-  onConfirm?: () => void;
+  onConfirm?: () => Promise<void> | void; // allow async
   openDialog: (options: {
     title: string;
     description: string;
-    onConfirm?: () => void;
+    onConfirm?: () => Promise<void> | void;
   }) => void;
   closeDialog: () => void;
 }

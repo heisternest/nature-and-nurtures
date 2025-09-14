@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -42,6 +43,7 @@ export function CollectionForm({
       imageUrl: "",
       metaTitle: "",
       metaDescription: "",
+      featured: false,
       ...defaultValues,
     },
   });
@@ -211,6 +213,30 @@ export function CollectionForm({
                     {field.value?.length || 0}/160 characters
                   </p>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="featured"
+              render={({ field }) => (
+                <FormItem className=" rounded-lg border p-3">
+                  <div className="space-y-0.5 flex items-center justify-between">
+                    <FormLabel>Is Featured</FormLabel>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </div>
+                  <div>
+                    <FormDescription>
+                      Mark this collection as featured to highlight it on the
+                      homepage.
+                    </FormDescription>
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />

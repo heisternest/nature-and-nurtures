@@ -23,15 +23,7 @@ const columns: ColumnDef<any>[] = [
       </Link>
     ),
   },
-  {
-    accessorKey: "createdAt",
-    header: "Date",
-    cell: (info) => (
-      <div className="">
-        {new Date(info.getValue<string>()).toLocaleDateString()}
-      </div>
-    ),
-  },
+
   {
     accessorKey: "status",
     header: "Status",

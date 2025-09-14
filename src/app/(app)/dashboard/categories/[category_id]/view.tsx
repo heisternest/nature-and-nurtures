@@ -18,9 +18,14 @@ import { toast } from "sonner";
 export function CategoryViewClient({
   category,
   handleDelete,
+  disconnectProduct,
 }: {
   category: any;
   handleDelete: (id: string) => Promise<{ success: boolean; error?: string }>;
+  disconnectProduct: (
+    categoryId: string,
+    productId: string
+  ) => Promise<{ success: boolean; error?: string }>;
 }) {
   const { openDialog } = useAlertDialog();
 
@@ -122,8 +127,38 @@ export function CategoryViewClient({
               {category.products.map((product: any) => (
                 <div
                   key={product.id}
-                  className="border rounded-lg overflow-hidden shadow-sm"
+                  className="border rounded-lg overflow-hidden shadow-sm relative" // add relative here
                 >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2 bg-red-50 hover:bg-red-100 z-10"
+                    onClick={() =>
+                      openDialog({
+                        title: `Remove ${product.name} from ${category.name}?`,
+                        description: `Removing this product from ${category.name} will not delete it permanently. It can still be found in the products section.`,
+                        onConfirm: async () => {
+                          // simulate deletion
+                          const res = await disconnectProduct(
+                            category.id,
+                            product.id
+                          );
+                          if (res.success) {
+                            toast.success("Product removed from category");
+                            router.refresh();
+                          } else {
+                            toast.error(
+                              res.error ||
+                                "Error removing product from category"
+                            );
+                          }
+                        },
+                      })
+                    }
+                  >
+                    <TrashIcon size={16} className="text-red-600" />
+                  </Button>
+
                   <div className="relative w-full h-48">
                     <img
                       src={product.images?.[0] || "/placeholder.png"}
