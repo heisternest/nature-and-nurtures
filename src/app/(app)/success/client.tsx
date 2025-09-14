@@ -2,6 +2,8 @@
 
 import { Footer } from "@/components/shared/footer";
 import Header from "@/components/shared/header";
+import { useCartStore } from "@/lib/cart-store";
+import { useEffect } from "react";
 
 interface SuccessButtonsProps {
   errorState?: boolean;
@@ -12,6 +14,12 @@ export default function SuccessButtons({
   errorState = false,
   orderId,
 }: SuccessButtonsProps) {
+  // set cart to empty array
+  const { clearCart } = useCartStore();
+  useEffect(() => {
+    clearCart();
+  }, [clearCart]);
+
   const handleContinueShopping = () => {
     window.location.href = "/";
   };
