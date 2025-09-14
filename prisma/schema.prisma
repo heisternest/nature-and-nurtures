@@ -243,6 +243,9 @@ model Order {
   stripePaymentIntent   String?
   stripeSessionId       String?     @unique
   status                String
+  carrier               String?
+  trackingNumber        String?
+  trackingUrl           String?
   deliveryStatus        OrderStatus @default(PENDING)
   items                 OrderItem[]
   remarks               String?

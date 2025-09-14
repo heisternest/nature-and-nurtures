@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { MultiSelect } from "@/components/ui/mult-select";
 import {
   Select,
   SelectContent,
@@ -30,29 +31,33 @@ import {
   Clock,
   Edit,
   Package,
-  Printer,
   Truck,
 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import { updateOrderStatus } from "./actions";
+import { updateOrderShipping, updateOrderStatus } from "./actions";
 
 const columns: ColumnDef<any>[] = [
   {
-    accessorKey: "product.name",
     header: "Product",
 
-    cell: ({ row }) => (
-      <div className="flex items-center gap-3 w-60">
-        <img
-          src={row.original.product.images[0]}
-          className="w-12 h-12 rounded-md object-cover bg-gray-100"
-        />
-        <span className="font-medium text-gray-900">
-          {row.original.product.name}
-        </span>
-      </div>
-    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center gap-3 w-60">
+          <img
+            src={
+              row.original.product?.images?.length
+                ? row.original.product.images[0]
+                : "/placeholder-image.png"
+            }
+            className="w-12 h-12 rounded-md object-cover bg-gray-100"
+          />
+          <span className="font-medium text-gray-900">
+            {row.original.product?.name}
+          </span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "quantity",
@@ -106,6 +111,13 @@ export const OrderDetailsClient = ({ data }: { data: any }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(deliveryStatus);
   const [isPending, startTransition] = useTransition();
+  const [carrier, setCarrier] = useState<string | null>(data.carrier || null);
+  const [trackingNumber, setTrackingNumber] = useState<string | null>(
+    data.trackingNumber || null
+  );
+  const [trackingUrl, setTrackingUrl] = useState<string | null>(
+    data.trackingUrl || null
+  );
 
   const currentStepIndex = deliverySteps.findIndex(
     (step) => step.id === deliveryStatus
@@ -153,10 +165,6 @@ export const OrderDetailsClient = ({ data }: { data: any }) => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <Printer className="h-4 w-4 mr-2" />
-              Print
-            </Button>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button size="sm">
@@ -342,6 +350,77 @@ export const OrderDetailsClient = ({ data }: { data: any }) => {
                 <CardTitle>Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div>
+                    <Label className="text-sm">Carrier</Label>
+                    <MultiSelect
+                      options={["USPS", "UPS", "FedEx", "DHL", "Other"].map(
+                        (c) => ({ label: c, value: c })
+                      )}
+                      multiple={false}
+                      value={carrier || ""}
+                      onChange={(val) => setCarrier(val as string)}
+                      placeholder="Select carrier"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-sm">Tracking Number</Label>
+                    <input
+                      className="w-full border rounded px-2 py-1"
+                      value={trackingNumber || ""}
+                      onChange={(e) =>
+                        setTrackingNumber(e.target.value || null)
+                      }
+                      placeholder="Tracking number"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-sm">Tracking URL (optional)</Label>
+                    <input
+                      className="w-full border rounded px-2 py-1"
+                      value={trackingUrl || ""}
+                      onChange={(e) => setTrackingUrl(e.target.value || null)}
+                      placeholder="https://..."
+                    />
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => {
+                        startTransition(async () => {
+                          // Auto-generate tracking URL for known carriers if not provided
+                          let genUrl = trackingUrl;
+                          if (!genUrl && carrier && trackingNumber) {
+                            const templates: Record<string, string> = {
+                              USPS: `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${trackingNumber}`,
+                              UPS: `https://wwwapps.ups.com/WebTracking/track?trackNums=${trackingNumber}`,
+                              FedEx: `https://www.fedex.com/fedextrack/?tracknumbers=${trackingNumber}`,
+                              DHL: `https://www.dhl.com/en/express/tracking.html?AWB=${trackingNumber}`,
+                            };
+                            genUrl = templates[carrier] || genUrl;
+                          }
+
+                          const result = await updateOrderShipping(
+                            data.id,
+                            carrier,
+                            trackingNumber,
+                            genUrl
+                          );
+                          if (result.success) {
+                            setTrackingUrl(genUrl || null);
+                            toast.success("Shipping info saved");
+                          } else {
+                            toast.error("Failed to save shipping info");
+                          }
+                        });
+                      }}
+                    >
+                      Save Shipping
+                    </Button>
+                  </div>
+                </div>
                 <div className="space-y-3">
                   <div className="flex justify-between text-gray-600">
                     <span>Subtotal</span>

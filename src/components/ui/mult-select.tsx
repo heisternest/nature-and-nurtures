@@ -22,11 +22,12 @@ type Option = {
   value: string;
 };
 
-interface MultiSelectProps {
+interface SelectProps {
   options: Option[];
-  value: string[]; // controlled value from parent
-  onChange: (value: string[]) => void; // controlled onChange
+  value: string | string[]; // string (single) OR array (multi)
+  onChange: (value: string | string[]) => void;
   placeholder?: string;
+  multiple?: boolean;
 }
 
 export function MultiSelect({
@@ -34,24 +35,48 @@ export function MultiSelect({
   value,
   onChange,
   placeholder,
-}: MultiSelectProps) {
+  multiple = true,
+}: SelectProps) {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState<Option[]>(initialOptions);
   const [search, setSearch] = React.useState("");
 
+  // 🔹 Normalize incoming value into array for internal use
+  const internalValue = React.useMemo(
+    () => (Array.isArray(value) ? value : value ? [value] : []),
+    [value]
+  );
+
   // ✅ Ensure all values have a fallback Option
   const selected = React.useMemo(() => {
-    return value.map((val) => {
+    return internalValue.map((val) => {
       const found = options.find((o) => o.value === val);
       return found || { label: val, value: val };
     });
-  }, [options, value]);
+  }, [options, internalValue]);
+
+  const updateValue = (vals: string[]) => {
+    if (multiple) {
+      onChange(vals);
+    } else {
+      onChange(vals[0] ?? "");
+    }
+  };
 
   const toggleOption = (option: Option) => {
-    if (value.includes(option.value)) {
-      onChange(value.filter((v) => v !== option.value));
+    if (multiple) {
+      if (internalValue.includes(option.value)) {
+        updateValue(internalValue.filter((v) => v !== option.value));
+      } else {
+        updateValue([option.value, ...internalValue]); // keep new ones on top
+      }
     } else {
-      onChange([option.value, ...value]); // keep new ones on top
+      if (internalValue.includes(option.value)) {
+        updateValue([]); // deselect if already selected
+      } else {
+        updateValue([option.value]); // only one allowed
+      }
+      setOpen(false); // auto close popover for single select
     }
   };
 
@@ -61,7 +86,9 @@ export function MultiSelect({
       value: search.toLowerCase().replace(/\s+/g, "-"),
     };
     setOptions([newOption, ...options]);
-    onChange([newOption.value, ...value]);
+    updateValue(
+      multiple ? [newOption.value, ...internalValue] : [newOption.value]
+    );
     setSearch("");
     setOpen(false);
   };
@@ -71,12 +98,19 @@ export function MultiSelect({
       opt.label.toLowerCase().includes(search.toLowerCase())
     );
 
-    // selected items always on top
-    return [
-      ...selected.filter((s) => filtered.some((opt) => opt.value === s.value)),
-      ...filtered.filter((opt) => !selected.some((s) => s.value === opt.value)),
-    ];
-  }, [options, selected, search]);
+    if (multiple) {
+      // selected items always on top
+      return [
+        ...selected.filter((s) =>
+          filtered.some((opt) => opt.value === s.value)
+        ),
+        ...filtered.filter(
+          (opt) => !selected.some((s) => s.value === opt.value)
+        ),
+      ];
+    }
+    return filtered;
+  }, [options, selected, search, multiple]);
 
   return (
     <div className="w-full">
@@ -89,7 +123,9 @@ export function MultiSelect({
             className="w-full justify-between"
           >
             {selected.length > 0
-              ? `${selected.length} selected`
+              ? multiple
+                ? `${selected.length} selected`
+                : selected[0]?.label
               : placeholder || "Select..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -106,7 +142,7 @@ export function MultiSelect({
                 {search ? (
                   <Button
                     variant="ghost"
-                    className="w-full justify-start my-0 py-0 m-0 p-0"
+                    className="w-full justify-start my-0 py-0"
                     onClick={addNewOption}
                   >
                     <PlusCircle className="mr-2 h-4 w-4" /> Add &quot;{search}
@@ -124,7 +160,7 @@ export function MultiSelect({
                     className="flex justify-between"
                   >
                     {option.label}
-                    {value.includes(option.value) && (
+                    {internalValue.includes(option.value) && (
                       <Check className="h-4 w-4" />
                     )}
                   </CommandItem>
@@ -135,7 +171,8 @@ export function MultiSelect({
         </PopoverContent>
       </Popover>
 
-      {selected.length > 0 && (
+      {/* Pills only for multi-select */}
+      {multiple && selected.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-2">
           {selected.map((opt) => (
             <span
