@@ -126,7 +126,7 @@ export function HeroFormBuilder({
   const heroData = form.watch();
 
   return (
-    <div className="w-full h-full bg-gray-100 font-sans flex flex-col lg:flex-row">
+    <div className="w-full h-full bg-gray-100 flex flex-col lg:flex-row">
       {/* Editor Panel */}
       <aside className="w-full lg:w-2/5 xl:w-1/3 h-screen bg-white border-r flex flex-col">
         {/* Header */}
@@ -150,8 +150,9 @@ export function HeroFormBuilder({
                     <FormLabel>Title</FormLabel>
                     <FormControl>
                       <RichTextEditor
-                        value={heroData.title}
-                        onChange={(value) => form.setValue("title", value)}
+                        value={field.value}
+                        // onChange={(value) => form.setValue("title", value)}
+                        onChange={(value) => field.onChange(value)}
                       />
                     </FormControl>
                     <FormMessage />

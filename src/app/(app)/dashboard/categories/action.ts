@@ -13,6 +13,8 @@ export async function saveCategory(data: CategoryFormValues) {
           description: data.description,
           imageUrl: data.imageUrl,
           slug: data.slug,
+          metaTitle: data.metaTitle,
+          metaDescription: data.metaDescription,
           active: data.active || false,
         },
       });
@@ -25,6 +27,8 @@ export async function saveCategory(data: CategoryFormValues) {
           imageUrl: data.imageUrl,
           slug: data.slug,
           active: data.active || false,
+          metaTitle: data.metaTitle,
+          metaDescription: data.metaDescription,
         },
       });
       return { success: true, message: "Category created successfully" };

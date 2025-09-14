@@ -10,6 +10,14 @@ export const categorySchema = z.object({
     .optional(),
   active: z.boolean().default(false),
   imageUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  metaTitle: z
+    .string()
+    .max(60, { message: "Meta title must be under 60 characters." })
+    .optional(),
+  metaDescription: z
+    .string()
+    .max(160, { message: "Meta description must be under 160 characters." })
+    .optional(),
 });
 
 export type CategoryFormValues = z.infer<typeof categorySchema>;

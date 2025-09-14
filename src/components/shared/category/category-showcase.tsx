@@ -36,19 +36,19 @@ const ArrowIcon = () => (
   </svg>
 );
 
-const ProductCard = ({ product }: any) => {
+const CategoryCard = ({ category }: any) => {
   return (
-    <Link href={`/category/${product.id}`} className="p-2">
+    <Link href={`/category/${category.slug}`} className="p-2">
       <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden group">
         <img
-          src={imageThumbnailUrl(product.imageUrl, 400, 600)}
-          alt={product.name}
+          src={imageThumbnailUrl(category.imageUrl, 400, 600)}
+          alt={category.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
         <div className="absolute bottom-4 left-4 right-4">
           <button className="w-full  bg-white/90 backdrop-blur-sm text-black px-4 py-3 rounded-lg flex justify-between items-center text-sm font-medium transition-colors duration-300 hover:bg-white">
-            <span>{product.name.toUpperCase()}</span>
+            <span>{category.name.toUpperCase()}</span>
             <ArrowIcon />
           </button>
         </div>
@@ -92,7 +92,7 @@ export function CategoryShowcaseClient({
                 key={category.id}
                 className="pl-2 basis-1/2 md:basis-1/3 lg:basis-1/4"
               >
-                <ProductCard product={category} />
+                <CategoryCard category={category} />
               </CarouselItem>
             ))}
           </CarouselContent>

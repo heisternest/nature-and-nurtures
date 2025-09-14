@@ -14,6 +14,8 @@ export async function saveCollection(data: CollectionFormValues) {
           imageUrl: data.imageUrl,
           slug: data.slug,
           active: data.active || false,
+          metaTitle: data.metaTitle,
+          metaDescription: data.metaDescription,
         },
       });
       return { success: true, message: "Collection updated successfully" };
@@ -25,6 +27,8 @@ export async function saveCollection(data: CollectionFormValues) {
           imageUrl: data.imageUrl,
           slug: data.slug,
           active: data.active || false,
+          metaTitle: data.metaTitle,
+          metaDescription: data.metaDescription,
         },
       });
       return { success: true, message: "Collection created successfully" };

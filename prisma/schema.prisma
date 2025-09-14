@@ -18,15 +18,17 @@ model PageContent {
 }
 
 model ProductCollection {
-  id          String    @id @default(cuid())
-  name        String    @unique
-  slug        String?   @unique
-  description String?
-  imageUrl    String?
-  active      Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  products    Product[]
+  id              String    @id @default(cuid())
+  name            String    @unique
+  slug            String?   @unique
+  description     String?
+  imageUrl        String?
+  metaTitle       String?
+  metaDescription String?
+  active          Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  products        Product[]
 
   @@map("product_collections")
   @@schema("public")
@@ -96,14 +98,17 @@ model ProductSize {
 }
 
 model Category {
-  id          String    @id @default(cuid())
-  name        String    @unique
-  slug        String?   @unique
-  description String?
-  active      Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  imageUrl    String?
-  products    Product[]
+  id              String  @id @default(cuid())
+  name            String  @unique
+  slug            String? @unique
+  description     String?
+  active          Boolean @default(false)
+  metaTitle       String?
+  metaDescription String?
+
+  createdAt DateTime  @default(now())
+  imageUrl  String?
+  products  Product[]
 
   @@map("categories")
   @@schema("public")

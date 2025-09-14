@@ -40,6 +40,8 @@ export function CategoryForm({
       description: "",
       active: false,
       imageUrl: "",
+      metaTitle: "",
+      metaDescription: "",
       ...defaultValues,
     },
   });
@@ -74,110 +76,177 @@ export function CategoryForm({
     }
   }
 
+  const isEdit = Boolean(defaultValues?.id);
+
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleSubmit)}
-        className="grid grid-cols-1 gap-6 sm:grid-cols-2 w-full max-w-3xl"
-      >
-        {/* ID (hidden field, optional) */}
-        <input type="hidden" {...form.register("id")} />
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Page Title */}
+      <h1 className="text-2xl font-bold mb-8">
+        {isEdit ? "Edit Category" : "Create Category"}
+      </h1>
 
-        {/* Name */}
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Category name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="grid grid-cols-1 gap-8"
+        >
+          <input type="hidden" {...form.register("id")} />
 
-        {/* Slug */}
-        <FormField
-          control={form.control}
-          name="slug"
-          render={({ field }) => (
-            <FormItem className="col-span-2 sm:col-span-1">
-              <FormLabel>Slug</FormLabel>
-              <FormControl>
-                <Input placeholder="auto-generated if empty" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          {/* General Section */}
+          <div className="space-y-6">
+            <h2 className="text-lg font-semibold border-b pb-2">General</h2>
 
-        {/* Active Toggle */}
-        <FormField
-          control={form.control}
-          name="active"
-          render={({ field }) => (
-            <FormItem className="col-span-2 sm:col-span-1 flex items-center justify-between rounded-lg border p-3">
-              <div className="space-y-0.5">
-                <FormLabel>Active</FormLabel>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+            {/* Name */}
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Category name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* Description */}
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea
-                  rows={5}
-                  placeholder="Provide a detailed description of this category (max 500 characters)..."
-                  className="resize-none"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            {/* Slug + Active */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="slug"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Slug</FormLabel>
+                    <FormControl>
+                      <Input placeholder="auto-generated if empty" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-        {/* Image URL */}
-        <FormField
-          control={form.control}
-          name="imageUrl"
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel>Image</FormLabel>
-              <FormControl>
-                <FileUpload
-                  value={field.value || ""}
-                  control={form.control}
-                  name="imageUrl"
-                  type="single"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+              <FormField
+                control={form.control}
+                name="active"
+                render={({ field }) => (
+                  <FormItem className="flex items-center justify-between rounded-lg border p-3">
+                    <div className="space-y-0.5">
+                      <FormLabel>Active</FormLabel>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
 
-        <div className="col-span-2">
-          <Button type="submit" className="w-full">
-            Save Category
-          </Button>
-        </div>
-      </form>
-    </Form>
+            {/* Description */}
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      rows={4}
+                      placeholder="Provide a detailed description of this category (max 500 characters)..."
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* SEO Section */}
+          <div className="space-y-6">
+            <h2 className="text-lg font-semibold border-b pb-2">SEO</h2>
+
+            <FormField
+              control={form.control}
+              name="metaTitle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Meta Title</FormLabel>
+                  <FormControl>
+                    <Input
+                      maxLength={60}
+                      placeholder="Best Category for Products..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <p className="text-xs text-muted-foreground">
+                    {field.value?.length || 0}/60 characters
+                  </p>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="metaDescription"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Meta Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      rows={3}
+                      maxLength={160}
+                      placeholder="Short description that will show up in search results..."
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <p className="text-xs text-muted-foreground">
+                    {field.value?.length || 0}/160 characters
+                  </p>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* Image Section */}
+          <div className="space-y-6">
+            <h2 className="text-lg font-semibold border-b pb-2">Image</h2>
+
+            <FormField
+              control={form.control}
+              name="imageUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image</FormLabel>
+                  <FormControl>
+                    <FileUpload
+                      value={field.value || ""}
+                      control={form.control}
+                      name="imageUrl"
+                      type="single"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div>
+            <Button type="submit" className="w-full">
+              {isEdit ? "Update Category" : "Save Category"}
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }
