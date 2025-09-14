@@ -21,6 +21,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { InputTags } from "@/components/ui/input-tags";
+import { MultiSelect } from "@/components/ui/mult-select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/utils/supabase/client";
@@ -30,12 +32,10 @@ import {
   FileText,
   FolderOpen,
   ImageIcon,
-  Plus,
   Save,
   Send,
   Settings,
   Tag,
-  X,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -71,14 +71,16 @@ export function BlogForm() {
   }>({ draft: false, publish: false });
 
   const availableCategories = [
-    // fashion related categories
-    "Fashion Tips",
-    "Latest Trends",
-    "Outfit Ideas",
-    "Sustainable Fashion",
-    "Fashion History",
-    "Celebrity Style",
-    "Fashion News",
+    "Skincare",
+    "Makeup",
+    "Haircare",
+    "Fragrances",
+    "Bath & Body",
+    "Men’s Grooming",
+    "Beauty Tools",
+    "Natural & Organic",
+    "Wellness",
+    "Gift Sets",
   ];
 
   const { id } = useParams();
@@ -435,73 +437,16 @@ export function BlogForm() {
                     name="categories"
                     render={({ field }) => (
                       <FormItem>
-                        <div className="space-y-3">
-                          <div className="flex flex-wrap gap-2">
-                            {field.value.map((category) => (
-                              <div
-                                key={category}
-                                className="relative inline-flex"
-                              >
-                                <Badge
-                                  variant="secondary"
-                                  className="pr-6 flex items-center gap-1"
-                                >
-                                  {category}
-                                </Badge>
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    removeCategory(category, field.value);
-                                  }}
-                                  className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
-                                >
-                                  <X className="w-3 h-3" />
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-
-                          <div className="space-y-2">
-                            <div className="flex gap-2">
-                              <Input
-                                placeholder="Add new category"
-                                value={newCategory}
-                                onChange={(e) => setNewCategory(e.target.value)}
-                                onKeyPress={(e) =>
-                                  e.key === "Enter" &&
-                                  (e.preventDefault(), addCategory(newCategory))
-                                }
-                              />
-                              <Button
-                                type="button"
-                                size="sm"
-                                className="bg-brand-secondary"
-                                onClick={() => addCategory(newCategory)}
-                              >
-                                <Plus className="w-4 h-4" />
-                              </Button>
-                            </div>
-
-                            <div className="text-xs text-gray-500">
-                              Popular categories:
-                            </div>
-                            <div className="flex flex-wrap gap-1">
-                              {availableCategories.map((category) => (
-                                <Button
-                                  key={category}
-                                  type="button"
-                                  variant="ghost"
-                                  size="sm"
-                                  className="text-xs h-6 px-2 bg-brand-gray hover:bg-brand-gray/80 text-white hover:text-white"
-                                  onClick={() => addCategory(category)}
-                                >
-                                  {category}
-                                </Button>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
+                        <MultiSelect
+                          options={availableCategories.map((category) => ({
+                            label: category,
+                            value: category,
+                          }))}
+                          placeholder="Select categories..."
+                          {...field}
+                          onChange={(value) => field.onChange(value)}
+                          value={field.value || []}
+                        />
                         <FormMessage />
                       </FormItem>
                     )}
@@ -523,50 +468,11 @@ export function BlogForm() {
                     name="tags"
                     render={({ field }) => (
                       <FormItem>
-                        <div className="space-y-3">
-                          <div className="flex flex-wrap gap-2">
-                            {(field.value || []).map((tag) => (
-                              <div className="relative inline-flex" key={tag}>
-                                <Badge variant="outline" className="pr-6">
-                                  {tag}
-                                </Badge>
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    removeTag(tag, field.value || []);
-                                  }}
-                                  className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
-                                >
-                                  <X className="w-3 h-3" />
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-
-                          <div className="flex gap-2">
-                            <Input
-                              placeholder="Add tags"
-                              value={newTag}
-                              onChange={(e) => setNewTag(e.target.value)}
-                              onKeyPress={(e) =>
-                                e.key === "Enter" &&
-                                (e.preventDefault(), addTag(newTag))
-                              }
-                            />
-                            <Button
-                              type="button"
-                              size="sm"
-                              className="bg-brand-secondary"
-                              onClick={() => addTag(newTag)}
-                            >
-                              <Plus className="w-4 h-4" />
-                            </Button>
-                          </div>
-                          <p className="text-xs text-gray-500">
-                            Separate tags with commas or press Enter
-                          </p>
-                        </div>
+                        <InputTags
+                          placeholder="Type and press enter to add tags"
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
                         <FormMessage />
                       </FormItem>
                     )}
