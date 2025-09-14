@@ -42,6 +42,7 @@ export default function OrderForm() {
         throw new Error(res.error);
       }
     } catch (error) {
+      console.log(error);
       toast.error("Failed to create order");
     }
   }
