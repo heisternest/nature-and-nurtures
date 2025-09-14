@@ -19,10 +19,17 @@ import {
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  IconBrandTelegram,
+  IconBrandThreads,
+  IconBrandWhatsapp,
+} from "@tabler/icons-react";
+import {
   Facebook,
   Github,
   Instagram,
   Linkedin,
+  MailIcon,
+  Phone,
   Plus,
   Trash2,
   Twitter,
@@ -35,11 +42,16 @@ import { FooterFormData, footerSchema } from "./schema";
 
 const socialIcons = [
   { value: "facebook", label: "Facebook", icon: Facebook },
-  { value: "twitter", label: "Twitter", icon: Twitter },
+  { value: "twitter", label: "X/Twitter", icon: Twitter },
   { value: "instagram", label: "Instagram", icon: Instagram },
   { value: "linkedin", label: "LinkedIn", icon: Linkedin },
   { value: "youtube", label: "YouTube", icon: Youtube },
   { value: "github", label: "GitHub", icon: Github },
+  { value: "telegram", label: "Telegram", icon: IconBrandTelegram },
+  { value: "whatsapp", label: "WhatsApp", icon: IconBrandWhatsapp },
+  { value: "email", label: "Email", icon: MailIcon },
+  { value: "phone", label: "Phone", icon: Phone },
+  { value: "threads", label: "Threads", icon: IconBrandThreads },
 ];
 
 interface FooterFormProps {

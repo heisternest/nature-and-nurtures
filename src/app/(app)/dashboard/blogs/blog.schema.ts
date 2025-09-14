@@ -18,6 +18,10 @@ export const blogSchema = z.object({
     .optional()
     .or(z.literal("")),
   status: z.enum(["draft", "published"]),
+  metaTitle: z
+    .string()
+    .max(60, "Meta title must be less than 60 characters")
+    .optional(),
   metaDescription: z
     .string()
     .max(160, "Meta description must be less than 160 characters")

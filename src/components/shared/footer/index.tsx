@@ -21,6 +21,7 @@ const socialIconMap = {
 interface SocialLink {
   icon: keyof typeof socialIconMap;
   url: string;
+  value: string;
 }
 
 interface FooterData {
@@ -95,7 +96,15 @@ export async function Footer() {
               return (
                 <Link
                   key={index}
-                  href={link.url}
+                  // href={link.url}
+                  // if link.value is phone or email then use tel: or mailto:
+                  href={
+                    link.value === "phone"
+                      ? `tel:${link.url}`
+                      : link.value === "email"
+                      ? `mailto:${link.url}`
+                      : link.url
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-600 hover:text-gray-900 transition-colors"

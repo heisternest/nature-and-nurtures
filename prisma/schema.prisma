@@ -278,6 +278,7 @@ model Blog {
   featuredImage String?
 
   status          BlogStatus
+  metaTitle       String?        @db.VarChar(60)
   metaDescription String?        @db.VarChar(160)
   slug            String?        @unique
   visibility      BlogVisibility

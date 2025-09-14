@@ -109,41 +109,6 @@ export function BlogForm() {
     }
   };
 
-  const addCategory = (category: string) => {
-    const currentCategories = form.getValues("categories");
-    if (category && !currentCategories.includes(category)) {
-      form.setValue("categories", [...currentCategories, category], {
-        shouldValidate: true,
-      });
-    }
-    setNewCategory("");
-  };
-
-  // Only keep the correct versions below
-
-  const removeCategory = (category: string, currentCategories: string[]) => {
-    form.setValue(
-      "categories",
-      currentCategories.filter((c) => c !== category),
-      { shouldValidate: true }
-    );
-  };
-
-  const removeTag = (tag: string, currentTags: string[]) => {
-    form.setValue(
-      "tags",
-      currentTags.filter((t) => t !== tag)
-    );
-  };
-
-  const addTag = (tag: string) => {
-    const currentTags = form.getValues("tags") || [];
-    if (tag && !currentTags.includes(tag)) {
-      form.setValue("tags", [...currentTags, tag]);
-    }
-    setNewTag("");
-  };
-
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
@@ -183,13 +148,12 @@ export function BlogForm() {
           metaDescription: data.metaDescription || "",
           visibility: data.visibility || "public",
           slug: data.slug || generateSlug(data.title || ""),
+          metaTitle: data.metaTitle || "",
         });
       }
     }
     fetchBlog();
   }, [form, id]);
-
-  console.log(form.formState.errors);
 
   return (
     <Form {...form}>
@@ -488,7 +452,35 @@ export function BlogForm() {
                     SEO
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="metaTitle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm">Meta Title</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Write a meta title..."
+                            className="min-h-[80px]"
+                            {...field}
+                          />
+                        </FormControl>
+                        <div className="flex justify-between items-center mt-1">
+                          <FormMessage />
+                          <span
+                            className={`text-xs ${
+                              (field.value?.length || 0) > 60
+                                ? "text-red-500"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            {field.value?.length || 0}/60
+                          </span>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="metaDescription"

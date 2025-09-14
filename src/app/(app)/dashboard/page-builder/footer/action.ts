@@ -1,27 +1,20 @@
 "use server";
 
-import { supabaseClient } from "@/lib/supabase/client";
+import prisma from "@/lib/db";
 import { FooterFormData } from "./schema";
 
 export async function saveFooter(data: FooterFormData) {
   try {
-    const { error } = await supabaseClient
-      .from("PageContent")
-      .upsert(
-        [
-          {
-            pageType: "footer",
-            content: data,
-          },
-        ],
-        {
-          onConflict: "pageType",
-        }
-      )
-      .select()
-      .single();
-
-    if (error) throw error;
+    await prisma.pageContent.upsert({
+      where: { pageType: "footer" },
+      create: {
+        pageType: "footer",
+        content: data,
+      },
+      update: {
+        content: data,
+      },
+    });
 
     return {
       success: true,
