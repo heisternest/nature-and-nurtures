@@ -78,6 +78,7 @@ export async function saveProduct(data: ProductFormData) {
           slug: data.slug,
           images: data.images,
           description: data.description,
+          active: data.active,
           sku: data.sku,
           stockQuantity: data.stockQuantity,
           price: data.price,
@@ -169,6 +170,8 @@ export async function saveProduct(data: ProductFormData) {
           images: data.images,
           description: data.description,
           sku: data.sku,
+          active: data.active,
+
           stockQuantity: data.stockQuantity,
           price: data.price,
           originalPrice: data.originalPrice,
