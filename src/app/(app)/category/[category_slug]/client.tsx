@@ -25,11 +25,13 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           alt={product.name}
           className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-300 p-8"
         />
-        <div className="absolute top-3 left-3 bg-white/50 backdrop-blur-sm px-2 py-1 rounded-md">
-          <span className="text-xs font-medium text-gray-700 tracking-wider">
-            {product.category.name}
-          </span>
-        </div>
+        {product.category && (
+          <div className="absolute top-3 left-3 bg-white/50 backdrop-blur-sm px-2 py-1 rounded-md">
+            <span className="text-xs font-medium text-gray-700 tracking-wider">
+              {product.category.name}
+            </span>
+          </div>
+        )}
         <button className="absolute top-3 right-3 bg-white/50 backdrop-blur-sm p-2 rounded-full text-gray-700 hover:bg-white transition-colors">
           <ShoppingBag size={18} />
         </button>
