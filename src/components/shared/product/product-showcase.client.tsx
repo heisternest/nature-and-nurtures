@@ -24,9 +24,12 @@ const ProductCard: React.FC<{ product: any }> = ({ product }) => (
         )})`,
       }}
     >
-      <div className="absolute top-4 left-4 text-xs font-semibold tracking-widest bg-white/80 px-3 py-1 rounded">
-        {product.category.name}
-      </div>
+      {product.category && (
+        <div className="absolute top-4 left-4 text-xs font-semibold tracking-widest bg-white/80 px-3 py-1 rounded">
+          {product.category.title}
+        </div>
+      )}
+
       <div className="absolute top-4 right-4 border border-gray-300 rounded-full p-2 bg-white/80">
         <ShoppingBag size={16} className="text-gray-600" />
       </div>
