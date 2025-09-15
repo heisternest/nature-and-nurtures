@@ -14,7 +14,8 @@ import { Label } from "@/components/ui/label";
 import { useFormStatus } from "react-dom";
 
 // Import your server action
-import { login } from "./action";
+import { useActionState } from "react";
+import { login, LoginActionState } from "./action";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -31,6 +32,10 @@ function SubmitButton() {
 }
 
 export default function SignInPage() {
+  const [state, formAction] = useActionState<LoginActionState, FormData>(
+    login,
+    { error: undefined, success: undefined }
+  );
   return (
     <div className="min-h-screen bg-gradient-to-br bg-brand-light flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -59,7 +64,7 @@ export default function SignInPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Bind the login server action to form */}
-            <form action={login} className="space-y-4">
+            <form action={formAction} className="space-y-4">
               <div className="space-y-2">
                 <Label
                   htmlFor="email"
@@ -102,6 +107,12 @@ export default function SignInPage() {
                   </Label>
                 </div>
               </div>
+
+              {state?.error && (
+                <p className="text-red-600 text-sm text-center bg-red-50 px-4 py-2 rounded">
+                  {state.error}
+                </p>
+              )}
 
               <SubmitButton />
             </form>
