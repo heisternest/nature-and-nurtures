@@ -119,14 +119,20 @@ export function BlogForm() {
   };
 
   // Auto-generate slug from title
+  const [slugTouched, setSlugTouched] = React.useState(false);
+
   React.useEffect(() => {
     const subscription = form.watch((value, { name }) => {
-      if (name === "title" && value.title && !form.getValues("slug")) {
+      if (name === "slug") {
+        setSlugTouched(true); // user edited slug manually
+      }
+
+      if (name === "title" && value.title && !slugTouched) {
         form.setValue("slug", generateSlug(value.title));
       }
     });
     return () => subscription.unsubscribe();
-  }, [form]);
+  }, [form, slugTouched]);
 
   useEffect(() => {
     async function fetchBlog() {
