@@ -109,7 +109,7 @@ export async function saveProduct(data: ProductFormData) {
                 deleteMany: {},
                 create: data.productImages.map((img) => ({
                   url: img.url,
-                  altText: img.altText,
+                  alt: img.altText,
                 })),
               },
             }),
@@ -188,7 +188,7 @@ export async function saveProduct(data: ProductFormData) {
             ? {
                 create: data.productImages.map((img) => ({
                   url: img.url,
-                  altText: img.altText,
+                  alt: img.altText,
                 })),
               }
             : undefined,
