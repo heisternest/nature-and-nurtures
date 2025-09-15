@@ -29,7 +29,7 @@ export function BlogCard({
   createdAt,
 }: BlogCardProps) {
   return (
-    <Card className="h-full flex flex-col">
+    <Card className="h-full flex flex-col m-0 p-0 pb-5">
       {featuredImage && (
         <div className="aspect-video relative overflow-hidden rounded-t-lg">
           <img src={featuredImage} alt={title} className="object-cover" />

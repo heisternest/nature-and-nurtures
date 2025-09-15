@@ -69,12 +69,19 @@ export default async function CollectionPage({
 
   if (!collection) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-center">Collection Not Found</h1>
-        <p className="text-center mt-4">
-          The collection you&apos;re looking for is not available.
-        </p>
-      </div>
+      <>
+        <Header />
+
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold text-center">
+            Collection Not Found
+          </h1>
+          <p className="text-center mt-4">
+            The collection you&apos;re looking for is not available.
+          </p>
+        </div>
+        <Footer />
+      </>
     );
   }
 
