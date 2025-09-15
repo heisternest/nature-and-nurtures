@@ -9,6 +9,7 @@ async function getCategoryWithProducts(category_slug: string) {
     where: { slug: category_slug, active: true },
     include: {
       products: {
+        where: { active: true },
         include: {
           category: {
             select: { id: true, name: true },

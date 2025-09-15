@@ -8,6 +8,7 @@ import React from "react";
 interface Product {
   id: number;
   name: string;
+  slug: string;
   category: {
     id: string;
     name: string;
@@ -18,7 +19,7 @@ interface Product {
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   return (
-    <Link href={`/products/${product.id}`} className="group relative">
+    <Link href={`/products/${product.slug}`} className="group relative">
       <div className="w-full bg-[#F7F5F3] aspect-square overflow-hidden rounded-lg">
         <img
           // src={product.images[0]}
