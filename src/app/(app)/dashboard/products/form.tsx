@@ -82,7 +82,7 @@ export function ProductForm({
       inStock: product?.inStock || false,
       active: product?.active ?? true,
       categoryId: product?.categoryId || "",
-      collections: product?.collections || [],
+      collections: product?.collections?.map((c: any) => c.id) || [],
       images: product?.images || [],
       colors: product?.colors || [],
       sizes: product?.sizes || [],
