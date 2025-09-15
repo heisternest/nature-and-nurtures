@@ -205,7 +205,14 @@ export function HeroFormBuilder({
                     <FormControl>
                       <Tabs
                         value={field.value}
-                        onValueChange={(v) => field.onChange(v)}
+                        onValueChange={(v) => {
+                          field.onChange(v);
+                          if (v === "image") {
+                            form.setValue("videoUrl", undefined); // clear video
+                          } else {
+                            form.setValue("imageUrl", undefined); // clear image
+                          }
+                        }}
                       >
                         <TabsList className="grid grid-cols-2 mb-2">
                           <TabsTrigger value="image">Image</TabsTrigger>
