@@ -147,10 +147,6 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
               {isLoading ? "PROCESSING..." : "CHECK OUT"}
             </button>
           </div>
-          <div className="text-center text-gray-500 text-sm">
-            OR <span className="font-semibold">CONTINUE SHOPPING</span>{" "}
-            <span className="text-black">→</span>
-          </div>
         </SheetFooter>
       </SheetContent>
     </Sheet>
