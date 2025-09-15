@@ -82,6 +82,8 @@ export async function saveProduct(data: ProductFormData) {
           sku: data.sku,
           stockQuantity: data.stockQuantity,
           price: data.price,
+          featured: data.featured,
+
           originalPrice: data.originalPrice,
           discount: data.originalPrice
             ? Math.round(
@@ -174,6 +176,7 @@ export async function saveProduct(data: ProductFormData) {
 
           stockQuantity: data.stockQuantity,
           price: data.price,
+          featured: data.featured,
           originalPrice: data.originalPrice,
           discount: data.originalPrice
             ? Math.round(

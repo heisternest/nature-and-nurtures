@@ -44,6 +44,7 @@ model Product {
   price           Float
   originalPrice   Float?
   discount        Int?                   @default(0)
+  featured        Boolean                @default(false)
   description     String?
   aboutProduct    String[]
   metaTitle       String?

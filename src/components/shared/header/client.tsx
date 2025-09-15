@@ -12,9 +12,11 @@ import { SearchDrawer } from "../search-drawer";
 export function HeaderClient({
   data,
   collections,
+  featuredProducts,
 }: {
   data: any;
   collections: any;
+  featuredProducts: any;
 }) {
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -37,10 +39,6 @@ export function HeaderClient({
   );
 
   // Featured products: top 4 by discount
-  const megaMenuFeatured = allProducts
-    .slice()
-    .sort((a: any, b: any) => (b.discount || 0) - (a.discount || 0))
-    .slice(0, 4);
 
   // Limit categories displayed in mega menu (e.g., top 4)
   const megaMenuCategories = categories.slice(0, 4);
@@ -90,8 +88,8 @@ export function HeaderClient({
                           FEATURED
                         </h4>
                         <ul className="space-y-4">
-                          {megaMenuFeatured.length ? (
-                            megaMenuFeatured.map((item: any) => (
+                          {featuredProducts.length ? (
+                            featuredProducts.map((item: any) => (
                               <li key={item.id}>
                                 <Link
                                   href={`/products/${encodeURIComponent(
