@@ -14,6 +14,7 @@ export default async function Header() {
         take: 3,
       },
     },
+    where: { active: true, featured: true },
     skip: 0,
     take: 3,
     orderBy: { createdAt: "desc" },
