@@ -1,7 +1,5 @@
 "use client";
 
-import { Footer } from "@/components/shared/footer";
-import Header from "@/components/shared/header";
 import { useCartStore } from "@/lib/cart-store";
 import { useEffect } from "react";
 
@@ -41,7 +39,6 @@ export default function SuccessButtons({
 
   return (
     <div>
-      <Header />
       <div className="space-y-3">
         <button
           onClick={handleContinueShopping}
@@ -56,7 +53,6 @@ export default function SuccessButtons({
           VIEW ORDERS
         </button>
       </div>
-      <Footer />
     </div>
   );
 }
