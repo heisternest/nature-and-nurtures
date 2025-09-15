@@ -91,7 +91,6 @@ export default function Page() {
                     options: [
                       { label: "Draft", value: "draft" },
                       { label: "Published", value: "published" },
-                      { label: "Archived", value: "archived" },
                     ],
                     type: "select",
                   },
