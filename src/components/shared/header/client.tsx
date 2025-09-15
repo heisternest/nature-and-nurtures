@@ -85,7 +85,7 @@ export function HeaderClient({
                       {/* Featured */}
                       <div className="min-w-[180px]">
                         <h4 className="font-bold mb-4 text-xs tracking-widest text-[#7c2943]">
-                          FEATURED
+                          FEATURED PRODUCTS
                         </h4>
                         <ul className="space-y-4">
                           {featuredProducts.length ? (
