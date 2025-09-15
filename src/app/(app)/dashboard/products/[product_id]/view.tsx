@@ -85,7 +85,7 @@ export function ProductViewClient({
         {/* Images */}
         <Card>
           <CardContent className="p-4">
-            {product.images.length > 0 ? (
+            {product.productImages.length > 0 ? (
               <div className="grid grid-cols-2 gap-2">
                 {product.productImages.map((img: any, idx: number) => (
                   <img
