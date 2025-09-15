@@ -549,7 +549,7 @@ export function ProductForm({
                   variant="outline"
                   size="sm"
                   onClick={() =>
-                    productImagesArray.append({ url: "", altText: "" })
+                    productImagesArray.append({ url: "", alt: "" })
                   }
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -583,7 +583,7 @@ export function ProductForm({
 
                   <FormField
                     control={form.control}
-                    name={`productImages.${index}.altText`}
+                    name={`productImages.${index}.alt`}
                     render={({ field }) => (
                       <FormItem className="flex-1">
                         <FormControl>

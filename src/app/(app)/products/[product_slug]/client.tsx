@@ -18,7 +18,12 @@ export function ProductPage({ product }: { product: any }) {
     const cartItem = {
       id: product.id,
       name: product.name,
-      image: product.images[0] || "/placeholder.svg",
+      image:
+        (product.productImages && product.productImages.length > 0
+          ? product.productImages[0].url
+          : product.images && product.images.length > 0
+          ? product.images[0]
+          : null) || null,
       price: product.price,
       quantity: quantity,
       options: `${
@@ -36,7 +41,10 @@ export function ProductPage({ product }: { product: any }) {
         <div className="flex gap-4 sticky top-8 self-start">
           {/* Thumbnails */}
           <div className="flex flex-col gap-2">
-            {product.images.map((image: string, index: number) => (
+            {(product.productImages && product.productImages.length > 0
+              ? product.productImages.map((img: any) => img.url)
+              : product.images || []
+            ).map((image: string, index: number) => (
               <button
                 key={index}
                 onClick={() => setSelectedImage(index)}
@@ -58,8 +66,12 @@ export function ProductPage({ product }: { product: any }) {
           {/* Main Image */}
           <div className="flex-1 bg-gray-100 rounded-lg overflow-hidden h-[38rem]">
             <img
-              src={product.images[selectedImage] || "/placeholder.svg"}
-              alt="Mesh Shirt"
+              src={
+                (product.productImages && product.productImages.length > 0
+                  ? product.productImages[selectedImage]?.url
+                  : product.images?.[selectedImage]) || "/placeholder.svg"
+              }
+              alt={product.name || "Product image"}
               width={500}
               height={1200}
               className="w-full h-full object-cover"

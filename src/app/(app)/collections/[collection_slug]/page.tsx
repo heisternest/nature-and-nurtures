@@ -1,6 +1,6 @@
+import { ProductCard } from "@/components/product-card";
 import { Footer } from "@/components/shared/footer";
 import Header from "@/components/shared/header";
-import { ProductCard } from "@/components/shared/product/product-card";
 import prisma from "@/lib/db";
 import type { Metadata } from "next";
 export const revalidate = 1;
@@ -15,6 +15,7 @@ async function getCollection(collection_slug: string) {
           category: {
             select: { name: true, id: true },
           },
+          productImages: { select: { id: true, url: true, alt: true } },
         },
         orderBy: { createdAt: "desc" },
       },

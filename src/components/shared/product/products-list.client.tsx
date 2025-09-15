@@ -1,8 +1,8 @@
 "use client";
 
+import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { ProductCard } from "./product-card";
 
 interface Product {
   id: string;

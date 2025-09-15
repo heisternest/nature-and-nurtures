@@ -10,6 +10,7 @@ export async function ProductShowcase() {
       category: {
         select: { name: true, id: true },
       },
+      productImages: { select: { url: true, alt: true } },
     },
   });
   return <ProductShowcaseClient products={products} />;

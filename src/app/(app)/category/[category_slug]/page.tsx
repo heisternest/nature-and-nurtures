@@ -14,6 +14,9 @@ async function getCategoryWithProducts(category_slug: string) {
           category: {
             select: { id: true, name: true },
           },
+          productImages: {
+            select: { id: true, url: true, alt: true },
+          },
         },
       },
     },

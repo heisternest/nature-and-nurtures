@@ -1,64 +1,7 @@
+import { ProductCard } from "@/components/product-card";
 import { Footer } from "@/components/shared/footer";
 import Header from "@/components/shared/header/index";
-import { ShoppingBag, Star } from "lucide-react";
-import Link from "next/link";
-import React from "react";
-
-// --- TYPE DEFINITIONS ---
-interface Product {
-  id: number;
-  name: string;
-  slug: string;
-  category: {
-    id: string;
-    name: string;
-  };
-  price: number;
-  images: string[];
-}
-
-const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
-  return (
-    <Link href={`/products/${product.slug}`} className="group relative">
-      <div className="w-full bg-[#F7F5F3] aspect-square overflow-hidden rounded-lg">
-        <img
-          // src={product.images[0]}
-          src={
-            product.images && product.images.length > 0
-              ? product.images[0]
-              : "/placeholder-image.png"
-          }
-          alt={product.name}
-          className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-300 p-8"
-        />
-        {product.category && (
-          <div className="absolute top-3 left-3 bg-white/50 backdrop-blur-sm px-2 py-1 rounded-md">
-            <span className="text-xs font-medium text-gray-700 tracking-wider">
-              {product.category.name}
-            </span>
-          </div>
-        )}
-        <button className="absolute top-3 right-3 bg-white/50 backdrop-blur-sm p-2 rounded-full text-gray-700 hover:bg-white transition-colors">
-          <ShoppingBag size={18} />
-        </button>
-      </div>
-      <div className="mt-4 flex justify-between">
-        <div>
-          <h3 className="text-sm font-semibold text-gray-800">
-            <span aria-hidden="true" className="absolute inset-0" />
-            {product.name}
-          </h3>
-          <p className="mt-1 text-xs text-gray-500 uppercase">
-            {product.category.name}
-          </p>
-        </div>
-        <p className="text-sm font-medium text-gray-900">
-          ${product.price.toFixed(2)}
-        </p>
-      </div>
-    </Link>
-  );
-};
+import { Star } from "lucide-react";
 
 export function CategoryProductClient({ data }: { data: any }) {
   return (

@@ -14,12 +14,13 @@ const columns: ColumnDef<any>[] = [
     header: "Name",
     cell: ({ row }) => (
       <div className="flex items-center">
-        {row.original.images?.[0] ? (
+        {row.original.product_images?.[0] ? (
           <img
             src={
-              imageThumbnailUrl(row.original.images[0]) || "/placeholder.svg"
+              imageThumbnailUrl(row.original.product_images[0].url) ||
+              "/placeholder.svg"
             }
-            alt={row.original.name}
+            alt={row.original.product_images[0]?.alt}
             className="w-10 h-10 rounded-md mr-3 shrink-0"
           />
         ) : (
@@ -95,7 +96,7 @@ export default function Page() {
               <DynamicDataTable<any>
                 supabase={supabaseClient}
                 table="products"
-                select="*, categories(name)"
+                select="*, categories(name), product_images(url, alt)"
                 columns={columns}
                 searchableColumns={["name", "sku"]}
                 filterDefs={[

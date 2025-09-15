@@ -17,6 +17,7 @@ export default async function CreateProductPage({
       features: true,
       sizes: true,
       specifications: true,
+      productImages: true,
     },
   });
 

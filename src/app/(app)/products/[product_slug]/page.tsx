@@ -18,6 +18,7 @@ async function getProduct(product_slug: string) {
       colors: true,
       features: { select: { description: true } },
       specifications: true,
+      productImages: { select: { id: true, url: true, alt: true } },
     },
   });
 }

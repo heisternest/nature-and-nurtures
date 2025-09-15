@@ -5,6 +5,8 @@ import prisma from "@/lib/db";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+export const revalidate = 1;
+
 // ✅ SEO Metadata
 export const metadata: Metadata = {
   title: "Shop Products | Best Deals & Categories | Nature and Nurtures",
@@ -61,6 +63,7 @@ export default async function ProductsPage({
       category: {
         select: { name: true, id: true },
       },
+      productImages: { select: { id: true, url: true, alt: true } },
     },
     orderBy: { createdAt: "desc" },
   });

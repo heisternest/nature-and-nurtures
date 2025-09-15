@@ -14,7 +14,7 @@ export const productSchema = z.object({
     .array(
       z.object({
         url: z.string().min(1, "Image URL is required"),
-        altText: z.string().optional(),
+        alt: z.string().optional(),
       })
     )
     .optional(),
