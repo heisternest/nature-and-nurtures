@@ -55,5 +55,16 @@ export default async function Page({
   const { category_slug } = await params;
   const data = await getCategoryWithProducts(category_slug);
 
+  if (!data) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-4">Category Not Found</h1>
+        <p className="text-gray-600">
+          The category you&apos;re looking for does not exist or is inactive.
+        </p>
+      </div>
+    );
+  }
+
   return <CategoryProductClient data={data} />;
 }

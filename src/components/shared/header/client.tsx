@@ -116,7 +116,7 @@ export function HeaderClient({
                         <div key={category.id} className="min-w-[220px]">
                           <Link
                             href={`/category/${encodeURIComponent(
-                              category.id
+                              category.slug
                             )}`}
                             className="font-serif text-xl mb-2 text-gray-900 hover:text-[#7c2943] block"
                           >
@@ -149,7 +149,7 @@ export function HeaderClient({
                           .map((c: any) => (
                             <Link
                               key={c.id}
-                              href={`/category/${encodeURIComponent(c.id)}`}
+                              href={`/category/${encodeURIComponent(c.slug)}`}
                               className="flex flex-col items-center"
                             >
                               <Image
