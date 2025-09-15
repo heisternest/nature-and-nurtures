@@ -19,6 +19,7 @@ export default async function ProductView({
       specifications: true,
       category: true,
       collections: true,
+      productImages: true,
     },
   });
 
