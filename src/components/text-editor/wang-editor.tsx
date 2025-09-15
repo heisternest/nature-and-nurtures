@@ -42,7 +42,7 @@ const RichTextEditor: React.FC<Props> = ({ value = "", onChange }) => {
           const fileName = `${Date.now()}-${file.name}`;
 
           const { error } = await supabase.storage
-            .from("product-images")
+            .from("ecom")
             .upload(fileName, file);
 
           if (error) {
@@ -51,7 +51,7 @@ const RichTextEditor: React.FC<Props> = ({ value = "", onChange }) => {
           }
 
           const { data: urlData } = supabase.storage
-            .from("product-images")
+            .from("ecom")
             .getPublicUrl(fileName);
 
           const publicUrl = urlData?.publicUrl;
