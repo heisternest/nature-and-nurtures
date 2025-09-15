@@ -209,6 +209,7 @@ export function CategoryForm({
                       maxLength={60}
                       placeholder="Best Category for Products..."
                       {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <p className="text-xs text-muted-foreground">
@@ -232,6 +233,7 @@ export function CategoryForm({
                       placeholder="Short description that will show up in search results..."
                       className="resize-none"
                       {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <p className="text-xs text-muted-foreground">

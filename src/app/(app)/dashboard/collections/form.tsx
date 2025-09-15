@@ -184,6 +184,7 @@ export function CollectionForm({
                       maxLength={60}
                       placeholder="Best Collection for Products..."
                       {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <p className="text-xs text-muted-foreground">
@@ -207,6 +208,7 @@ export function CollectionForm({
                       placeholder="Short description that will show up in search results..."
                       className="resize-none"
                       {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <p className="text-xs text-muted-foreground">
