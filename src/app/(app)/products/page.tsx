@@ -3,6 +3,7 @@ import Header from "@/components/shared/header";
 import { ProductsListClient } from "@/components/shared/product/products-list.client";
 import prisma from "@/lib/db";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 // ✅ SEO Metadata
 export const metadata: Metadata = {
@@ -34,10 +35,6 @@ export const metadata: Metadata = {
     canonical: "https://yourdomain.com/products",
   },
 };
-
-interface SearchParams {
-  search?: string;
-}
 
 export default async function ProductsPage({
   searchParams,
@@ -88,6 +85,33 @@ export default async function ProductsPage({
   });
 
   const hasMore = filteredProducts.length === 10 && totalProducts > 10;
+
+  if (totalProducts === 0) {
+    return (
+      <>
+        <Header />
+        <div className="min-h-[60vh] flex flex-col items-center justify-center">
+          {search ? (
+            <h2 className="text-2xl font-semibold mb-4">
+              No Products Found for &quot;{search}&quot;
+            </h2>
+          ) : (
+            <h2 className="text-2xl font-semibold mb-4">
+              No Products Available
+            </h2>
+          )}
+          <p className="text-gray-600">
+            We couldn&apos;t find any products matching your search.
+          </p>
+
+          <Link href={"/"} className="mt-4 text-blue-500 hover:underline">
+            Go Back to Home
+          </Link>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
