@@ -94,7 +94,6 @@ export function ProductPage({ product }: { product: any }) {
                 </svg>
               ))}
             </div>
-            <span className="text-sm text-gray-600">(1234 reviews)</span>
           </div>
 
           {/* Price */}
