@@ -47,7 +47,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Category, ProductCollection } from "@prisma/client";
 import { Check, ChevronsUpDown, Plus, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ProductFormData, productSchema } from "./schema";
@@ -103,6 +103,20 @@ export function ProductForm({
     name: "specifications",
   });
 
+  const name = form.watch("name");
+  const slug = form.watch("slug");
+
+  console.log(form.formState.errors);
+
+  useEffect(() => {
+    if (name && !slug) {
+      const generatedSlug = `${name
+        .replace(/\s+/g, "-")
+        .toLowerCase()}-${Math.floor(Math.random() * 1000)}`;
+      form.setValue("slug", generatedSlug);
+    }
+  }, [name]);
+
   const onSubmit = async (values: ProductFormData) => {
     try {
       const payload = { ...values };
@@ -116,7 +130,7 @@ export function ProductForm({
       }
       router.push("/dashboard/products");
     } catch (err) {
-      toast.error("Error submitting product");
+      toast.error(`Error submitting product: ${(err as Error).message}`);
       console.error("Error submitting product:", err);
     }
   };
@@ -238,7 +252,7 @@ export function ProductForm({
                           <CommandGroup>
                             {collections.map((collection) => {
                               const isSelected = field.value?.some(
-                                (c) => c.id === collection.id
+                                (c) => c === collection.id
                               );
                               return (
                                 <CommandItem
@@ -248,7 +262,7 @@ export function ProductForm({
                                     if (isSelected) {
                                       field.onChange(
                                         currentValue.filter(
-                                          (c) => c.id !== collection.id
+                                          (c) => c !== collection.id
                                         )
                                       );
                                     } else {
@@ -277,11 +291,12 @@ export function ProductForm({
                       <div className="flex flex-wrap gap-2 mt-2">
                         {field.value.map((collectionId) => {
                           const collection = collections.find(
-                            (c) => c.id === collectionId.id
+                            (c) => c.id === (collectionId as unknown as string)
                           );
+
                           return (
                             <Badge
-                              key={collectionId.id}
+                              key={collectionId}
                               variant="secondary"
                               className="text-xs"
                             >

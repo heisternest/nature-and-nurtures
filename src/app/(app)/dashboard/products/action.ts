@@ -70,7 +70,7 @@ export async function saveProduct(data: ProductFormData) {
             data.collections && data.collections.length > 0
               ? {
                   set: data.collections.map((collection) => ({
-                    id: collection.id,
+                    id: collection,
                   })),
                 }
               : { set: [] },
@@ -164,7 +164,7 @@ export async function saveProduct(data: ProductFormData) {
             data.collections && data.collections.length > 0
               ? {
                   connect: data.collections.map((collection) => ({
-                    id: collection.id,
+                    id: collection,
                   })),
                 }
               : undefined,

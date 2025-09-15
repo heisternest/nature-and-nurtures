@@ -17,9 +17,7 @@ export const productSchema = z.object({
   inStock: z.boolean().optional(),
   active: z.boolean().default(true),
   categoryId: z.string().min(1, "Category is required"),
-  collections: z
-    .array(z.object({ id: z.string(), name: z.string() }))
-    .optional(),
+  collections: z.array(z.string()).optional(),
   images: z.array(z.string()).optional(),
   colors: z
     .array(
