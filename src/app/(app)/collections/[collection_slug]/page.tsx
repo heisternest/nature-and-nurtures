@@ -62,10 +62,10 @@ export async function generateMetadata({
 export default async function CollectionPage({
   params,
 }: {
-  params: Promise<{ collection_id: string }>;
+  params: Promise<{ collection_slug: string }>;
 }) {
   const resolvedParams = await params;
-  const collection = await getCollection(resolvedParams.collection_id);
+  const collection = await getCollection(resolvedParams.collection_slug);
 
   if (!collection) {
     return (
