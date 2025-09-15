@@ -98,13 +98,7 @@ export async function Footer() {
                   key={index}
                   // href={link.url}
                   // if link.value is phone or email then use tel: or mailto:
-                  href={
-                    link.value === "phone"
-                      ? `tel:${link.url}`
-                      : link.value === "email"
-                      ? `mailto:${link.url}`
-                      : link.url
-                  }
+                  href={link.value}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-600 hover:text-gray-900 transition-colors"

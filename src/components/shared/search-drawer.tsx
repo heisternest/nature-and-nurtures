@@ -44,7 +44,7 @@ export function SearchDrawer({ open, closeDrawer }: SearchDrawerProps) {
                   <input
                     id="global-search"
                     ref={inputRef}
-                    placeholder="Search products, categories, articles..."
+                    placeholder="Search products"
                     className="w-full px-4 py-3 focus:outline-none"
                     autoFocus
                   />
