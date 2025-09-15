@@ -94,17 +94,21 @@ export async function Footer() {
               if (!IconComponent) return null;
 
               return (
-                <Link
-                  key={index}
-                  // href={link.url}
-                  // if link.value is phone or email then use tel: or mailto:
-                  href={link.value}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  <IconComponent className="w-5 h-5" />
-                </Link>
+                <div key={index}>
+                  {link.value && (
+                    <Link
+                      key={index}
+                      // href={link.url}
+                      // if link.value is phone or email then use tel: or mailto:
+                      href={link.value}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-600 hover:text-gray-900 transition-colors"
+                    >
+                      <IconComponent className="w-5 h-5" />
+                    </Link>
+                  )}
+                </div>
               );
             })}
           </div>
