@@ -142,9 +142,9 @@ export function ProductPage({ product }: { product: any }) {
               <h3 className="text-sm font-medium text-gray-900">Size:</h3>
             </div>
             <div className="flex gap-2">
-              {product.sizes.map((size: any) => (
+              {product.sizes.map((size: any, index: number) => (
                 <button
-                  key={size}
+                  key={index}
                   onClick={() => setSelectedSize(size)}
                   className={`px-4 py-2 border rounded-md text-sm font-medium ${
                     selectedSize === size
