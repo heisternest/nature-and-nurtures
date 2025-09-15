@@ -22,7 +22,7 @@ export function ProductViewClient({
   const router = useRouter();
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-6 w-full">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
