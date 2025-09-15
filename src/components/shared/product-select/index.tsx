@@ -169,7 +169,12 @@ export function ProductSelect({ control, name }: ProductSelectProps) {
                             <div className="flex items-center gap-3">
                               {product.images?.[0] && (
                                 <img
-                                  src={product.images[0]}
+                                  // src={product.images[0]}
+                                  src={
+                                    product.images && product.images.length > 0
+                                      ? product.images[0]
+                                      : "/placeholder-image.png"
+                                  }
                                   alt={product.name}
                                   className="w-16 h-16 object-cover rounded"
                                 />
@@ -242,7 +247,12 @@ export function ProductSelect({ control, name }: ProductSelectProps) {
                     <div className="flex items-center gap-3">
                       {product.images?.[0] && (
                         <img
-                          src={product.images[0]}
+                          // src={product.images[0]}
+                          src={
+                            product.images && product.images.length > 0
+                              ? product.images[0]
+                              : "/placeholder-image.png"
+                          }
                           alt={product.name}
                           className="w-16 h-16 object-cover rounded"
                         />

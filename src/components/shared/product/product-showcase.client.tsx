@@ -17,11 +17,15 @@ const ProductCard: React.FC<{ product: any }> = ({ product }) => (
     <div
       className="rounded-lg relative flex flex-col justify-end h-96 bg-center bg-cover text-left overflow-hidden"
       style={{
-        backgroundImage: `url(${imageThumbnailUrl(
-          product.images[0],
-          200,
-          300
-        )})`,
+        ...(product.images && product.images.length > 0
+          ? {
+              backgroundImage: `url(${imageThumbnailUrl(
+                product.images[0],
+                200,
+                300
+              )})`,
+            }
+          : {}),
       }}
     >
       {product.category && (
