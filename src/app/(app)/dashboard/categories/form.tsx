@@ -52,7 +52,7 @@ export function CategoryForm({
   const slugValue = form.watch("slug");
 
   useEffect(() => {
-    if (nameValue && !slugValue) {
+    if (nameValue && !slugValue && nameValue.length > 5) {
       form.setValue("slug", `${slugify(nameValue)}`);
     }
   }, [nameValue]);
