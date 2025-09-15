@@ -139,9 +139,6 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
             SHIPPING AND TAXES CALCULATED AT CHECKOUT.
           </div>
           <div className="flex space-x-4 mb-4">
-            <button className="flex-1 border border-gray-900 rounded-full py-3 font-semibold text-gray-900 hover:bg-gray-100 transition">
-              VIEW CART
-            </button>
             <button
               className="flex-1 bg-black text-white rounded-full py-3 font-semibold hover:bg-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleCheckout}
