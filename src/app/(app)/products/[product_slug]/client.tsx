@@ -188,6 +188,7 @@ export function ProductPage({ product }: { product: any }) {
           <div className="space-y-3">
             <button
               onClick={handleAddToCart}
+              disabled={!product.inStock}
               className="w-full bg-white border border-gray-300 text-gray-900 py-3 px-6 rounded-md font-medium hover:bg-gray-50 transition-colors"
             >
               ADD TO CART
