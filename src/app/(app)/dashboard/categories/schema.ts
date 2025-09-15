@@ -13,11 +13,13 @@ export const categorySchema = z.object({
   metaTitle: z
     .string()
     .max(60, { message: "Meta title must be under 60 characters." })
-    .optional(),
+    .optional()
+    .nullable(),
   metaDescription: z
     .string()
     .max(160, { message: "Meta description must be under 160 characters." })
-    .optional(),
+    .optional()
+    .nullable(),
   featured: z.boolean().default(false),
 });
 
