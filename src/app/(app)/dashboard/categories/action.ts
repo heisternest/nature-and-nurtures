@@ -16,6 +16,7 @@ export async function saveCategory(data: CategoryFormValues) {
           metaTitle: data.metaTitle,
           metaDescription: data.metaDescription,
           active: data.active || false,
+          featured: data.featured || false,
         },
       });
       return { success: true, message: "Category updated successfully" };
@@ -29,6 +30,7 @@ export async function saveCategory(data: CategoryFormValues) {
           active: data.active || false,
           metaTitle: data.metaTitle,
           metaDescription: data.metaDescription,
+          featured: data.featured || false,
         },
       });
       return { success: true, message: "Category created successfully" };
