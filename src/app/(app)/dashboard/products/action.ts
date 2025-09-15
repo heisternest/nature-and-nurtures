@@ -103,6 +103,17 @@ export async function saveProduct(data: ProductFormData) {
               },
             }),
 
+          ...(data.productImages &&
+            data.productImages.length > 0 && {
+              productImages: {
+                deleteMany: {},
+                create: data.productImages.map((img) => ({
+                  url: img.url,
+                  altText: img.altText,
+                })),
+              },
+            }),
+
           ...(data.sizes &&
             data.sizes.length > 0 && {
               sizes: {
@@ -173,6 +184,14 @@ export async function saveProduct(data: ProductFormData) {
           description: data.description,
           sku: data.sku,
           active: data.active,
+          productImages: data.productImages
+            ? {
+                create: data.productImages.map((img) => ({
+                  url: img.url,
+                  altText: img.altText,
+                })),
+              }
+            : undefined,
 
           stockQuantity: data.stockQuantity,
           price: data.price,

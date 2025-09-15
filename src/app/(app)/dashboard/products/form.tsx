@@ -90,6 +90,7 @@ export function ProductForm({
       specifications: product?.specifications || [],
       metaTitle: product?.metaTitle || "",
       metaDescription: product?.metaDescription || "",
+      productImages: product?.productImages || [],
     },
   });
 
@@ -102,6 +103,8 @@ export function ProductForm({
     control,
     name: "specifications",
   });
+
+  const productImagesArray = useFieldArray({ control, name: "productImages" });
 
   const name = form.watch("name");
   const slug = form.watch("slug");
@@ -120,6 +123,12 @@ export function ProductForm({
   const onSubmit = async (values: ProductFormData) => {
     try {
       const payload = { ...values };
+      // Remove empty productImages entries (those without a url)
+      if (payload.productImages && Array.isArray(payload.productImages)) {
+        payload.productImages = payload.productImages.filter(
+          (p) => p && (p as any).url && (p as any).url.length > 0
+        );
+      }
       const result = await SaveProduct(payload, params.product_id);
       if (!result.ok) throw new Error("Failed to save product");
 
@@ -529,27 +538,77 @@ export function ProductForm({
               />
             </div>
 
-            {/* Product Images */}
+            {/* Structured Product Images (with alt text) */}
             <div className="space-y-4">
-              <h3 className="text-lg font-medium">Product Images</h3>
-              <FormField
-                control={form.control}
-                name="images"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FileUpload
-                        control={form.control}
-                        name="images"
-                        bucketName="ecom"
-                        value={field.value || []}
-                        type="multiple"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-medium">
+                  Product Images (with alt text)
+                </h3>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    productImagesArray.append({ url: "", altText: "" })
+                  }
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Image
+                </Button>
+              </div>
+
+              {productImagesArray.fields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="flex gap-4 items-center p-4 border rounded-lg"
+                >
+                  <FormField
+                    control={form.control}
+                    name={`productImages.${index}.url`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          <FileUpload
+                            control={form.control}
+                            name={`productImages.${index}.url`}
+                            bucketName="ecom"
+                            value={field.value || ""}
+                            type="single"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name={`productImages.${index}.altText`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          <Input
+                            placeholder="Alt text (for accessibility)"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => productImagesArray.remove(index)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
 
             {/* Available Colors */}

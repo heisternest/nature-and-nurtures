@@ -10,6 +10,14 @@ export const productSchema = z.object({
   price: z.coerce.number().positive("Price must be positive"),
   originalPrice: z.coerce.number().optional(),
   sku: z.string().min(1, "SKU is required"),
+  productImages: z
+    .array(
+      z.object({
+        url: z.string().min(1, "Image URL is required"),
+        altText: z.string().optional(),
+      })
+    )
+    .optional(),
   stockQuantity: z.coerce
     .number()
     .min(0, "Stock quantity must be 0 or more")
