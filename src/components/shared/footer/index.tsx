@@ -1,9 +1,16 @@
 import { supabaseClient } from "@/lib/supabase/client";
 import {
+  IconBrandTelegram,
+  IconBrandThreads,
+  IconBrandWhatsapp,
+} from "@tabler/icons-react";
+import {
   Facebook,
   Github,
   Instagram,
   Linkedin,
+  MailIcon,
+  Phone,
   Twitter,
   Youtube,
 } from "lucide-react";
@@ -16,6 +23,11 @@ const socialIconMap = {
   linkedin: Linkedin,
   youtube: Youtube,
   github: Github,
+  telegram: IconBrandTelegram,
+  whatsapp: IconBrandWhatsapp,
+  email: MailIcon,
+  phone: Phone,
+  threads: IconBrandThreads,
 };
 
 interface SocialLink {
