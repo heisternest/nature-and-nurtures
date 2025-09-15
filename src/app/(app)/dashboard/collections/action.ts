@@ -37,7 +37,10 @@ export async function saveCollection(data: CollectionFormValues) {
     }
   } catch (error) {
     console.error("Error updating collection:", error);
-    return { success: false, message: "Failed to update collection" };
+    return {
+      success: false,
+      message: `Failed to update collection: ${(error as Error).message}`,
+    };
   }
 }
 

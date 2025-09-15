@@ -37,7 +37,10 @@ export async function saveCategory(data: CategoryFormValues) {
     }
   } catch (error) {
     console.error("Error updating category:", error);
-    return { success: false, message: "Failed to update category" };
+    return {
+      success: false,
+      message: `Failed to update category: ${(error as Error).message}`,
+    };
   }
 }
 
