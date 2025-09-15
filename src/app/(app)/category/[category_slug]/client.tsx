@@ -21,7 +21,12 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     <Link href={`/products/${product.id}`} className="group relative">
       <div className="w-full bg-[#F7F5F3] aspect-square overflow-hidden rounded-lg">
         <img
-          src={product.images[0]}
+          // src={product.images[0]}
+          src={
+            product.images && product.images.length > 0
+              ? product.images[0]
+              : "/placeholder-image.png"
+          }
           alt={product.name}
           className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-300 p-8"
         />
