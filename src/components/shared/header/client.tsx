@@ -1,6 +1,5 @@
 "use client";
 
-import { Input } from "@/components/ui/input"; // shadcn Input
 import { useCartStore } from "@/lib/cart-store";
 import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
@@ -9,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CartClientDrawer } from "../cart/client";
+import { SearchBar } from "../search/search-drawer";
 
 export function HeaderClient({
   data,
@@ -34,15 +34,6 @@ export function HeaderClient({
 
   const showDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
-
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const searchTerm = formData.get("search") as string;
-    if (searchTerm.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchTerm)}`);
-    }
-  };
 
   return (
     <header className="w-full border-b bg-white">
@@ -211,15 +202,13 @@ export function HeaderClient({
 
         {/* Search + Cart */}
         <div className="flex items-center space-x-4">
-          {/* Search Input */}
-          <form onSubmit={handleSearch} className="hidden md:block">
-            <Input
-              type="text"
-              name="search"
-              placeholder="Search products..."
-              className="w-64"
-            />
-          </form>
+          {/* Search */}
+          <div className="hidden md:block w-64">
+            <SearchBar />
+          </div>
+          <div className="md:hidden">
+            <SearchBar />
+          </div>
 
           {/* Cart */}
           <div className="relative">
@@ -235,6 +224,8 @@ export function HeaderClient({
           </div>
         </div>
       </div>
+
+      {/* Cart Drawer */}
       <CartClientDrawer open={open} closeDrawer={closeDrawer} />
     </header>
   );
