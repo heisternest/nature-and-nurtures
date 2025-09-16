@@ -60,7 +60,6 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
       direction={isMobile ? "bottom" : "right"}
       open={open}
       onOpenChange={(o) => !o && closeDrawer()}
-      modal
     >
       <DrawerContent className="">
         <DrawerHeader className="border-b flex items-center justify-between px-4 sm:px-8 py-4">
@@ -76,10 +75,15 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
           {items.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col sm:flex-row items-center sm:items-start py-4 border-b last:border-b-0"
+              className="flex flex-row sm:flex-row items-center sm:items-center gap-2 py-4 border-b last:border-b-0"
             >
               <img
-                src={imageThumbnailUrl(item.image, 100, 100)}
+                // src={imageThumbnailUrl(item.image, 100, 100)}
+                src={
+                  item.image
+                    ? imageThumbnailUrl(item.image, 100, 100)
+                    : "/placeholder.png"
+                }
                 alt={item.name}
                 className="w-24 h-24 object-cover rounded-lg bg-[#f8f5f2] sm:mr-6 mb-4 sm:mb-0"
               />
