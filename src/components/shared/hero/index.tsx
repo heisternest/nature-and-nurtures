@@ -12,37 +12,46 @@ export async function HeroSection() {
     .eq("pageType", "HERO")
     .single();
 
-  console.log("Hero Data:", data);
-
   return (
     <section
-      className="w-full "
+      className="w-full"
       style={{
         backgroundColor: data.backgroundColor,
       }}
     >
-      <div className=" mx-auto grid md:grid-cols-2 items-center">
+      <div className="mx-auto grid grid-cols-1 md:grid-cols-2 items-center">
         {/* Left Content */}
-        <div className="p-10 space-y-6 px-12 md:px-24 lg:px-32">
-          <div className="flex items-center space-x-2">
-            <span className="text-6xl">{data.icon}</span>
+        <div className="p-6 sm:p-10 md:px-16 lg:px-24 space-y-6 text-center md:text-left">
+          {/* Icon */}
+          <div className="flex justify-center md:justify-start items-center space-x-2">
+            <span className="text-4xl sm:text-5xl md:text-6xl">
+              {data.icon}
+            </span>
           </div>
+
+          {/* Title */}
           <div
-            className="prose prose-lg max-w-none text-4xl md:text-6xl font-light whitespace-pre-line"
+            className="prose prose-lg max-w-none 
+                       text-2xl sm:text-3xl md:text-5xl lg:text-6xl 
+                       font-light whitespace-pre-line"
             dangerouslySetInnerHTML={{ __html: data.title }}
           />
+
+          {/* Description */}
           <div
-            className="prose prose-sm  text-sm max-w-md"
+            className="prose prose-sm text-sm sm:text-base max-w-md mx-auto md:mx-0"
             dangerouslySetInnerHTML={{ __html: data.description }}
           />
+
+          {/* CTA Button */}
           <Link
-            href={"/products"}
-            className="inline-flex items-center bg-white rounded-full px-6 py-3 text-xs font-semibold uppercase tracking-wider
+            href="/products"
+            className="inline-flex items-center bg-white rounded-full px-5 sm:px-6 py-3 text-xs sm:text-sm font-semibold uppercase tracking-wider
                        transform transition-transform duration-200 hover:scale-105 hover:bg-gray-100"
           >
             {data.buttonText}
             <span
-              className="ml-2 inline-flex justify-center items-center w-6 h-6 bg-black text-white rounded-full
+              className="ml-2 inline-flex justify-center items-center w-5 h-5 sm:w-6 sm:h-6 bg-black text-white rounded-full
                              transform transition-transform duration-200 group-hover:translate-x-1"
             >
               →
@@ -50,25 +59,25 @@ export async function HeroSection() {
           </Link>
         </div>
 
-        {data.videoUrl ? (
-          <div className="p-10">
-            <div className="aspect-w-16 aspect-h-9">
+        {/* Right Content (Video or Image) */}
+        <div className="p-6 sm:p-10 flex justify-center">
+          {data.videoUrl ? (
+            <div className="w-full max-w-lg aspect-video">
               <iframe
-                width="560"
-                height="315"
+                className="w-full h-full rounded-lg"
                 src={data.videoUrl}
-                title="YouTube video player"
+                title="Video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              ></iframe>
+              />
             </div>
-          </div>
-        ) : (
-          <img
-            src={data.imageUrl}
-            alt="Hero"
-            className="w-full object-cover md:object-contain"
-          />
-        )}
+          ) : (
+            <img
+              src={data.imageUrl}
+              alt="Hero"
+              className="w-full max-w-lg object-cover md:object-contain rounded-lg"
+            />
+          )}
+        </div>
       </div>
     </section>
   );

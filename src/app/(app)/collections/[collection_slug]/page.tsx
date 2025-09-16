@@ -2,6 +2,7 @@ import { ProductCard } from "@/components/product-card";
 import { Footer } from "@/components/shared/footer";
 import Header from "@/components/shared/header";
 import prisma from "@/lib/db";
+import { Star } from "lucide-react";
 import type { Metadata } from "next";
 export const revalidate = 1;
 
@@ -90,16 +91,20 @@ export default async function CollectionPage({
     <>
       <Header />
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-center mb-4">
+        <header className="text-center mb-12">
+          <div className="flex justify-center mb-4">
+            <Star size={16} className="text-gray-800" fill="currentColor" />
+          </div>
+          <p className="text-sm uppercase tracking-widest text-gray-500">
+            Collection
+          </p>
+          <h1 className="text-4xl md:text-6xl font-serif text-gray-900 my-2">
             {collection.name}
           </h1>
-          {collection.description && (
-            <p className="text-center text-gray-600">
-              {collection.description}
-            </p>
-          )}
-        </div>
+          <p className="max-w-md mx-auto text-gray-600 text-sm leading-relaxed">
+            {collection.description}
+          </p>
+        </header>
         {collection.products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {collection.products.map((product) => (

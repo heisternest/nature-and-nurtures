@@ -54,28 +54,31 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
 
   return (
     <Sheet open={open} onOpenChange={(o) => !o && closeDrawer()}>
-      <SheetContent side="right" className="p-0 w-full min-w-xl">
-        <SheetHeader className="border-b flex items-center justify-between px-8 py-4">
-          <SheetTitle>Shopping Cart</SheetTitle>
+      <SheetContent
+        side="right"
+        className="p-0 w-full sm:min-w-[400px] md:min-w-xl"
+      >
+        <SheetHeader className="border-b flex items-center justify-between px-4 sm:px-8 py-4">
+          <SheetTitle className="text-lg sm:text-xl">Shopping Cart</SheetTitle>
           <span className="text-sm text-gray-500">
             {totalItems} {totalItems === 1 ? "item" : "items"}
           </span>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto px-8 py-4">
+        <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4">
           {items.map((item) => (
             <div
               key={item.id}
-              className="flex items-center py-4 border-b last:border-b-0"
+              className="flex flex-col sm:flex-row items-center sm:items-start py-4 border-b last:border-b-0"
             >
               <img
                 src={imageThumbnailUrl(item.image, 100, 100)}
                 alt={item.name}
-                className="w-24 h-24 object-cover rounded-lg bg-[#f8f5f2] mr-6"
+                className="w-24 h-24 object-cover rounded-lg bg-[#f8f5f2] sm:mr-6 mb-4 sm:mb-0"
               />
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <div>
+              <div className="flex-1 w-full">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex-1">
                     <div className="font-semibold text-base tracking-wide">
                       {item.name}
                     </div>
@@ -86,15 +89,16 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
                       ${item.price.toFixed(2)}
                     </div>
                   </div>
-                  <div className="font-semibold text-base">
+                  <div className="font-semibold text-base mt-2 sm:mt-0">
                     ${(item.price * item.quantity).toFixed(2)}
                   </div>
                 </div>
-                <div className="flex items-center mt-4">
+
+                <div className="flex items-center mt-4 flex-wrap gap-2">
                   {/* Decrement Button */}
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="border px-2 py-1 rounded-full text-gray-500 hover:text-black"
+                    className="border px-2 py-1 rounded-full text-gray-500 hover:text-black disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={item.quantity <= 1}
                   >
                     −
@@ -115,7 +119,7 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
 
                   {/* Remove Item Button */}
                   <button
-                    className="ml-4 text-gray-400 hover:text-red-500"
+                    className="ml-2 text-gray-400 hover:text-red-500"
                     onClick={() => removeFromCart(item.id)}
                   >
                     <Trash2 size={20} />
@@ -126,25 +130,31 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
           ))}
         </div>
 
-        <SheetFooter className="border-t px-8 py-4">
-          <div className="flex items-center justify-between mb-2">
+        <SheetFooter className="border-t px-4 sm:px-8 py-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-2">
             <span className="font-semibold text-base tracking-wide">
               {totalItems} {totalItems === 1 ? "item" : "items"}
             </span>
-            <span className="font-semibold text-lg">
+            <span className="font-semibold text-lg mt-2 sm:mt-0">
               ${subtotal.toFixed(2)}
             </span>
           </div>
-          <div className="text-gray-500 text-sm mb-6">
+          <div className="text-gray-500 text-sm mb-6 text-center sm:text-left">
             SHIPPING AND TAXES CALCULATED AT CHECKOUT.
           </div>
-          <div className="flex space-x-4 mb-4">
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
             <button
               className="flex-1 bg-black text-white rounded-full py-3 font-semibold hover:bg-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleCheckout}
               disabled={isLoading || items.length === 0}
             >
               {isLoading ? "PROCESSING..." : "CHECK OUT"}
+            </button>
+            <button
+              className="flex-1 border border-gray-300 rounded-full py-3 font-semibold hover:bg-gray-100 transition"
+              onClick={closeDrawer}
+            >
+              CONTINUE SHOPPING
             </button>
           </div>
         </SheetFooter>
