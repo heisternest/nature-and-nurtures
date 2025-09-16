@@ -109,15 +109,10 @@ export async function Footer() {
               const IconComponent = socialIconMap[link.icon];
               if (!IconComponent) return null;
 
-              // Handle tel/mailto links
-              let href = link.url;
-              if (link.icon === "phone") href = `tel:${link.value}`;
-              if (link.icon === "email") href = `mailto:${link.value}`;
-
               return (
                 <Link
                   key={index}
-                  href={href}
+                  href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-600 hover:text-gray-900 transition-colors"
