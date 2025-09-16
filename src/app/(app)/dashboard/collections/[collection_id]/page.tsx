@@ -16,7 +16,13 @@ export default async function CategoryDisplayPage({
 }) {
   const collection = await prisma.productCollection.findUnique({
     where: { id: (await params).collection_id },
-    include: { products: true },
+    include: {
+      products: {
+        include: {
+          productImages: true,
+        },
+      },
+    },
   });
 
   if (!collection) {

@@ -165,7 +165,11 @@ export function CollectionViewClient({
 
                   <div className="relative w-full h-48">
                     <img
-                      src={product.images?.[0] || "/placeholder.png"}
+                      src={
+                        product.productImages.length > 0
+                          ? product.productImages[0].url
+                          : "/placeholder.png"
+                      }
                       alt={product.name || "Product image"}
                       className="object-cover w-full h-full rounded-t-lg"
                     />
