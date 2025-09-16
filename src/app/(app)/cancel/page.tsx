@@ -2,6 +2,11 @@ import { Footer } from "@/components/shared/footer";
 import Header from "@/components/shared/header";
 import Link from "next/link";
 
+export const metadata = {
+  title: "Payment Canceled - Nature Nurtures",
+  description: "Your payment was not completed. Please try again.",
+};
+
 export default function CancelPage() {
   return (
     <>
