@@ -54,12 +54,13 @@ export async function Footer() {
   const footerData: FooterData = data;
 
   return (
-    <footer className="bg-white rounded-b-2xl pt-12 pb-4 px-8 border-t mt-20">
+    <footer className="bg-white rounded-b-2xl pt-12 pb-4 px-6 sm:px-8 border-t mt-20">
       <div className="max-w-7xl mx-auto flex flex-col">
-        <div className="flex flex-wrap justify-between items-start mb-8">
+        {/* Top Section */}
+        <div className="flex flex-col md:flex-row md:justify-between mb-8 gap-8">
           {/* Logo */}
-          <div className="flex-1 min-w-[180px] flex flex-col justify-between h-full">
-            <div className="mb-8">
+          <div className="flex-1 min-w-[180px] flex flex-col">
+            <div className="mb-4 md:mb-8">
               <img
                 src={footerData.logoUrl || "/logo.png"}
                 alt="Logo"
@@ -69,7 +70,7 @@ export async function Footer() {
           </div>
 
           {/* Columns */}
-          <div className="flex-[3] grid grid-cols-4 gap-12 min-w-[600px] justify-end">
+          <div className="flex-[3] grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12 w-full">
             <div>
               <div className="font-semibold mb-4">COMPANY</div>
               <ul className="space-y-2 text-sm text-gray-700">
@@ -94,30 +95,35 @@ export async function Footer() {
 
         <hr className="my-4 border-gray-200" />
 
-        <div className="flex flex-wrap items-center justify-between">
-          <div className="text-xs text-gray-500">
+        {/* Bottom Section */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* Copyright */}
+          <div className="text-xs text-gray-500 text-center sm:text-left">
             {footerData.copyrightText ||
               "© 2025 NATURE AND NURTURES COMPANY, INC. ALL RIGHTS RESERVED."}
           </div>
 
+          {/* Social Links */}
           <div className="flex items-center space-x-6">
             {footerData.socialLinks?.map((link: SocialLink, index: number) => {
               const IconComponent = socialIconMap[link.icon];
               if (!IconComponent) return null;
 
+              // Handle tel/mailto links
+              let href = link.url;
+              if (link.icon === "phone") href = `tel:${link.value}`;
+              if (link.icon === "email") href = `mailto:${link.value}`;
+
               return (
-                <div key={index}>
-                  <Link
-                    key={index}
-                    href={link.url}
-                    // if link.value is phone or email then use tel: or mailto:
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-gray-900 transition-colors"
-                  >
-                    <IconComponent className="w-5 h-5" />
-                  </Link>
-                </div>
+                <Link
+                  key={index}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  <IconComponent className="w-5 h-5" />
+                </Link>
               );
             })}
           </div>

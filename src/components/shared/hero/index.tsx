@@ -62,9 +62,9 @@ export async function HeroSection() {
         {/* Right Content (Video or Image) */}
         <div className="p-6 sm:p-10 flex justify-center">
           {data.videoUrl ? (
-            <div className="w-full max-w-lg aspect-video">
+            <div className="w-full max-w-lg md:aspect-video">
               <iframe
-                className="w-full h-full rounded-lg"
+                className="w-full h-auto md:h-full rounded-lg"
                 src={data.videoUrl}
                 title="Video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

@@ -1,13 +1,14 @@
 "use client";
 
+import { Input } from "@/components/ui/input"; // shadcn Input
 import { useCartStore } from "@/lib/cart-store";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CartClientDrawer } from "../cart/client";
-import { SearchDrawer } from "../search-drawer";
 
 export function HeaderClient({
   data,
@@ -19,34 +20,29 @@ export function HeaderClient({
   featuredProducts: any;
 }) {
   const [open, setOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState<null | "explore" | "collections">(
     null
   );
 
   const { items } = useCartStore();
+  const router = useRouter();
 
   const categories = Array.isArray(data) ? data : [];
-
-  // Flatten all products
-  const allProducts = categories.flatMap((c: any) =>
-    (c.products || []).map((p: any) => ({
-      ...p,
-      categoryId: c.id,
-      categoryName: c.name,
-      categoryImage: c.imageUrl,
-    }))
-  );
-
-  // Featured products: top 4 by discount
 
   // Limit categories displayed in mega menu (e.g., top 4)
   const megaMenuCategories = categories.slice(0, 4);
 
   const showDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
-  const showSearchDrawer = () => setSearchOpen(true);
-  const closeSearchDrawer = () => setSearchOpen(false);
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const searchTerm = formData.get("search") as string;
+    if (searchTerm.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchTerm)}`);
+    }
+  };
 
   return (
     <header className="w-full border-b bg-white">
@@ -170,6 +166,7 @@ export function HeaderClient({
               </AnimatePresence>
             </div>
 
+            {/* Collections Dropdown */}
             <div
               className="relative group"
               onMouseEnter={() => setMenuOpen("collections")}
@@ -212,12 +209,19 @@ export function HeaderClient({
           </nav>
         </div>
 
-        {/* Icons */}
+        {/* Search + Cart */}
         <div className="flex items-center space-x-4">
-          <Search
-            className="w-5 h-5 cursor-pointer"
-            onClick={showSearchDrawer}
-          />
+          {/* Search Input */}
+          <form onSubmit={handleSearch} className="hidden md:block">
+            <Input
+              type="text"
+              name="search"
+              placeholder="Search products..."
+              className="w-64"
+            />
+          </form>
+
+          {/* Cart */}
           <div className="relative">
             <ShoppingBag
               className="w-5 h-5 cursor-pointer"
@@ -225,16 +229,12 @@ export function HeaderClient({
             />
             {items.length > 0 && (
               <span className="absolute -top-2 -right-2 text-xs bg-black text-white rounded-full px-1 min-w-[18px] h-[18px] flex items-center justify-center">
-                {
-                  // total quantity instead of items
-                  items.reduce((total, item) => total + item.quantity, 0)
-                }
+                {items.reduce((total, item) => total + item.quantity, 0)}
               </span>
             )}
           </div>
         </div>
       </div>
-      <SearchDrawer open={searchOpen} closeDrawer={closeSearchDrawer} />
       <CartClientDrawer open={open} closeDrawer={closeDrawer} />
     </header>
   );

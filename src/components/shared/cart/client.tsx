@@ -1,12 +1,13 @@
 "use client";
 
 import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+  Drawer,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useCartStore } from "@/lib/cart-store";
 import { imageThumbnailUrl } from "@/utils/image-otf";
 import { Trash2 } from "lucide-react";
@@ -52,18 +53,24 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
     }
   };
 
+  const isMobile = useIsMobile();
+
   return (
-    <Sheet open={open} onOpenChange={(o) => !o && closeDrawer()}>
-      <SheetContent
-        side="right"
-        className="p-0 w-full sm:min-w-[400px] md:min-w-xl"
-      >
-        <SheetHeader className="border-b flex items-center justify-between px-4 sm:px-8 py-4">
-          <SheetTitle className="text-lg sm:text-xl">Shopping Cart</SheetTitle>
+    <Drawer
+      direction={isMobile ? "bottom" : "right"}
+      open={open}
+      onOpenChange={(o) => !o && closeDrawer()}
+      modal
+    >
+      <DrawerContent className="">
+        <DrawerHeader className="border-b flex items-center justify-between px-4 sm:px-8 py-4">
+          <DrawerTitle className="text-lg sm:text-xl">
+            Shopping Cart
+          </DrawerTitle>
           <span className="text-sm text-gray-500">
             {totalItems} {totalItems === 1 ? "item" : "items"}
           </span>
-        </SheetHeader>
+        </DrawerHeader>
 
         <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4">
           {items.map((item) => (
@@ -130,7 +137,7 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
           ))}
         </div>
 
-        <SheetFooter className="border-t px-4 sm:px-8 py-4">
+        <DrawerFooter className="border-t px-4 sm:px-8 py-4">
           <div className="flex flex-col sm:flex-row items-center justify-between mb-2">
             <span className="font-semibold text-base tracking-wide">
               {totalItems} {totalItems === 1 ? "item" : "items"}
@@ -157,8 +164,8 @@ export function CartClientDrawer({ open, closeDrawer }: CartDrawerProps) {
               CONTINUE SHOPPING
             </button>
           </div>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 }
