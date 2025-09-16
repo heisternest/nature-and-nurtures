@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
       },
 
       success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}/cart`,
+      cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}/cancel`,
 
       // Automatic tax calculation (optional)
       automatic_tax: {
