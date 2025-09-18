@@ -1,7 +1,8 @@
 import prisma from "@/lib/db";
 import { saveProduct } from "../../action";
 import { ProductForm } from "../../form";
-
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 export default async function CreateProductPage({
   params,
 }: {
