@@ -298,9 +298,11 @@ export function HeroFormBuilder({
       </aside>
 
       {/* Live Preview */}
-      <main className="w-full lg:w-3/5 xl:w-2/3 flex-grow">
+      <main className="w-full lg:w-3/5 xl:w-2/3 flex-grow bg-gray-50 flex items-center justify-center overflow-auto">
         <div className="h-full w-full flex items-center justify-center">
-          <HeroDisplay data={heroData} />
+          <div className="transform scale-75 origin-top w-[133%]">
+            <HeroDisplay data={heroData} />
+          </div>
         </div>
       </main>
     </div>
