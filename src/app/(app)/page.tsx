@@ -3,7 +3,7 @@ import { FAQSection } from "@/components/shared/faq";
 import { Footer } from "@/components/shared/footer";
 import Header from "@/components/shared/header";
 import { HeroSection } from "@/components/shared/hero";
-import { SkincareSection } from "@/components/shared/info/skincare";
+import { InfoSection } from "@/components/shared/info";
 import { Newsletter } from "@/components/shared/newsletter";
 import { ProductShowcase } from "@/components/shared/product/product-showcase";
 
@@ -32,19 +32,10 @@ export const metadata = {
 export default function Home() {
   return (
     <div>
-      {/* <Header />
-      
-     
-      
-      
-     
-       */}
-      {/**/}
-
       <Header />
       <HeroSection />
       <CategoryShowcase />
-      <SkincareSection />
+      <InfoSection />
       <ProductShowcase />
       <FAQSection />
       <Newsletter />
