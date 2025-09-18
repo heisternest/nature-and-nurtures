@@ -31,6 +31,15 @@ export default async function OrderDetailPage({
     throw new Error("Order not found");
   }
 
+  await prisma.order.update({
+    where: {
+      id,
+    },
+    data: {
+      isViewed: true,
+    },
+  });
+
   return (
     <div>
       <OrderDetailsClient data={orderDetail} />

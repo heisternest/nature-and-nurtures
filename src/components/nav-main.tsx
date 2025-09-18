@@ -1,6 +1,6 @@
 "use client";
 
-import { IconCirclePlusFilled, type Icon } from "@tabler/icons-react";
+import { IconCirclePlusFilled } from "@tabler/icons-react";
 
 import {
   SidebarGroup,
@@ -9,8 +9,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import {
+  IconCategory,
+  IconChartBar,
+  IconDashboard,
+  IconListDetails,
+  IconTrademark,
+} from "@tabler/icons-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,18 +26,35 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string;
-    url: string;
-    icon?: Icon;
-  }[];
-}) {
-  const router = useRouter();
-  const pathname = usePathname();
+const items = [
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: IconDashboard,
+  },
+  {
+    title: "Products",
+    url: "/dashboard/products",
+    icon: IconListDetails,
+  },
+  {
+    title: "Product Collections",
+    url: "/dashboard/collections",
+    icon: IconTrademark,
+  },
+  {
+    title: "Orders",
+    url: "/dashboard/orders",
+    icon: IconChartBar,
+  },
+  {
+    title: "Categories",
+    url: "/dashboard/categories",
+    icon: IconCategory,
+  },
+];
 
+export function NavMain({ orderCount = 0 }: { orderCount?: number }) {
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -48,20 +71,20 @@ export function NavMain({
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuLabel>Quick Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => router.push("/dashboard/products/create")}
-                >
-                  Create Product
+                <DropdownMenuItem>
+                  <Link href="/dashboard/products/new" className="w-full">
+                    Create Product
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => router.push("/dashboard/categories/create")}
-                >
-                  Create Category
+                <DropdownMenuItem>
+                  <Link href="/dashboard/categories/new" className="w-full">
+                    Create Category
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => router.push("/dashboard/blogs/create")}
-                >
-                  Create Blog
+                <DropdownMenuItem>
+                  <Link href="/dashboard/blogs/new" className="w-full">
+                    Create Blog
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -70,16 +93,21 @@ export function NavMain({
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton
-                tooltip={item.title}
-                isActive={pathname === item.url}
-              >
+              <SidebarMenuButton tooltip={item.title}>
                 <Link
                   href={item.url}
-                  className="flex items-center gap-2 p-2 text-sm"
+                  className="flex items-center justify-between gap-2 p-2 text-sm w-full"
                 >
-                  {item.icon && <item.icon className="w-4 h-4" />}
-                  <span>{item.title}</span>
+                  <div className="flex items-center gap-2">
+                    {item.icon && <item.icon className="w-4 h-4" />}
+                    <span>{item.title}</span>
+                  </div>
+
+                  {item.title === "Orders" && orderCount > 0 && (
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+                      {orderCount > 99 ? "99+" : orderCount}
+                    </span>
+                  )}
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

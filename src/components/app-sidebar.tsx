@@ -17,7 +17,6 @@ import {
 import * as React from "react";
 
 import { NavDocuments } from "@/components/nav-documents";
-import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -28,6 +27,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { NavMain } from "./nav-main";
 
 const data = {
   user: {
@@ -104,7 +104,12 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+// export function AppSidebar({ ...props, orderCount }: React.ComponentProps<typeof Sidebar>) {
+// add orderCount prop to the above line
+export function AppSidebar({
+  orderCount,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & { orderCount?: number }) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -123,7 +128,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain orderCount={orderCount} />
 
         <NavDocuments title="Documents" items={data.documents} />
         <NavDocuments title="Page Builder" items={data.navPageBuilder} />

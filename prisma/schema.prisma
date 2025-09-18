@@ -243,6 +243,7 @@ model Order {
   amountSubtotal        Int
   amountTotal           Int
   currency              String
+  isViewed              Boolean     @default(false)
   customerAddressLine1  String?
   customerAddressLine2  String?
   customerCity          String?
