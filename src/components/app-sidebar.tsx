@@ -8,6 +8,7 @@ import {
   IconEyeClosed,
   IconFileAi,
   IconHelp,
+  IconInfoCircle,
   IconListDetails,
   IconReport,
   IconSettings,
@@ -67,6 +68,11 @@ const data = {
       name: "Hero Section",
       url: "/dashboard/page-builder/hero",
       icon: IconSettings,
+    },
+    {
+      name: "Info Section",
+      url: "/dashboard/page-builder/info",
+      icon: IconInfoCircle,
     },
     {
       name: "FAQ",

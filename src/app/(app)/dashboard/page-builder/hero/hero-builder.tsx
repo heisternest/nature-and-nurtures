@@ -1,6 +1,6 @@
 "use client";
 
-import { cn, getEmbedUrl } from "@/lib/utils";
+import { getEmbedUrl } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit } from "lucide-react";
 import { useState } from "react";
@@ -25,11 +25,11 @@ import { herobuilderSchema, HeroData } from "./schema";
 function HeroDisplay({ data }: { data: HeroData }) {
   return (
     <section
-      className={cn("w-full")}
+      className="py-16 sm:py-24"
       style={{ backgroundColor: data.backgroundColor }}
     >
       <div className="mx-auto grid md:grid-cols-2 items-center">
-        <div className="p-10 space-y-6 px-12 md:px-24 lg:px-32">
+        <div className="px-10 space-y-6 ">
           <div
             className="prose prose-lg max-w-none text-4xl md:text-6xl font-light whitespace-pre-line"
             dangerouslySetInnerHTML={{ __html: data.title }}
@@ -130,11 +130,20 @@ export function HeroFormBuilder({
       {/* Editor Panel */}
       <aside className="w-full lg:w-2/5 xl:w-1/3 h-screen bg-white border-r flex flex-col">
         {/* Header */}
-        <div className="flex items-center px-8 py-4 border-b border-gray-200 flex-shrink-0">
-          <Edit className="text-gray-600" size={24} />
-          <h2 className="text-xl font-bold text-gray-800 ml-3">
-            Hero Section Editor
-          </h2>
+        <div className="flex items-center justify-between px-8 py-4 border-b border-gray-200">
+          <div className="flex items-center">
+            <Edit className="text-gray-600" size={24} />
+            <h2 className="text-xl font-bold ml-3">Info Section Editor</h2>
+          </div>
+          <Button
+            type="submit"
+            size="sm"
+            className="bg-black text-white hover:bg-gray-800"
+            onClick={form.handleSubmit(onSubmit)}
+            disabled={loading}
+          >
+            {loading ? "Saving..." : "Save"}
+          </Button>
         </div>
 
         {/* Scrollable Form */}
@@ -283,25 +292,13 @@ export function HeroFormBuilder({
             </form>
           </Form>
         </div>
-
-        {/* Fixed Save Button */}
-        <div className="px-8 py-4 border-t border-gray-200 flex-shrink-0">
-          <Button
-            type="submit"
-            className="w-full bg-black text-white hover:bg-gray-800"
-            onClick={form.handleSubmit(onSubmit)}
-            disabled={loading}
-          >
-            {loading ? "Saving..." : "Save"}
-          </Button>
-        </div>
       </aside>
 
       {/* Live Preview */}
       <main className="w-full lg:w-3/5 xl:w-2/3 flex-grow bg-gray-50 flex items-center justify-center overflow-auto">
         <div className="h-full w-full flex items-center justify-center">
-          <div className="transform scale-75 origin-top w-[133%]">
-            <HeroDisplay data={heroData} />
+          <div className="scale-75 origin-top">
+            <HeroDisplay data={heroData as any} />
           </div>
         </div>
       </main>

@@ -25,6 +25,7 @@ import { InputTags } from "@/components/ui/input-tags";
 import { MultiSelect } from "@/components/ui/mult-select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { useAlertDialog } from "@/hooks/alert-dialog/use-alert-dialog";
 import { createClient } from "@/utils/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -36,6 +37,7 @@ import {
   Send,
   Settings,
   Tag,
+  Trash,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -63,24 +65,19 @@ export function BlogForm() {
   });
 
   const [showPreview, setShowPreview] = React.useState(false);
-  const [newCategory, setNewCategory] = React.useState("");
-  const [newTag, setNewTag] = React.useState("");
   const [loading, setLoading] = React.useState<{
     draft: boolean;
     publish: boolean;
   }>({ draft: false, publish: false });
 
   const availableCategories = [
-    "Skincare",
-    "Makeup",
-    "Haircare",
-    "Fragrances",
-    "Bath & Body",
-    "Men’s Grooming",
-    "Beauty Tools",
-    "Natural & Organic",
-    "Wellness",
-    "Gift Sets",
+    "Cold-Pressed Oils",
+    "Recipes & Cooking Ideas",
+    "Health & Nutrition",
+    "Skin & Hair Care",
+    "Behind the Brand",
+    "Sustainability & Lifestyle",
+    "Product Update & News",
   ];
 
   const { id } = useParams();
@@ -161,6 +158,8 @@ export function BlogForm() {
     fetchBlog();
   }, [form, id]);
 
+  const { openDialog } = useAlertDialog();
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-0">
@@ -168,14 +167,24 @@ export function BlogForm() {
           {/* Header */}
           <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10">
             <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-brand-primary">
-                  {/* Create New Post */}
-                  {id ? "Edit Post" : "Create New Post"}
-                </h1>
-                <p className="text-sm text-gray-500 mt-1">
-                  Write and publish your blog post
-                </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="link"
+                  type="button"
+                  className="text-gray-600 hover:text-gray-900 cursor-pointer"
+                  onClick={() => router.push("/dashboard/blogs")}
+                >
+                  ← Back
+                </Button>
+                <div>
+                  <h1 className="text-2xl font-bold text-brand-primary">
+                    {/* Create New Post */}
+                    {id ? "Edit Post" : "Create New Post"}
+                  </h1>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Write and publish your blog post
+                  </p>
+                </div>
               </div>
               <div className="flex items-center space-x-3">
                 <Button
@@ -187,6 +196,7 @@ export function BlogForm() {
                   <Eye className="w-4 h-4 mr-2" />
                   Preview
                 </Button>
+
                 <Button
                   variant="outline"
                   onClick={() => {
@@ -251,6 +261,40 @@ export function BlogForm() {
                   )}
                   Publish
                 </Button>
+                {id && (
+                  <Button
+                    variant="destructive"
+                    onClick={() =>
+                      openDialog({
+                        title: `Delete "${form.getValues("title")}"`,
+                        description:
+                          "Deleting this blog post is irreversible. ",
+                        onConfirm: async () => {
+                          const deleted = await supabase
+                            .from("Blog")
+                            .delete()
+                            .eq("id", id)
+                            .select()
+                            .single();
+                          if (deleted.data && !deleted.error) {
+                            toast.success("Blog post deleted");
+                            router.push("/dashboard/blogs");
+                          } else {
+                            toast.error(
+                              `Error deleting post: ${deleted.error?.message}`
+                            );
+                          }
+                        },
+                      })
+                    }
+                    type="button"
+                    className="border-gray-300"
+                    disabled={loading.draft}
+                  >
+                    <Trash className="w-4 h-4 mr-2" />
+                    Delete Post
+                  </Button>
+                )}
               </div>
             </div>
           </div>
