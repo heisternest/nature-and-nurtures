@@ -76,15 +76,15 @@ export type FilterOperator =
   | "lte"
   | "ilike"
   | "in"
-  | "is"; // is: true/false null checks
+  | "is"; // is: true/false/null
 export type FilterType = "text" | "number" | "select" | "date" | "boolean";
 
 export type FilterDef = {
   id: string; // accessorKey/column name in DB
   title?: string;
   type: FilterType;
-  operator?: FilterOperator; // defaults based on type
-  options?: Array<{ label: string; value: string }>; // for select
+  operator?: FilterOperator;
+  options?: Array<{ label: string; value: string }>;
 };
 
 export type DynamicDataTableProps<TData, TValue> = {
@@ -97,6 +97,8 @@ export type DynamicDataTableProps<TData, TValue> = {
 
   initialPagination?: { pageIndex?: number; pageSize?: number };
   initialSorting?: SortingState;
+  defaultSortBy?: { id: string; desc?: boolean }; // 👈 NEW
+
   initialVisibility?: VisibilityState;
 
   searchableColumns?: string[];
@@ -105,11 +107,9 @@ export type DynamicDataTableProps<TData, TValue> = {
   staticFilters?: Record<string, any>;
 
   onRowClick?: (row: Row<TData>) => void;
-
   renderRowActions?: (row: Row<TData>) => ReactNode;
 
   emptyState?: ReactNode;
-
   className?: string;
 };
 
@@ -125,6 +125,7 @@ export default function DynamicDataTable<
     columns: userColumns,
     initialPagination,
     initialSorting,
+    defaultSortBy, // 👈 NEW
     initialVisibility,
     searchableColumns = [],
     filterDefs = [],
@@ -142,9 +143,14 @@ export default function DynamicDataTable<
   const [rowCount, setRowCount] = React.useState<number>(
     () => initialData?.length ?? 0
   );
+
   const [sorting, setSorting] = React.useState<SortingState>(
-    initialSorting ?? []
+    initialSorting ??
+      (defaultSortBy
+        ? [{ id: defaultSortBy.id, desc: defaultSortBy.desc ?? false }]
+        : [])
   );
+
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -198,7 +204,6 @@ export default function DynamicDataTable<
     setError(null);
 
     try {
-      // Build base query with count
       let query = supabase
         .from(tableName)
         .select(select ?? "*", { count: "exact" });
@@ -211,7 +216,7 @@ export default function DynamicDataTable<
         }
       }
 
-      // Global search across searchableColumns
+      // Global search
       if (debouncedGlobal && searchableColumns.length) {
         const term = debouncedGlobal.replace(/%/g, "");
         const ors = searchableColumns
@@ -220,7 +225,7 @@ export default function DynamicDataTable<
         query = query.or(ors);
       }
 
-      // Column filters → Supabase
+      // Column filters
       for (const f of columnFilters) {
         const def = filterDefs.find((d) => d.id === f.id);
         const op: FilterOperator = (def?.operator ??
@@ -238,7 +243,6 @@ export default function DynamicDataTable<
             query = query.ilike(col, `%${String(val)}%`);
             break;
           case "in":
-            // expect comma-separated or array
             {
               const arr = Array.isArray(val)
                 ? val
@@ -258,21 +262,19 @@ export default function DynamicDataTable<
             query = (query as any)[op](col, val);
             break;
           case "is":
-            // boolean or null
             query = query.is(col, val);
             break;
         }
       }
 
-      // Sorting (multiple)
+      // Sorting
       if (sorting.length) {
-        // Supabase applies last order precedence last → so apply in order
         for (const s of sorting) {
           query = query.order(s.id, { ascending: !s.desc as boolean });
         }
       }
 
-      // Pagination → range is inclusive
+      // Pagination
       const from = pageIndex * pageSize;
       const to = from + pageSize - 1;
       query = query.range(from, to);
@@ -304,12 +306,11 @@ export default function DynamicDataTable<
     pageSize,
   ]);
 
-  // Kick off fetches for server mode
   React.useEffect(() => {
     if (isServerMode) fetchServerData();
   }, [isServerMode, fetchServerData]);
 
-  // Client-side global filter (for in-memory mode)
+  // Client-side search
   const clientFilteredData = React.useMemo(() => {
     if (isServerMode) return data;
     if (!debouncedGlobal || !searchableColumns.length) return data;
@@ -346,22 +347,16 @@ export default function DynamicDataTable<
         typeof updater === "function" ? updater(old) : updater
       ),
     getCoreRowModel: getCoreRowModel(),
-
     manualSorting: isServerMode,
     manualFiltering: isServerMode,
     manualPagination: isServerMode,
-
     pageCount: isServerMode
       ? Math.ceil(rowCount / pageSize)
       : Math.ceil((clientFilteredData?.length ?? 0) / pageSize),
-    // TanStack requires a pagination updater. We'll manage page state ourselves.
   });
 
-  // When user changes page via our controls
   const totalRows = isServerMode ? rowCount : clientFilteredData.length;
   const totalPages = Math.max(1, Math.ceil(totalRows / pageSize));
-
-  // ——— Toolbar UI (moved to hoisted DataTableToolbar component below) ———
 
   return (
     <div className={cn("space-y-3", className)}>
@@ -457,9 +452,12 @@ export default function DynamicDataTable<
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="py-2">
-                      {cell.column.columnDef.cell instanceof Function
-                        ? // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-                          (cell.column.columnDef.cell as Function)({
+                      {typeof cell.column.columnDef.cell === "function"
+                        ? (
+                            cell.column.columnDef.cell as (
+                              props: any
+                            ) => React.ReactNode
+                          )({
                             ...cell.getContext(),
                             value: cell.getValue(),
                           })
@@ -563,7 +561,7 @@ export default function DynamicDataTable<
   );
 }
 
-// ——— Toolbar (hoisted) ———
+// ——— Toolbar ———
 function DataTableToolbar<TData>({
   table,
   searchableColumns,

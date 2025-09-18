@@ -96,6 +96,7 @@ export default function Page() {
                 table="orders"
                 select="*"
                 columns={columns}
+                defaultSortBy={{ id: "createdAt", desc: true }}
                 searchableColumns={["customerName", "customerEmail"]}
                 filterDefs={[
                   {
