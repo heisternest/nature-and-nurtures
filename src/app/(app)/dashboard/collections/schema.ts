@@ -3,7 +3,10 @@ import z from "zod";
 export const collectionSchema = z.object({
   id: z.string().optional(), // ✅ optional ID
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  slug: z.string().optional(),
+  slug: z
+    .string()
+    .optional()
+    .refine((val) => !val || !/\s/.test(val), "Slug must not contain spaces"),
   description: z
     .string()
     .max(500, { message: "Description must be under 500 characters." })

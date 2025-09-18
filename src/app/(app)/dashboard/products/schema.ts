@@ -3,7 +3,10 @@ import z from "zod";
 // Zod Schema
 export const productSchema = z.object({
   id: z.string().optional(),
-  slug: z.string().optional(),
+  slug: z
+    .string()
+    .optional()
+    .refine((val) => !val || !/\s/.test(val), "Slug must not contain spaces"),
   featured: z.boolean().optional(),
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Description is required"),
