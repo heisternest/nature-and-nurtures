@@ -1,7 +1,6 @@
 "use client";
 
 import { ProductCard } from "@/components/product-card";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 interface Product {
@@ -55,14 +54,6 @@ export function ProductsListClient({
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
-
-      {hasMore && (
-        <div className="text-center">
-          <Button onClick={loadMore} disabled={loading} className="px-8 py-2">
-            {loading ? "Loading..." : "Load More"}
-          </Button>
-        </div>
-      )}
     </div>
   );
 }
