@@ -38,16 +38,30 @@ const ArrowIcon = () => (
 
 const CategoryCard = ({ category }: any) => {
   return (
-    <Link href={`/category/${category.slug}`} className="p-2">
-      <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden group">
+    <Link href={`/category/${category.slug}`} className="p-2 group">
+      <div
+        className="relative aspect-square w-full rounded-xl overflow-hidden
+                   transition-transform duration-500 group-hover:scale-105"
+      >
         <img
-          src={imageThumbnailUrl(category.imageUrl, 400, 600)}
+          src={
+            category.imageUrl
+              ? imageThumbnailUrl(category.imageUrl, 400, 400)
+              : "/placeholder.png"
+          } // square thumbnail
           alt={category.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
+
+        {/* optional light gradient instead of black */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent transition-opacity duration-300 opacity-0 group-hover:opacity-100"></div>
+
         <div className="absolute bottom-4 left-4 right-4">
-          <button className="w-full  bg-white/90 backdrop-blur-sm text-black px-4 py-3 rounded-lg flex justify-between items-center text-sm font-medium transition-colors duration-300 hover:bg-white">
+          <button
+            className="w-full bg-white/90 backdrop-blur-sm text-black px-4 py-3 rounded-lg
+                       flex justify-between items-center text-sm font-medium
+                       transition-colors duration-300 hover:bg-white"
+          >
             <span>{category.name.toUpperCase()}</span>
             <ArrowIcon />
           </button>
@@ -56,6 +70,8 @@ const CategoryCard = ({ category }: any) => {
     </Link>
   );
 };
+
+export default CategoryCard;
 
 export function CategoryShowcaseClient({
   categories,

@@ -66,7 +66,7 @@ export function ProductPage({ product }: { product: any }) {
             <img
               src={
                 product.productImages?.[selectedImage]?.url ||
-                "/placeholder.svg"
+                "/placeholder.png"
               }
               alt={
                 product.productImages?.[selectedImage]?.alt ||

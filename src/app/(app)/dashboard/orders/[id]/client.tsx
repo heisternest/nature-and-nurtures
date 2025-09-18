@@ -152,7 +152,7 @@ export const OrderDetailsClient = ({ data }: { data: any }) => {
         {/* Header */}
         <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm border">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon">
+            <Button onClick={() => history.back()} variant="ghost" size="icon">
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <div>

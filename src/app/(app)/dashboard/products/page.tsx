@@ -18,7 +18,7 @@ const columns: ColumnDef<any>[] = [
           <img
             src={
               imageThumbnailUrl(row.original.product_images[0].url) ||
-              "/placeholder.svg"
+              "/placeholder.png"
             }
             alt={row.original.product_images[0]?.alt}
             className="w-10 h-10 rounded-md mr-3 shrink-0"
