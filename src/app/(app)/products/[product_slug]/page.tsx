@@ -12,7 +12,7 @@ async function getProduct(product_slug: string) {
     where: { slug: product_slug, active: true },
     include: {
       category: {
-        select: { id: true, name: true },
+        select: { id: true, name: true, slug: true },
       },
       sizes: true,
       colors: true,

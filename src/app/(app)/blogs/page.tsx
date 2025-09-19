@@ -4,6 +4,15 @@ import Header from "@/components/shared/header";
 import prisma from "@/lib/db";
 import { Metadata } from "next";
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+
 export const metadata: Metadata = {
   title: "Blogs | Nature & Nurtures",
   description: "Read our latest blogs about nature and nurturing",
@@ -34,14 +43,31 @@ export default async function BlogsPage() {
     <div>
       <Header />
       <div className="container mx-auto px-4 py-8">
+        {/* Breadcrumbs */}
+        <div className="mb-6">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Blogs</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+
+        {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">Our Blogs</h1>
-          <p className="text-muted-foreground text-lg">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3">Our Blogs</h1>
+          <p className="text-muted-foreground text-base sm:text-lg">
             Discover insights about nature and nurturing through our latest
             articles.
           </p>
         </div>
 
+        {/* Blogs Grid */}
         {blogs.length === 0 ? (
           <div className="text-center py-12">
             <h2 className="text-2xl font-semibold mb-4">No blogs available</h2>
@@ -50,7 +76,7 @@ export default async function BlogsPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {blogs.map((blog) => (
               <BlogCard
                 key={blog.id}

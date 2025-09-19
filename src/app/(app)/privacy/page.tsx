@@ -3,10 +3,21 @@ import Header from "@/components/shared/header";
 import prisma from "@/lib/db";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-export const revalidate = 0;
 
+// shadcn breadcrumb imports
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+
+export const revalidate = 0;
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
+
 type PrivacyData = {
   title: string;
   content: string;
@@ -32,8 +43,21 @@ export default async function PrivacyPage() {
     <div>
       <Header />
       <div className="min-h-screen bg-white">
-        <div className="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-          <div className="prose prose-lg max-w-none">
+        <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+          {/* Breadcrumb */}
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{data.title}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+
+          <div className="prose prose-lg max-w-none mt-6">
             <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
               {data.title}
             </h1>

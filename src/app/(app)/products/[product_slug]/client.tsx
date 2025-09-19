@@ -1,5 +1,13 @@
 "use client";
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { useCartStore } from "@/lib/cart-store";
 import { imageThumbnailUrl } from "@/utils/image-otf";
 import { useState } from "react";
@@ -37,6 +45,23 @@ export function ProductPage({ product }: { product: any }) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 sm:py-8">
+      <Breadcrumb className="mb-6 sm:mb-8">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href={`/category/${product.category.slug}`}>
+              {product.category.name}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{product.name}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Left Column - Images */}
         <div className="flex flex-col sm:flex-row gap-4 lg:sticky lg:top-8 lg:self-start">

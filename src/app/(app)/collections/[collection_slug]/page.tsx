@@ -4,6 +4,16 @@ import Header from "@/components/shared/header";
 import prisma from "@/lib/db";
 import { Star } from "lucide-react";
 import type { Metadata } from "next";
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+
 export const revalidate = 1;
 
 async function getCollection(collection_slug: string) {
@@ -73,12 +83,11 @@ export default async function CollectionPage({
     return (
       <>
         <Header />
-
         <div className="container mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-center">
             Collection Not Found
           </h1>
-          <p className="text-center mt-4">
+          <p className="text-center mt-4 text-sm sm:text-base">
             The collection you&apos;re looking for is not available.
           </p>
         </div>
@@ -90,29 +99,48 @@ export default async function CollectionPage({
   return (
     <>
       <Header />
-      <div className="container mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <div className="flex justify-center mb-4">
+      <div className="container mx-auto px-4 py-6 sm:py-10">
+        {/* Breadcrumb */}
+        <div className="mb-6 sm:mb-10">
+          <Breadcrumb>
+            <BreadcrumbList className="flex flex-wrap text-xs sm:text-sm">
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{collection.name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+
+        {/* Header Section */}
+        <header className="text-center mb-10 sm:mb-12">
+          <div className="flex justify-center mb-3 sm:mb-4">
             <Star size={16} className="text-gray-800" fill="currentColor" />
           </div>
-          <p className="text-sm uppercase tracking-widest text-gray-500">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-gray-500">
             Collection
           </p>
-          <h1 className="text-4xl md:text-6xl font-serif text-gray-900 my-2">
+          <h1 className="text-2xl sm:text-4xl md:text-6xl font-serif text-gray-900 my-2">
             {collection.name}
           </h1>
-          <p className="max-w-md mx-auto text-gray-600 text-sm leading-relaxed">
+          <p className="max-w-md mx-auto text-gray-600 text-xs sm:text-sm leading-relaxed">
             {collection.description}
           </p>
         </header>
+
+        {/* Product Grid */}
         {collection.products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {collection.products.map((product) => (
               <ProductCard key={product.id} product={product as any} />
             ))}
           </div>
         ) : (
-          <p className="text-center">
+          <p className="text-center text-sm sm:text-base">
             No products available in this collection.
           </p>
         )}
