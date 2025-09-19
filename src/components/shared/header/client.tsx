@@ -1,5 +1,13 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import { useCartStore } from "@/lib/cart-store";
 import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
@@ -23,6 +31,7 @@ export function HeaderClient({
   const [menuOpen, setMenuOpen] = useState<null | "explore" | "collections">(
     null
   );
+  const [mobileExploreOpen, setMobileExploreOpen] = useState(false);
 
   const { items } = useCartStore();
   const router = useRouter();
@@ -50,7 +59,7 @@ export function HeaderClient({
             />
           </Link>
 
-          {/* Navigation */}
+          {/* Navigation (Desktop) */}
           <nav className="hidden md:flex items-center space-x-8 text-sm font-medium relative">
             {/* EXPLORE MEGAMENU */}
             <div
@@ -181,7 +190,7 @@ export function HeaderClient({
                               href={`/collections/${encodeURIComponent(
                                 collection.slug
                               )}`}
-                              className="block px-4 py-2 text-gray-900  hover:text-white transition-colors hover:bg-gray-900 w-full"
+                              className="block px-4 py-2 text-gray-900 hover:text-white transition-colors hover:bg-gray-900 w-full"
                             >
                               {collection.name}
                             </Link>
@@ -202,6 +211,14 @@ export function HeaderClient({
 
         {/* Search + Cart */}
         <div className="flex items-center space-x-4">
+          {/* Mobile Explore Button */}
+          <button
+            onClick={() => setMobileExploreOpen(true)}
+            className="md:hidden text-sm font-medium hover:text-gray-700"
+          >
+            EXPLORE
+          </button>
+
           {/* Search */}
           <div className="hidden md:block w-64">
             <SearchBar />
@@ -227,6 +244,98 @@ export function HeaderClient({
 
       {/* Cart Drawer */}
       <CartClientDrawer open={open} closeDrawer={closeDrawer} />
+
+      {/* Mobile Explore Drawer (Shadcn) */}
+      <Drawer open={mobileExploreOpen} onOpenChange={setMobileExploreOpen}>
+        <DrawerContent className="h-[85vh]">
+          <DrawerHeader>
+            <DrawerTitle>Explore</DrawerTitle>
+            <DrawerClose asChild>
+              <Button variant="ghost" size="sm">
+                ✕
+              </Button>
+            </DrawerClose>
+          </DrawerHeader>
+
+          <div className="p-6 overflow-y-auto space-y-8">
+            {/* Featured Products */}
+            <div>
+              <h4 className="font-bold mb-3 text-xs tracking-widest text-[#7c2943]">
+                FEATURED PRODUCTS
+              </h4>
+              <ul className="space-y-2">
+                {featuredProducts.length ? (
+                  featuredProducts.map((item: any) => (
+                    <li key={item.id}>
+                      <Link
+                        href={`/products/${encodeURIComponent(item.slug)}`}
+                        className="text-gray-900 hover:text-[#7c2943] transition-colors"
+                        onClick={() => setMobileExploreOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-500">No featured products</li>
+                )}
+              </ul>
+            </div>
+
+            {/* Categories */}
+            {megaMenuCategories.map((category: any) => (
+              <div key={category.id}>
+                <Link
+                  href={`/category/${encodeURIComponent(category.slug)}`}
+                  className="font-serif text-lg text-gray-900 hover:text-[#7c2943] block mb-2"
+                  onClick={() => setMobileExploreOpen(false)}
+                >
+                  {category.name}
+                </Link>
+                <ul className="ml-3 pl-2 border-l border-[#7c2943] space-y-1">
+                  {(category.products || []).slice(0, 6).map((item: any) => (
+                    <li key={item.id}>
+                      <Link
+                        href={`/products/${encodeURIComponent(item.slug)}`}
+                        className="text-gray-700 hover:text-[#7c2943] transition-colors"
+                        onClick={() => setMobileExploreOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+
+            {/* Category Images */}
+            <div className="grid grid-cols-2 gap-4">
+              {categories
+                .filter((c: any) => c.imageUrl)
+                .slice(0, 3)
+                .map((c: any) => (
+                  <Link
+                    key={c.id}
+                    href={`/category/${encodeURIComponent(c.slug)}`}
+                    onClick={() => setMobileExploreOpen(false)}
+                  >
+                    <Image
+                      src={c.imageUrl}
+                      alt={c.name}
+                      width={160}
+                      height={128}
+                      className="w-full h-28 object-cover rounded"
+                      unoptimized
+                    />
+                    <span className="mt-1 block text-sm text-gray-700 text-center">
+                      {c.name}
+                    </span>
+                  </Link>
+                ))}
+            </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </header>
   );
 }
