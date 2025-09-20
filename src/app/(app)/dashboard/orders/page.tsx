@@ -26,7 +26,10 @@ const columns: ColumnDef<any>[] = [
   {
     accessorKey: "createdAt",
     header: "Date",
-    cell: (info) => new Date(info.getValue() as string).toLocaleDateString(),
+    cell: (info) =>
+      new Date(info.getValue() as string).toLocaleDateString("en-US", {
+        timeZone: "America/Los_Angeles",
+      }),
   },
 
   {

@@ -54,7 +54,7 @@ const items = [
   },
 ];
 
-export function NavMain({ orderCount = 0 }: { orderCount?: number }) {
+export function NavMain({ orderCount }: { orderCount?: React.ReactNode }) {
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -103,11 +103,7 @@ export function NavMain({ orderCount = 0 }: { orderCount?: number }) {
                     <span>{item.title}</span>
                   </div>
 
-                  {item.title === "Orders" && orderCount > 0 && (
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
-                      {orderCount > 99 ? "99+" : orderCount}
-                    </span>
-                  )}
+                  {item.title === "Orders" && <div>{orderCount}</div>}
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

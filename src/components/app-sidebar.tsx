@@ -110,7 +110,7 @@ const data = {
 export function AppSidebar({
   orderCount,
   ...props
-}: React.ComponentProps<typeof Sidebar> & { orderCount?: number }) {
+}: React.ComponentProps<typeof Sidebar> & { orderCount?: React.ReactNode }) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>

@@ -1,20 +1,22 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import prisma from "@/lib/db";
+import { OrderCount } from "./order-count";
 
 export const metadata = {
   title: "Dashboard",
   description: "Manage your store",
 };
 
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const orderCount = await prisma.order.count({ where: { isViewed: false } });
-
   return (
     <SidebarProvider
       style={
@@ -24,7 +26,7 @@ export default async function DashboardLayout({
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset" orderCount={orderCount} />
+      <AppSidebar variant="inset" orderCount={<OrderCount />} />
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">
