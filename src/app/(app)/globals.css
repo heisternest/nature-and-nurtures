@@ -14,6 +14,14 @@ body {
   font-family: "Urbanist", sans-serif;
 }
 
+.w-e-text-container [contenteditable="true"] {
+  text-transform: none !important;
+  font-variant-caps: normal !important;
+  font-feature-settings: normal !important;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", "Liberation Sans", sans-serif !important;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
