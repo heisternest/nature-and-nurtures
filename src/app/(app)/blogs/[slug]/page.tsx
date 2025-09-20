@@ -26,7 +26,6 @@ async function getBlogBySlug(slug: string) {
       where: {
         slug: slug,
         status: "published",
-        visibility: "public",
       },
     });
     return blog;

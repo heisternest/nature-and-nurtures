@@ -43,6 +43,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAlertDialog } from "@/hooks/alert-dialog/use-alert-dialog";
+import { useDebouncedValue } from "@/hooks/useDebounced";
+import { cn } from "@/lib/utils";
 import {
   CalendarIcon,
   ChevronDown,
@@ -51,20 +54,6 @@ import {
   Search,
   SlidersHorizontal,
 } from "lucide-react";
-
-// ——— Utilities ———
-function cn(...classes: Array<string | undefined | false>) {
-  return classes.filter(Boolean).join(" ");
-}
-
-function useDebouncedValue<T>(value: T, delay = 400) {
-  const [debounced, setDebounced] = React.useState(value);
-  React.useEffect(() => {
-    const id = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(id);
-  }, [value, delay]);
-  return debounced;
-}
 
 // ——— Filtering Types ———
 export type FilterOperator =
@@ -78,6 +67,14 @@ export type FilterOperator =
   | "in"
   | "is"; // is: true/false/null
 export type FilterType = "text" | "number" | "select" | "date" | "boolean";
+export type BulkActionDef<TData> = {
+  id: string;
+  label: string;
+  field?: string; // not needed for delete
+  type?: FilterType; // optional
+  options?: Array<{ label: string; value: string }>;
+  onUpdate?: (selectedRows: TData[], value: any) => Promise<void> | void;
+};
 
 export type FilterDef = {
   id: string; // accessorKey/column name in DB
@@ -93,6 +90,8 @@ export type DynamicDataTableProps<TData, TValue> = {
   select?: string;
 
   data?: TData[];
+  bulkActions?: BulkActionDef<TData>[]; // 👈 NEW
+
   columns?: ColumnDef<TData, TValue>[];
 
   initialPagination?: { pageIndex?: number; pageSize?: number };
@@ -323,6 +322,7 @@ export default function DynamicDataTable<
       )
     );
   }, [isServerMode, data, debouncedGlobal, searchableColumns]);
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data: clientFilteredData,
@@ -333,7 +333,10 @@ export default function DynamicDataTable<
       columnVisibility,
       globalFilter: debouncedGlobal,
       pagination: { pageIndex, pageSize },
+      rowSelection,
     },
+    onRowSelectionChange: setRowSelection,
+    enableRowSelection: true,
     onSortingChange: (updater) =>
       setSorting((old) =>
         typeof updater === "function" ? updater(old) : updater
@@ -373,6 +376,7 @@ export default function DynamicDataTable<
         loading={loading}
         onRefresh={isServerMode ? fetchServerData : undefined}
       />
+      <BulkActionsToolbar table={table} bulkActions={props.bulkActions} />
 
       {/* Active filter chips */}
       {!!columnFilters.length && (
@@ -562,7 +566,7 @@ export default function DynamicDataTable<
 }
 
 // ——— Toolbar ———
-function DataTableToolbar<TData>({
+function DataTableToolbar({
   table,
   searchableColumns,
   globalFilter,
@@ -571,7 +575,6 @@ function DataTableToolbar<TData>({
   filterDefs,
   columnFilters,
   setColumnFilters,
-  isServerMode,
   loading,
   onRefresh,
 }: {
@@ -799,4 +802,76 @@ function FilterControl({
     default:
       return null;
   }
+}
+function BulkActionsToolbar<TData>({
+  table,
+  bulkActions = [],
+}: {
+  table: any;
+  bulkActions?: BulkActionDef<TData>[];
+}) {
+  const selectedRows = table
+    .getSelectedRowModel()
+    .rows.map((r: any) => r.original);
+
+  const [action, setAction] = React.useState<string>("");
+  const [value, setValue] = React.useState<any>("");
+
+  const def = bulkActions.find((a) => a.id === action);
+
+  const { openDialog } = useAlertDialog();
+
+  if (selectedRows.length === 0) return null;
+
+  return (
+    <div className="flex items-center gap-2 p-2 border rounded-md bg-muted/30">
+      <span className="text-sm">{selectedRows.length} selected</span>
+
+      {/* Action selector */}
+      <Select value={action} onValueChange={setAction}>
+        <SelectTrigger className="w-40">
+          <SelectValue placeholder="Choose action" />
+        </SelectTrigger>
+        <SelectContent>
+          {bulkActions.map((a) => (
+            <SelectItem key={a.id} value={a.id}>
+              {a.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      {/* Value input if action requires it */}
+      {def?.type && (
+        <FilterControl
+          def={{ ...def, id: def.field! } as any}
+          value={value}
+          onChange={setValue}
+        />
+      )}
+
+      {/* Apply button */}
+      {def && (
+        <Button
+          size="sm"
+          onClick={() => {
+            openDialog({
+              title: "Confirm bulk action",
+              description: def.type
+                ? `Apply "${def.label}" with value "${value}" to ${selectedRows.length} row(s)?`
+                : `Apply "${def.label}" to ${selectedRows.length} row(s)?`,
+              onConfirm: async () => {
+                await def.onUpdate?.(selectedRows, value);
+                setAction("");
+                setValue("");
+                table.resetRowSelection();
+              },
+            });
+          }}
+        >
+          Apply
+        </Button>
+      )}
+    </div>
+  );
 }

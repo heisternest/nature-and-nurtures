@@ -1,14 +1,34 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import DynamicDataTable from "@/components/ui/data-table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { supabaseClient } from "@/lib/supabase/client";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ExternalLink, PlusCircle } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const columns: ColumnDef<any>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+      />
+    ),
+
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label={`Select row ${row.id}`}
+      />
+    ),
+  },
   {
     accessorKey: "image",
     header: "Image",
@@ -73,6 +93,7 @@ const columns: ColumnDef<any>[] = [
 ];
 
 export default function Page() {
+  const router = useRouter();
   return (
     <div className="bg-gray-50/50 min-h-screen p-4 sm:p-6 lg:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
@@ -104,6 +125,55 @@ export default function Page() {
                 searchableColumns={["name"]}
                 filterDefs={[]}
                 initialPagination={{ pageSize: 20 }}
+                bulkActions={[
+                  {
+                    id: "active",
+                    label: "Change Status",
+                    field: "",
+                    type: "select",
+                    options: [
+                      { label: "Active", value: "true" },
+                      { label: "Inactive", value: "false" },
+                    ],
+                    onUpdate: async (selectedRows, value) => {
+                      const ids = selectedRows.map((row) => row.id);
+                      const res = await supabaseClient
+                        .from("categories")
+                        .update({ active: value === "true" })
+                        .in("id", ids);
+
+                      if (res.error) {
+                        toast.error("Failed to update status");
+                        return;
+                      }
+
+                      toast.success("Status updated successfully");
+                      router.refresh();
+                    },
+                  },
+                  {
+                    id: "delete",
+                    label: "Delete",
+                    field: "",
+                    type: "boolean",
+                    options: [],
+                    onUpdate: async (selectedRows) => {
+                      const ids = selectedRows.map((row) => row.id);
+                      const res = await supabaseClient
+                        .from("categories")
+                        .delete()
+                        .in("id", ids);
+
+                      if (res.error) {
+                        toast.error("Failed to delete categories");
+                        return;
+                      }
+
+                      toast.success("Categories deleted successfully");
+                      router.refresh();
+                    },
+                  },
+                ]}
               />
             </TabsContent>
           </Tabs>

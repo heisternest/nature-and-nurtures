@@ -1,16 +1,56 @@
 // app/(dashboard)/contacts/page.tsx
 "use client";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import DynamicDataTable from "@/components/ui/data-table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { supabaseClient } from "@/lib/supabase/client";
 import type { ColumnDef } from "@tanstack/react-table";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+function statusToColor(status: string) {
+  switch (status) {
+    case "PENDING":
+      return "bg-yellow-100 text-yellow-800";
+    case "CONFIRMED":
+      return "bg-blue-100 text-blue-800";
+    case "PROCESSING":
+      return "bg-purple-100 text-purple-800";
+    case "SHIPPED":
+      return "bg-orange-100 text-orange-800";
+    case "DELIVERED":
+      return "bg-green-100 text-green-800";
+    case "CANCELLED":
+      return "bg-red-100 text-red-800";
+    case "REFUNDED":
+      return "bg-gray-100 text-gray-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+}
 
 const columns: ColumnDef<any>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+      />
+    ),
+
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label={`Select row ${row.id}`}
+      />
+    ),
+  },
   {
     accessorKey: "id",
     header: "Order Id",
@@ -59,19 +99,27 @@ const columns: ColumnDef<any>[] = [
       );
     },
   },
-  {
-    accessorKey: "status",
-    header: "Payment",
-    cell: ({ row }) => <Badge>{row.getValue("status")}</Badge>,
-  },
+
   {
     accessorKey: "deliveryStatus",
     header: "Delivery Status",
-    cell: ({ row }) => <Badge>{row.getValue("deliveryStatus")}</Badge>,
+    // cell: ({ row }) => <Badge>{row.getValue("deliveryStatus")}</Badge>,
+    cell: ({ row }) => {
+      const status = row.getValue("deliveryStatus") as string;
+      const colorClass = statusToColor(status);
+      return (
+        <span
+          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${colorClass}`}
+        >
+          {status}
+        </span>
+      );
+    },
   },
 ];
 
 export default function Page() {
+  const router = useRouter();
   return (
     <div className="bg-gray-50/50 min-h-screen p-4 sm:p-6 lg:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
@@ -119,6 +167,38 @@ export default function Page() {
                       { label: "CANCELLED", value: "CANCELLED" },
                       { label: "PENDING", value: "PENDING" },
                     ],
+                  },
+                ]}
+                bulkActions={[
+                  {
+                    id: "active",
+                    label: "Change Status",
+                    field: "",
+                    type: "select",
+                    options: [
+                      { label: "PENDING", value: "PENDING" },
+                      { label: "CONFIRMED", value: "CONFIRMED" },
+                      { label: "PROCESSING", value: "PROCESSING" },
+                      { label: "SHIPPED", value: "SHIPPED" },
+                      { label: "DELIVERED", value: "DELIVERED" },
+                      { label: "CANCELLED", value: "CANCELLED" },
+                      { label: "REFUNDED", value: "REFUNDED" },
+                    ],
+                    onUpdate: async (selectedRows, value) => {
+                      const ids = selectedRows.map((row) => row.id);
+                      const res = await supabaseClient
+                        .from("orders")
+                        .update({ deliveryStatus: value })
+                        .in("id", ids);
+
+                      if (res.error) {
+                        toast.error("Failed to update status");
+                        return;
+                      }
+
+                      toast.success("Status updated successfully");
+                      router.refresh();
+                    },
                   },
                 ]}
                 initialPagination={{ pageSize: 20 }}

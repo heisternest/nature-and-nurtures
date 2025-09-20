@@ -87,7 +87,7 @@ export function OrderCount() {
   return (
     <>
       {orderCount !== null && orderCount > 0 ? (
-        <div className="inline-flex items-center px-2 py-1 bg-red-600 text-white text-sm font-medium rounded-full">
+        <div className="inline-flex items-center px-2 py-1 text-xs bg-red-600 text-white  rounded-full">
           {orderCount}
         </div>
       ) : null}
