@@ -18,7 +18,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputTags } from "@/components/ui/input-tags";
@@ -68,7 +67,10 @@ export function BlogForm() {
   const [loading, setLoading] = React.useState<{
     draft: boolean;
     publish: boolean;
-  }>({ draft: false, publish: false });
+  }>({
+    draft: false,
+    publish: false,
+  });
 
   const availableCategories = [
     "Cold-Pressed Oils",
@@ -84,7 +86,6 @@ export function BlogForm() {
   const router = useRouter();
 
   const onSubmit = async (data: BlogFormValues) => {
-    // if id is available then update else insert
     const isDraft = data.status === "draft";
     setLoading((prev) => ({ ...prev, [isDraft ? "draft" : "publish"]: true }));
     try {
@@ -106,24 +107,19 @@ export function BlogForm() {
     }
   };
 
-  const generateSlug = (title: string) => {
-    return title
+  const generateSlug = (title: string) =>
+    title
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, "")
       .replace(/\s+/g, "-")
       .replace(/-+/g, "-")
       .trim();
-  };
 
-  // Auto-generate slug from title
   const [slugTouched, setSlugTouched] = React.useState(false);
 
   React.useEffect(() => {
     const subscription = form.watch((value, { name }) => {
-      if (name === "slug") {
-        setSlugTouched(true); // user edited slug manually
-      }
-
+      if (name === "slug") setSlugTouched(true);
       if (name === "title" && value.title && !slugTouched) {
         form.setValue("slug", generateSlug(value.title));
       }
@@ -165,38 +161,28 @@ export function BlogForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-0">
         <div className="min-h-screen bg-white">
           {/* Header */}
-          <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10">
-            <div className="flex items-center justify-between">
+          <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 sticky top-0 z-10">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div className="flex items-center gap-2">
-                <Button
-                  variant="link"
-                  type="button"
-                  className="text-gray-600 hover:text-gray-900 cursor-pointer"
-                  onClick={() => router.push("/dashboard/blogs")}
-                >
-                  ← Back
-                </Button>
                 <div>
-                  <h1 className="text-2xl font-bold text-brand-primary">
-                    {/* Create New Post */}
+                  <h1 className="text-xl sm:text-2xl font-bold text-brand-primary">
                     {id ? "Edit Post" : "Create New Post"}
                   </h1>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
                     Write and publish your blog post
                   </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-3">
+              <div className="flex flex-wrap gap-2">
                 <Button
                   variant="ghost"
                   type="button"
                   onClick={() => setShowPreview(true)}
-                  className="text-gray-600 hover:text-gray-900"
+                  className="w-full sm:w-auto"
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   Preview
                 </Button>
-
                 <Button
                   variant="outline"
                   onClick={() => {
@@ -204,7 +190,7 @@ export function BlogForm() {
                     form.handleSubmit(onSubmit)();
                   }}
                   type="button"
-                  className="border-gray-300"
+                  className="w-full sm:w-auto border-gray-300"
                   disabled={loading.draft}
                 >
                   {loading.draft ? (
@@ -237,6 +223,7 @@ export function BlogForm() {
                   }}
                   type="button"
                   disabled={loading.publish}
+                  className="w-full sm:w-auto"
                 >
                   {loading.publish ? (
                     <span className="mr-2 animate-spin">
@@ -267,8 +254,7 @@ export function BlogForm() {
                     onClick={() =>
                       openDialog({
                         title: `Delete "${form.getValues("title")}"`,
-                        description:
-                          "Deleting this blog post is irreversible. ",
+                        description: "Deleting this blog post is irreversible.",
                         onConfirm: async () => {
                           const deleted = await supabase
                             .from("Blog")
@@ -288,7 +274,7 @@ export function BlogForm() {
                       })
                     }
                     type="button"
-                    className="border-gray-300"
+                    className="w-full sm:w-auto border-gray-300"
                     disabled={loading.draft}
                   >
                     <Trash className="w-4 h-4 mr-2" />
@@ -299,12 +285,12 @@ export function BlogForm() {
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-6 p-4 lg:p-6">
+          <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 p-4 sm:p-6">
             {/* Main Content */}
-            <div className="w-full lg:flex-1 space-y-6">
+            <div className="w-full lg:flex-1 space-y-4 sm:space-y-6">
               {/* Title */}
               <Card>
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                   <FormField
                     control={form.control}
                     name="title"
@@ -314,14 +300,12 @@ export function BlogForm() {
                           <Input
                             placeholder="Add title"
                             {...field}
-                            className="!text-3xl font-bold border-none p-0 focus-visible:ring-0 placeholder:text-gray-400 h-auto leading-tight text-brand-primary"
+                            className="!text-2xl sm:!text-3xl font-bold border-none p-0 focus-visible:ring-0 placeholder:text-gray-400 h-auto leading-tight text-brand-primary"
                           />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
-
                   <FormField
                     control={form.control}
                     name="slug"
@@ -331,15 +315,12 @@ export function BlogForm() {
                           Permalink / Slug
                         </FormLabel>
                         <FormControl>
-                          <div className="flex items-center text-sm">
-                            <Input
-                              placeholder="post-slug"
-                              {...field}
-                              className="border-none p-0 focus-visible:ring-0 text-blue-600"
-                            />
-                          </div>
+                          <Input
+                            placeholder="post-slug"
+                            {...field}
+                            className="border-none p-0 focus-visible:ring-0 text-blue-600"
+                          />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -348,7 +329,7 @@ export function BlogForm() {
 
               {/* Content Editor */}
               <Card>
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                   <FormField
                     control={form.control}
                     name="content"
@@ -361,7 +342,6 @@ export function BlogForm() {
                             onChange={field.onChange}
                           />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -371,7 +351,7 @@ export function BlogForm() {
               {/* Excerpt */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
+                  <CardTitle className="flex items-center text-base sm:text-lg">
                     <FileText className="w-5 h-5 mr-2" />
                     Excerpt
                   </CardTitle>
@@ -389,7 +369,6 @@ export function BlogForm() {
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
                         <p className="text-xs text-gray-500 mt-2">
                           Excerpts are optional hand-crafted summaries of your
                           content.
@@ -402,13 +381,11 @@ export function BlogForm() {
             </div>
 
             {/* Sidebar */}
-            <div className="w-full lg:w-80 space-y-6 lg:sticky lg:top-24">
-              {/* Publish Settings */}
-
+            <div className="w-full lg:w-80 space-y-4 sm:space-y-6 lg:sticky lg:top-24">
               {/* Featured Image */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
+                  <CardTitle className="flex items-center text-base sm:text-lg">
                     <ImageIcon className="w-5 h-5 mr-2" />
                     Featured Image
                   </CardTitle>
@@ -420,17 +397,14 @@ export function BlogForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <div>
-                            <FileUpload
-                              bucketName="ecom"
-                              control={form.control}
-                              type="single"
-                              value={field.value}
-                              name="featuredImage"
-                            />
-                          </div>
+                          <FileUpload
+                            bucketName="ecom"
+                            control={form.control}
+                            type="single"
+                            value={field.value}
+                            name="featuredImage"
+                          />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -440,7 +414,7 @@ export function BlogForm() {
               {/* Categories */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
+                  <CardTitle className="flex items-center text-base sm:text-lg">
                     <FolderOpen className="w-5 h-5 mr-2" />
                     Categories
                   </CardTitle>
@@ -452,16 +426,15 @@ export function BlogForm() {
                     render={({ field }) => (
                       <FormItem>
                         <MultiSelect
-                          options={availableCategories.map((category) => ({
-                            label: category,
-                            value: category,
+                          options={availableCategories.map((c) => ({
+                            label: c,
+                            value: c,
                           }))}
                           placeholder="Select categories..."
                           {...field}
-                          onChange={(value) => field.onChange(value)}
+                          onChange={field.onChange}
                           value={field.value || []}
                         />
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -471,7 +444,7 @@ export function BlogForm() {
               {/* Tags */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
+                  <CardTitle className="flex items-center text-base sm:text-lg">
                     <Tag className="w-5 h-5 mr-2" />
                     Tags
                   </CardTitle>
@@ -487,7 +460,6 @@ export function BlogForm() {
                           value={field.value}
                           onChange={field.onChange}
                         />
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -497,7 +469,7 @@ export function BlogForm() {
               {/* SEO */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
+                  <CardTitle className="flex items-center text-base sm:text-lg">
                     <Settings className="w-5 h-5 mr-2" />
                     SEO
                   </CardTitle>
@@ -517,7 +489,6 @@ export function BlogForm() {
                           />
                         </FormControl>
                         <div className="flex justify-between items-center mt-1">
-                          <FormMessage />
                           <span
                             className={`text-xs ${
                               (field.value?.length || 0) > 60
@@ -547,7 +518,6 @@ export function BlogForm() {
                           />
                         </FormControl>
                         <div className="flex justify-between items-center mt-1">
-                          <FormMessage />
                           <span
                             className={`text-xs ${
                               (field.value?.length || 0) > 160
@@ -568,12 +538,12 @@ export function BlogForm() {
 
           {/* Preview Dialog */}
           <Dialog open={showPreview} onOpenChange={setShowPreview}>
-            <DialogContent className="min-w-4xl w-full max-h-[90vh] overflow-auto">
+            <DialogContent className="w-full sm:min-w-[90%] md:min-w-[70%] max-h-[90vh] overflow-auto">
               <DialogHeader>
                 <DialogTitle>Preview</DialogTitle>
                 <DialogClose />
               </DialogHeader>
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 {form.watch("featuredImage") && (
                   <img
                     src={
@@ -581,7 +551,7 @@ export function BlogForm() {
                       "/placeholder.svg?height=256&width=1024"
                     }
                     alt="Featured"
-                    className="w-full h-64 object-cover rounded-lg mb-6"
+                    className="w-full h-48 sm:h-64 object-cover rounded-lg mb-6"
                   />
                 )}
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -591,16 +561,16 @@ export function BlogForm() {
                     </Badge>
                   ))}
                 </div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">
+                <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2">
                   {form.watch("title") || "Untitled Post"}
                 </h1>
                 {form.watch("excerpt") && (
-                  <p className="text-lg text-gray-600 mb-6 italic">
+                  <p className="text-base sm:text-lg text-gray-600 mb-6 italic">
                     {form.watch("excerpt")}
                   </p>
                 )}
                 <Separator className="mb-6" />
-                <div className="prose max-w-none">
+                <div className="prose max-w-none text-sm sm:text-base">
                   <div
                     dangerouslySetInnerHTML={{
                       __html: form.watch("content") || "<p>No content</p>",

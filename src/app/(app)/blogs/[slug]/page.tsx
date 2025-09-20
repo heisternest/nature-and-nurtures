@@ -1,9 +1,15 @@
 import { Footer } from "@/components/shared/footer";
 import Header from "@/components/shared/header";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import prisma from "@/lib/db";
-import { ArrowLeft } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -67,37 +73,56 @@ export default async function BlogPage({ params }: BlogPageProps) {
   return (
     <div>
       <Header />
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <Link href="/blogs">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Blogs
-            </Button>
-          </Link>
-        </div>
+      <div className="container mx-auto px-4 py-6 md:py-10">
+        {/* Breadcrumbs */}
+        <Breadcrumb>
+          <BreadcrumbList className="text-sm md:text-base">
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/">Home</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/blogs">Blogs</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="line-clamp-1">
+                {blog.title}
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
-        <article className="max-w-4xl mx-auto">
+        <article className="max-w-7xl mx-auto mt-12">
+          {/* Featured Image */}
           {blog.featuredImage && (
-            <div className="aspect-video relative overflow-hidden rounded-lg mb-8">
+            <div className="aspect-video relative overflow-hidden rounded-lg mb-6 md:mb-10">
               <img
                 src={blog.featuredImage}
                 alt={blog.title}
-                className="object-cover"
+                className="object-cover w-full h-full"
               />
             </div>
           )}
 
-          <header className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">{blog.title}</h1>
+          {/* Blog Header */}
+          <header className="mb-6 md:mb-10">
+            <h1 className="text-2xl md:text-4xl font-bold mb-4">
+              {blog.title}
+            </h1>
 
             {blog.excerpt && (
-              <p className="text-xl text-muted-foreground mb-6">
+              <p className="text-base md:text-xl text-muted-foreground mb-4 md:mb-6">
                 {blog.excerpt}
               </p>
             )}
 
-            <div className="flex flex-wrap gap-2 mb-4">
+            {/* Categories */}
+            <div className="flex flex-wrap gap-2 mb-3 md:mb-4">
               {blog.categories.map((category) => (
                 <Badge key={category} variant="secondary">
                   {category}
@@ -105,7 +130,8 @@ export default async function BlogPage({ params }: BlogPageProps) {
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-2 mb-6">
+            {/* Tags */}
+            <div className="flex flex-wrap gap-2 mb-4 md:mb-6">
               {blog.tags.map((tag) => (
                 <Badge key={tag} variant="outline" className="text-xs">
                   {tag}
@@ -113,7 +139,8 @@ export default async function BlogPage({ params }: BlogPageProps) {
               ))}
             </div>
 
-            <div className="text-sm text-muted-foreground">
+            {/* Published Date */}
+            <div className="text-xs md:text-sm text-muted-foreground">
               Published on{" "}
               {new Date(blog.createdAt).toLocaleDateString("en-US", {
                 year: "numeric",
@@ -123,8 +150,9 @@ export default async function BlogPage({ params }: BlogPageProps) {
             </div>
           </header>
 
+          {/* Blog Content */}
           <div
-            className="prose prose-lg max-w-none"
+            className="prose prose-sm md:prose-lg max-w-none"
             dangerouslySetInnerHTML={{ __html: blog.content }}
           />
         </article>
