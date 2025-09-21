@@ -154,8 +154,7 @@ export default function Page() {
                   {
                     id: "delete",
                     label: "Delete",
-                    field: "",
-                    type: "boolean",
+
                     options: [],
                     onUpdate: async (selectedRows) => {
                       const ids = selectedRows.map((row) => row.id);

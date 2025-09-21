@@ -72,17 +72,17 @@ export function NavMain({ orderCount }: { orderCount?: React.ReactNode }) {
                 <DropdownMenuLabel>Quick Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <Link href="/dashboard/products/new" className="w-full">
+                  <Link href="/dashboard/products/create" className="w-full">
                     Create Product
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/dashboard/categories/new" className="w-full">
+                  <Link href="/dashboard/categories/create" className="w-full">
                     Create Category
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/dashboard/blogs/new" className="w-full">
+                  <Link href="/dashboard/blogs/create" className="w-full">
                     Create Blog
                   </Link>
                 </DropdownMenuItem>

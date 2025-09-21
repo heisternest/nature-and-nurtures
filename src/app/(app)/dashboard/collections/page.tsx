@@ -158,7 +158,6 @@ export default function Page() {
                   {
                     id: "delete",
                     label: "Delete",
-                    field: "",
                     onUpdate: async (selectedRows) => {
                       const ids = selectedRows.map((row) => row.id);
                       const res = await supabaseClient
