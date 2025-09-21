@@ -77,6 +77,9 @@ export async function Footer() {
                 <li>
                   <Link href="/blogs">BLOG</Link>
                 </li>
+                <li>
+                  <Link href="/about">ABOUT</Link>
+                </li>
               </ul>
             </div>
             <div>

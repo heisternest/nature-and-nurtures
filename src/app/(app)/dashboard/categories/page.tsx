@@ -127,6 +127,31 @@ export default function Page() {
                 initialPagination={{ pageSize: 20 }}
                 bulkActions={[
                   {
+                    id: "featured",
+                    label: "Set Featured",
+                    field: "",
+                    type: "select",
+                    options: [
+                      { label: "Feature", value: "true" },
+                      { label: "Unfeature", value: "false" },
+                    ],
+                    onUpdate: async (selectedRows, value) => {
+                      const ids = selectedRows.map((row) => row.id);
+                      const res = await supabaseClient
+                        .from("categories")
+                        .update({ featured: value === "true" })
+                        .in("id", ids);
+
+                      if (res.error) {
+                        toast.error("Failed to update featured status");
+                        return;
+                      }
+
+                      toast.success("Featured status updated successfully");
+                      router.refresh();
+                    },
+                  },
+                  {
                     id: "active",
                     label: "Change Status",
                     field: "",

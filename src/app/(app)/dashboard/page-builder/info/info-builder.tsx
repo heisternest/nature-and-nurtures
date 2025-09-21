@@ -20,7 +20,6 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { InfoData, infoSchema } from "./schema";
 
-// ---------------- Display Component ----------------
 export function InfoDisplay({ data }: { data: InfoData }) {
   return (
     <section
@@ -41,27 +40,37 @@ export function InfoDisplay({ data }: { data: InfoData }) {
             />
           </div>
 
-          {/* Left Image */}
-          {data.leftImage && (
-            <div className="lg:col-span-3 flex justify-center">
+          {/* Image Grid (2x2 square) */}
+          <div className="lg:col-span-7 grid grid-cols-2 gap-4">
+            {data.image1 && (
               <img
-                src={data.leftImage}
-                alt="Left image"
-                className="rounded-xl object-cover w-full max-w-sm aspect-[3/4]"
+                src={data.image1}
+                alt="Image 1"
+                className="rounded-xl object-cover w-full aspect-square"
               />
-            </div>
-          )}
-
-          {/* Right Image */}
-          {data.rightImage && (
-            <div className="lg:col-span-4 flex justify-center">
+            )}
+            {data.image2 && (
               <img
-                src={data.rightImage}
-                alt="Right image"
-                className="rounded-xl object-cover w-full aspect-video"
+                src={data.image2}
+                alt="Image 2"
+                className="rounded-xl object-cover w-full aspect-square"
               />
-            </div>
-          )}
+            )}
+            {data.image3 && (
+              <img
+                src={data.image3}
+                alt="Image 3"
+                className="rounded-xl object-cover w-full aspect-square"
+              />
+            )}
+            {data.image4 && (
+              <img
+                src={data.image4}
+                alt="Image 4"
+                className="rounded-xl object-cover w-full aspect-square"
+              />
+            )}
+          </div>
         </div>
       </div>
     </section>
@@ -83,9 +92,8 @@ export function InfoFormBuilder({
       "Clean, Beyond Reproach <em class='italic font-serif'>Skincare.</em>",
     description:
       "WE LOVE IT FOR MODERN UI DESIGN BECAUSE OF ITS SIMPLE, CLEAN, AND DISTINCTIVE GEOMETRIC STYLE...",
-    leftImage: "feature-1.webp",
-    rightImage:
-      "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=1974&auto=format&fit=crop",
+    image1: "/placeholder.png",
+    image2: "/placeholder.png",
     backgroundColor: "#ffffff",
     ...data,
   };
@@ -177,17 +185,17 @@ export function InfoFormBuilder({
               {/* Left Image */}
               <FormField
                 control={form.control}
-                name="leftImage"
+                name="image1"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Left Image</FormLabel>
+                    <FormLabel>Image 1</FormLabel>
                     <FormControl>
                       <FileUpload
                         bucketName="ecom"
                         control={form.control}
                         type="single"
                         value={field.value}
-                        name="leftImage"
+                        name="image1"
                       />
                     </FormControl>
                     <FormMessage />
@@ -198,17 +206,59 @@ export function InfoFormBuilder({
               {/* Right Image */}
               <FormField
                 control={form.control}
-                name="rightImage"
+                name="image2"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Right Image</FormLabel>
+                    <FormLabel>Image 2</FormLabel>
                     <FormControl>
                       <FileUpload
                         bucketName="ecom"
                         control={form.control}
                         type="single"
                         value={field.value}
-                        name="rightImage"
+                        name="image2"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Image 3 (Optional) */}
+              <FormField
+                control={form.control}
+                name="image3"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image 3 (Optional)</FormLabel>
+                    <FormControl>
+                      <FileUpload
+                        bucketName="ecom"
+                        control={form.control}
+                        type="single"
+                        value={field.value}
+                        name="image3"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Image 4 (Optional) */}
+              <FormField
+                control={form.control}
+                name="image4"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image 4 (Optional)</FormLabel>
+                    <FormControl>
+                      <FileUpload
+                        bucketName="ecom"
+                        control={form.control}
+                        type="single"
+                        value={field.value}
+                        name="image4"
                       />
                     </FormControl>
                     <FormMessage />

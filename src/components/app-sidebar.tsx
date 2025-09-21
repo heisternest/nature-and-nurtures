@@ -27,6 +27,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { PersonStanding } from "lucide-react";
 import Link from "next/link";
 import { NavMain } from "./nav-main";
 
@@ -65,6 +66,11 @@ const data = {
   ],
 
   navPageBuilder: [
+    {
+      name: "About us",
+      url: "/dashboard/page-builder/about",
+      icon: PersonStanding,
+    },
     {
       name: "Hero Section",
       url: "/dashboard/page-builder/hero",

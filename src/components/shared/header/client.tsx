@@ -28,17 +28,13 @@ export function HeaderClient({
   featuredProducts: any;
 }) {
   const [open, setOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState<null | "explore" | "collections">(
-    null
-  );
+  const [menuOpen, setMenuOpen] = useState(false);
   const [mobileExploreOpen, setMobileExploreOpen] = useState(false);
 
   const { items } = useCartStore();
   const router = useRouter();
 
   const categories = Array.isArray(data) ? data : [];
-
-  // Limit categories displayed in mega menu (e.g., top 4)
   const megaMenuCategories = categories.slice(0, 4);
 
   const showDrawer = () => setOpen(true);
@@ -61,15 +57,15 @@ export function HeaderClient({
 
           {/* Navigation (Desktop) */}
           <nav className="hidden md:flex items-center space-x-8 text-sm font-medium relative">
-            {/* EXPLORE MEGAMENU */}
+            {/* Single EXPLORE MEGAMENU */}
             <div
               className="relative group"
-              onMouseEnter={() => setMenuOpen("explore")}
-              onMouseLeave={() => setMenuOpen(null)}
+              onMouseEnter={() => setMenuOpen(true)}
+              onMouseLeave={() => setMenuOpen(false)}
             >
               <button className="hover:text-gray-700">EXPLORE ▾</button>
               <AnimatePresence>
-                {menuOpen === "explore" && (
+                {menuOpen && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -135,6 +131,31 @@ export function HeaderClient({
                         </div>
                       ))}
 
+                      {/* Collections */}
+                      <div className="min-w-[180px]">
+                        <h4 className="font-bold mb-4 text-xs tracking-widest text-[#7c2943]">
+                          COLLECTIONS
+                        </h4>
+                        <ul className="space-y-2">
+                          {collections.length ? (
+                            collections.map((collection: any) => (
+                              <li key={collection.id}>
+                                <Link
+                                  href={`/collections/${encodeURIComponent(
+                                    collection.slug
+                                  )}`}
+                                  className="text-gray-900 hover:text-[#7c2943] transition-colors"
+                                >
+                                  {collection.name}
+                                </Link>
+                              </li>
+                            ))
+                          ) : (
+                            <li className="text-gray-500">No collections</li>
+                          )}
+                        </ul>
+                      </div>
+
                       {/* Category Images */}
                       <div className="flex flex-col items-center justify-start space-y-6">
                         {categories
@@ -161,47 +182,6 @@ export function HeaderClient({
                           ))}
                       </div>
                     </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Collections Dropdown */}
-            <div
-              className="relative group"
-              onMouseEnter={() => setMenuOpen("collections")}
-              onMouseLeave={() => setMenuOpen(null)}
-            >
-              <button className="hover:text-gray-700">COLLECTIONS ▾</button>
-              <AnimatePresence>
-                {menuOpen === "collections" && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute left-0 top-full mt-2 w-56 bg-white shadow-lg border border-gray-100 rounded-md z-30"
-                  >
-                    <ul className="py-2">
-                      {collections.length ? (
-                        collections.map((collection: any) => (
-                          <li key={collection.id}>
-                            <Link
-                              href={`/collections/${encodeURIComponent(
-                                collection.slug
-                              )}`}
-                              className="block px-4 py-2 text-gray-900 hover:text-white transition-colors hover:bg-gray-900 w-full"
-                            >
-                              {collection.name}
-                            </Link>
-                          </li>
-                        ))
-                      ) : (
-                        <li className="px-4 py-2 text-gray-500">
-                          No collections
-                        </li>
-                      )}
-                    </ul>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -245,7 +225,7 @@ export function HeaderClient({
       {/* Cart Drawer */}
       <CartClientDrawer open={open} closeDrawer={closeDrawer} />
 
-      {/* Mobile Explore Drawer (Shadcn) */}
+      {/* Mobile Explore Drawer */}
       <Drawer open={mobileExploreOpen} onOpenChange={setMobileExploreOpen}>
         <DrawerContent className="h-[85vh]">
           <DrawerHeader>
@@ -307,6 +287,32 @@ export function HeaderClient({
                 </ul>
               </div>
             ))}
+
+            {/* Collections */}
+            <div>
+              <h4 className="font-bold mb-3 text-xs tracking-widest text-[#7c2943]">
+                COLLECTIONS
+              </h4>
+              <ul className="space-y-2">
+                {collections.length ? (
+                  collections.map((collection: any) => (
+                    <li key={collection.id}>
+                      <Link
+                        href={`/collections/${encodeURIComponent(
+                          collection.slug
+                        )}`}
+                        className="text-gray-900 hover:text-[#7c2943] transition-colors"
+                        onClick={() => setMobileExploreOpen(false)}
+                      >
+                        {collection.name}
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-500">No collections</li>
+                )}
+              </ul>
+            </div>
 
             {/* Category Images */}
             <div className="grid grid-cols-2 gap-4">

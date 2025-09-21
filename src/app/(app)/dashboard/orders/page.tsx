@@ -200,6 +200,26 @@ export default function Page() {
                       router.refresh();
                     },
                   },
+                  {
+                    id: "delete",
+                    label: "Delete",
+                    field: "",
+                    onUpdate: async (selectedRows) => {
+                      const ids = selectedRows.map((row) => row.id);
+                      const res = await supabaseClient
+                        .from("orders")
+                        .delete()
+                        .in("id", ids);
+
+                      if (res.error) {
+                        toast.error("Failed to delete orders");
+                        return;
+                      }
+
+                      toast.success("Orders deleted successfully");
+                      router.refresh();
+                    },
+                  },
                 ]}
                 initialPagination={{ pageSize: 20 }}
               />
