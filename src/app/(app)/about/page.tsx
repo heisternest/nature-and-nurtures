@@ -57,7 +57,7 @@ export default async function TOSPage() {
               {data.title}
             </h1>
             <div
-              className="text-gray-700 leading-relaxed"
+              className="prose [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
               dangerouslySetInnerHTML={{ __html: data.content }}
             />
           </div>

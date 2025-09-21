@@ -110,20 +110,9 @@ export function AboutBuilder({
         <div className="prose max-w-full">
           <h1 className="text-3xl font-bold mb-4">{form.getValues("title")}</h1>
           <div
-            className="prose"
+            className="prose [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
             dangerouslySetInnerHTML={{ __html: content }}
           />
-
-          <style jsx>{`
-            .prose ul {
-              list-style-type: disc;
-              list-style-position: inside;
-            }
-            .prose ol {
-              list-style-type: decimal;
-              list-style-position: inside;
-            }
-          `}</style>
         </div>
       </main>
     </div>
