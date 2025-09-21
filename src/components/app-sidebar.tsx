@@ -13,6 +13,7 @@ import {
   IconReport,
   IconSettings,
   IconTrademark,
+  IconUserCheck,
 } from "@tabler/icons-react";
 import * as React from "react";
 
@@ -27,7 +28,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { PersonStanding } from "lucide-react";
 import Link from "next/link";
 import { NavMain } from "./nav-main";
 
@@ -69,7 +69,7 @@ const data = {
     {
       name: "About us",
       url: "/dashboard/page-builder/about",
-      icon: PersonStanding,
+      icon: IconUserCheck,
     },
     {
       name: "Hero Section",
