@@ -50,11 +50,20 @@ export function ProductPage({ product }: { product: any }) {
           <BreadcrumbItem>
             <BreadcrumbLink href="/">Home</BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href={`/category/${product.category.slug}`}>
-              {product.category.name}
-            </BreadcrumbLink>
+            {product.category &&
+              product.category.slug &&
+              product.category.name && (
+                <>
+                  <BreadcrumbSeparator />
+
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href={`/category/${product.category.slug}`}>
+                      {product.category.name}
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                </>
+              )}
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -110,9 +119,12 @@ export function ProductPage({ product }: { product: any }) {
           {/* Header */}
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm text-gray-500 font-medium">
-                {product.category.name}
-              </p>
+              {product.category && product.category.name && (
+                <p className="text-sm text-gray-500 font-medium">
+                  {product.category.name}
+                </p>
+              )}
+
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                 {product.name}
               </h1>
@@ -245,9 +257,11 @@ export function ProductPage({ product }: { product: any }) {
               <p>
                 <strong>SKU:</strong> {product.sku}
               </p>
-              <p>
-                <strong>Categories:</strong> {product.category.name}
-              </p>
+              {product.category && product.category.name && (
+                <p>
+                  <strong>Categories:</strong> {product.category.name}
+                </p>
+              )}
             </div>
           </div>
         </div>
