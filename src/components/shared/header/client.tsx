@@ -63,7 +63,7 @@ export function HeaderClient({
               onMouseEnter={() => setMenuOpen(true)}
               onMouseLeave={() => setMenuOpen(false)}
             >
-              <button className="hover:text-gray-700">EXPLORE ▾</button>
+              <button className="hover:text-gray-700">SHOP ALL ▾</button>
               <AnimatePresence>
                 {menuOpen && (
                   <motion.div
@@ -186,6 +186,10 @@ export function HeaderClient({
                 )}
               </AnimatePresence>
             </div>
+
+            <Link href="/blogs" className="hover:text-gray-700">
+              BLOGS
+            </Link>
           </nav>
         </div>
 
@@ -196,7 +200,7 @@ export function HeaderClient({
             onClick={() => setMobileExploreOpen(true)}
             className="md:hidden text-sm font-medium hover:text-gray-700"
           >
-            EXPLORE
+            SHOP ALL
           </button>
 
           {/* Search */}
@@ -229,7 +233,7 @@ export function HeaderClient({
       <Drawer open={mobileExploreOpen} onOpenChange={setMobileExploreOpen}>
         <DrawerContent className="h-[85vh]">
           <DrawerHeader>
-            <DrawerTitle>Explore</DrawerTitle>
+            <DrawerTitle>SHOP ALL</DrawerTitle>
             <DrawerClose asChild>
               <Button variant="ghost" size="sm">
                 ✕
