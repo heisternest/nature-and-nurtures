@@ -159,6 +159,33 @@ export default function Page() {
                     },
                   },
                   {
+                    id: "duplicate",
+                    label: "Duplicate",
+                    onUpdate: async (selectedRows) => {
+                      const rowsToDuplicate = selectedRows.map((row) => ({
+                        name: row.name + " (Copy)",
+                        description: row.description,
+                        slug: row.slug + "-copy",
+                        price: row.price,
+                        sku: row.sku,
+                        stockQuantity: row.stockQuantity,
+                        active: row.active,
+                      }));
+
+                      const res = await supabaseClient
+                        .from("products")
+                        .insert(rowsToDuplicate);
+
+                      if (res.error) {
+                        toast.error("Failed to duplicate products");
+                        return;
+                      }
+
+                      toast.success("Products duplicated successfully");
+                      router.refresh();
+                    },
+                  },
+                  {
                     id: "delete",
                     label: "Delete",
                     field: "",

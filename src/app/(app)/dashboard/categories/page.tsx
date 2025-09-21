@@ -177,6 +177,30 @@ export default function Page() {
                     },
                   },
                   {
+                    id: "duplicate",
+                    label: "Duplicate",
+                    onUpdate: async (selectedRows) => {
+                      const rowsToDuplicate = selectedRows.map((row) => ({
+                        name: row.name + " (Copy)",
+                        description: row.description,
+                        imageUrl: row.imageUrl,
+                        active: row.active,
+                      }));
+
+                      const res = await supabaseClient
+                        .from("categories")
+                        .insert(rowsToDuplicate);
+
+                      if (res.error) {
+                        toast.error("Failed to duplicate categories");
+                        return;
+                      }
+
+                      toast.success("Categories duplicated successfully");
+                      router.refresh();
+                    },
+                  },
+                  {
                     id: "delete",
                     label: "Delete",
 
