@@ -269,8 +269,17 @@ export function CollectionForm({
           </div>
 
           <div>
-            <Button type="submit" className="w-full">
-              {isEdit ? "Update Collection" : "Save Collection"}
+            <Button
+              disabled={form.formState.isSubmitting}
+              type="submit"
+              className="w-full"
+            >
+              {/* {isEdit ? "Update Collection" : "Save Collection"} */}
+              {form.formState.isSubmitting
+                ? "Saving..."
+                : isEdit
+                ? "Update Collection"
+                : "Save Collection"}
             </Button>
           </div>
         </form>

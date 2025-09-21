@@ -90,13 +90,13 @@ export type DynamicDataTableProps<TData, TValue> = {
   select?: string;
 
   data?: TData[];
-  bulkActions?: BulkActionDef<TData>[]; // 👈 NEW
+  bulkActions?: BulkActionDef<TData>[];
 
   columns?: ColumnDef<TData, TValue>[];
 
   initialPagination?: { pageIndex?: number; pageSize?: number };
   initialSorting?: SortingState;
-  defaultSortBy?: { id: string; desc?: boolean }; // 👈 NEW
+  defaultSortBy?: { id: string; desc?: boolean };
 
   initialVisibility?: VisibilityState;
 
@@ -104,6 +104,7 @@ export type DynamicDataTableProps<TData, TValue> = {
   filterDefs?: FilterDef[];
 
   staticFilters?: Record<string, any>;
+  where?: Record<string, any>;
 
   onRowClick?: (row: Row<TData>) => void;
   renderRowActions?: (row: Row<TData>) => ReactNode;
@@ -210,6 +211,13 @@ export default function DynamicDataTable<
       // Static filters
       if (staticFilters) {
         for (const [k, v] of Object.entries(staticFilters)) {
+          if (v === null) query = query.is(k, null);
+          else query = query.eq(k, v);
+        }
+      }
+
+      if (props.where) {
+        for (const [k, v] of Object.entries(props.where)) {
           if (v === null) query = query.is(k, null);
           else query = query.eq(k, v);
         }
@@ -610,57 +618,59 @@ function DataTableToolbar({
           />
         </div>
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="gap-2">
-              <SlidersHorizontal className="h-4 w-4" /> Filters
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent align="start" className="w-80">
-            <div className="space-y-3">
-              {filterDefs.length === 0 && (
-                <p className="text-sm text-muted-foreground">
-                  No filters configured.
-                </p>
-              )}
-              {filterDefs.map((f) => (
-                <FilterControl
-                  key={f.id}
-                  def={f}
-                  value={
-                    (columnFilters.find((c) => c.id === f.id)?.value as any) ??
-                    ""
-                  }
-                  onChange={(val) => {
-                    setPageIndex(0);
-                    setColumnFilters((prev) => {
-                      const next = prev.filter((c) => c.id !== f.id);
-                      if (
-                        val !== undefined &&
-                        val !== "" &&
-                        !(Array.isArray(val) && val.length === 0)
-                      )
-                        next.push({ id: f.id, value: val });
-                      return next;
-                    });
-                  }}
-                />
-              ))}
-              {!!columnFilters.length && (
-                <div className="flex justify-end">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    className="h-8 px-2 text-xs"
-                    onClick={() => setColumnFilters([])}
-                  >
-                    Clear filters
-                  </Button>
-                </div>
-              )}
-            </div>
-          </PopoverContent>
-        </Popover>
+        {filterDefs.length > 0 && (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <SlidersHorizontal className="h-4 w-4" /> Filters
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-80">
+              <div className="space-y-3">
+                {filterDefs.length === 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    No filters configured.
+                  </p>
+                )}
+                {filterDefs.map((f) => (
+                  <FilterControl
+                    key={f.id}
+                    def={f}
+                    value={
+                      (columnFilters.find((c) => c.id === f.id)
+                        ?.value as any) ?? ""
+                    }
+                    onChange={(val) => {
+                      setPageIndex(0);
+                      setColumnFilters((prev) => {
+                        const next = prev.filter((c) => c.id !== f.id);
+                        if (
+                          val !== undefined &&
+                          val !== "" &&
+                          !(Array.isArray(val) && val.length === 0)
+                        )
+                          next.push({ id: f.id, value: val });
+                        return next;
+                      });
+                    }}
+                  />
+                ))}
+                {!!columnFilters.length && (
+                  <div className="flex justify-end">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="h-8 px-2 text-xs"
+                      onClick={() => setColumnFilters([])}
+                    >
+                      Clear filters
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </PopoverContent>
+          </Popover>
+        )}
       </div>
 
       <div className="flex items-center gap-2">
@@ -833,6 +843,11 @@ function BulkActionsToolbar<TData>({
           <SelectValue placeholder="Choose action" />
         </SelectTrigger>
         <SelectContent>
+          {bulkActions.length === 0 && (
+            <SelectItem value="null" disabled>
+              No actions
+            </SelectItem>
+          )}
           {bulkActions.map((a) => (
             <SelectItem key={a.id} value={a.id}>
               {a.label}

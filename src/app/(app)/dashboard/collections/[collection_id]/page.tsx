@@ -1,6 +1,6 @@
 import prisma from "@/lib/db";
 import Link from "next/link";
-import { deleteCollection, removeProductFromCollection } from "../action";
+import { deleteCollection } from "../action";
 import { CollectionViewClient } from "./view";
 
 export const revalidate = 1;
@@ -25,6 +25,8 @@ export default async function CategoryDisplayPage({
     },
   });
 
+  const collections = await prisma.productCollection.findMany();
+
   if (!collection) {
     return (
       <div className="container mx-auto max-w-5xl p-6">
@@ -46,7 +48,7 @@ export default async function CategoryDisplayPage({
     <CollectionViewClient
       handleDelete={deleteCollection}
       collection={collection}
-      disconnectProduct={removeProductFromCollection}
+      collections={collections}
     />
   );
 }

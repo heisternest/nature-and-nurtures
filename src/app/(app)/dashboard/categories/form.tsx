@@ -270,8 +270,17 @@ export function CategoryForm({
           </div>
 
           <div>
-            <Button type="submit" className="w-full">
-              {isEdit ? "Update Category" : "Save Category"}
+            <Button
+              disabled={form.formState.isSubmitting}
+              type="submit"
+              className="w-full"
+            >
+              {/* {isEdit ? "Update Category" : "Save Category"} */}
+              {form.formState.isSubmitting
+                ? "Saving..."
+                : isEdit
+                ? "Update Category"
+                : "Save Category"}
             </Button>
           </div>
         </form>

@@ -9,29 +9,106 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import DynamicDataTable from "@/components/ui/data-table";
 import { useAlertDialog } from "@/hooks/alert-dialog/use-alert-dialog";
+import { supabaseClient } from "@/lib/supabase/client";
+import { formatCurrency, imageThumbnailUrl } from "@/lib/utils";
+import { ColumnDef } from "@tanstack/react-table";
 import { TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+const columns: ColumnDef<any>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+      />
+    ),
+
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label={`Select row ${row.id}`}
+      />
+    ),
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row }) => (
+      <div className="flex items-center">
+        {row.original.product_images?.[0] ? (
+          <img
+            src={
+              imageThumbnailUrl(row.original.product_images[0].url) ||
+              "/placeholder.png"
+            }
+            alt={row.original.product_images[0]?.alt}
+            className="w-10 h-10 rounded-md mr-3 shrink-0"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-md mr-3 bg-gray-200 flex items-center justify-center text-gray-500 shrink-0"></div>
+        )}
+        <Link
+          href={`/dashboard/products/${row.original.id}`}
+          className="ml-2 min-w-0 flex-1 flex items-center  group"
+        >
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-medium max-w-xs text-blue-600 group-hover:underline">
+              {row.original.name}
+            </p>
+            <span className="text-xs text-muted-foreground truncate block">
+              {row.original.categories?.name}
+            </span>
+          </div>
+        </Link>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "price",
+    enableSorting: true,
+    header: "Price",
+    cell: ({ getValue }) => <div>{formatCurrency(getValue<number>())}</div>,
+  },
+
+  { accessorKey: "stockQuantity", header: "Stock" },
+  { accessorKey: "sku", header: "SKU" },
+  {
+    accessorKey: "active",
+    header: "Status",
+    cell: ({ getValue }) => {
+      const status = getValue<boolean>();
+      return status ? (
+        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+          Active
+        </span>
+      ) : (
+        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+          Inactive
+        </span>
+      );
+    },
+  },
+];
+
 export function CollectionViewClient({
   collection,
   handleDelete,
-  disconnectProduct,
+  collections,
 }: {
   collection: any;
   handleDelete: (id: string) => Promise<{
     success: boolean;
     error?: string | undefined;
   }>;
-  disconnectProduct: (
-    collectionId: string,
-    productId: string
-  ) => Promise<{
-    success: boolean;
-    error?: string | undefined;
-  }>;
+  collections: any[];
 }) {
   const { openDialog } = useAlertDialog();
 
@@ -125,64 +202,77 @@ export function CollectionViewClient({
         </CardHeader>
 
         <CardContent>
-          {collection.products?.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {collection.products.map((product: any) => (
-                <div
-                  key={product.id}
-                  className="border rounded-lg overflow-hidden shadow-sm relative" // add relative here
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute top-2 right-2 bg-red-50 hover:bg-red-100 z-10"
-                    onClick={() =>
-                      openDialog({
-                        title: `Remove ${product.name} from ${collection.name}?`,
-                        description: `Removing this product from ${collection.name} will not delete it permanently. It can still be found in the products section.`,
-                        onConfirm: async () => {
-                          const res = await disconnectProduct(
-                            collection.id,
-                            product.id
-                          );
-                          if (res.success) {
-                            toast.success(
-                              `${product.name} removed from ${collection.name}`
-                            );
-                            router.refresh();
-                          } else {
-                            toast.error(
-                              res.error ||
-                                "Error removing product from collection"
-                            );
-                          }
-                        },
-                      })
-                    }
-                  >
-                    <TrashIcon size={16} className="text-red-600" />
-                  </Button>
+          <DynamicDataTable<any>
+            supabase={supabaseClient}
+            table="products"
+            select="*, categories(name), product_images(url, alt), _ProductToProductCollection!inner(*)"
+            columns={columns}
+            searchableColumns={["name", "sku"]}
+            filterDefs={[]}
+            bulkActions={[
+              {
+                id: "disconnect",
+                label: "Disconnect from Collection",
+                onUpdate: async (selectedRows) => {
+                  const disconnectProducts = await supabaseClient
+                    .from("_ProductToProductCollection")
+                    .delete()
+                    .in(
+                      "A",
+                      selectedRows.map((row) => row.id)
+                    )
+                    .select("*");
 
-                  <div className="relative w-full h-48">
-                    <img
-                      src={
-                        product.productImages.length > 0
-                          ? product.productImages[0].url
-                          : "/placeholder.png"
-                      }
-                      alt={product.name || "Product image"}
-                      className="object-cover w-full h-full rounded-t-lg"
-                    />
-                  </div>
-                  <div className="p-3">
-                    <p className="font-medium truncate">{product.name}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-muted-foreground">No products found.</p>
-          )}
+                  if (disconnectProducts.error) {
+                    toast.error(disconnectProducts.error.message);
+                    return;
+                  }
+
+                  toast.success(
+                    `${disconnectProducts.data.length} product(s) disconnected from collection`
+                  );
+                  router.refresh();
+                  return;
+                },
+              },
+
+              {
+                id: "migrate",
+                label: "Migrate to another Collection",
+                type: "select",
+                options:
+                  collections.map((cat) => ({
+                    label: cat.name,
+                    value: cat.id,
+                  })) || [],
+                onUpdate: async (selectedRows, value) => {
+                  console.log(value, selectedRows);
+                  const migrateProducts = await supabaseClient
+                    .from("_ProductToProductCollection")
+                    .update({ B: value })
+                    .in(
+                      "A",
+                      selectedRows.map((row) => row.id)
+                    )
+                    .select("*");
+
+                  console.log("migrateProducts", migrateProducts);
+
+                  if (migrateProducts.error) {
+                    toast.error(migrateProducts.error.message);
+                    return;
+                  }
+
+                  toast.success(
+                    `${migrateProducts.data.length} product(s) migrated to new collection`
+                  );
+                  router.refresh();
+                  return;
+                },
+              },
+            ]}
+            where={{ "_ProductToProductCollection.B": collection.id }}
+          />
         </CardContent>
       </Card>
     </div>

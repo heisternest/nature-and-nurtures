@@ -1,6 +1,6 @@
 import prisma from "@/lib/db";
 import Link from "next/link";
-import { deleteCategory, removeProductFromCategory } from "../action";
+import { deleteCategory } from "../action";
 import { CategoryViewClient } from "./view";
 
 export const revalidate = 1;
@@ -25,6 +25,10 @@ export default async function CategoryDisplayPage({
     },
   });
 
+  const categories = await prisma.category.findMany({
+    orderBy: { name: "asc" },
+  });
+
   if (!category) {
     return (
       <div className="container mx-auto max-w-5xl p-6">
@@ -46,7 +50,7 @@ export default async function CategoryDisplayPage({
     <CategoryViewClient
       handleDelete={deleteCategory}
       category={category}
-      disconnectProduct={removeProductFromCategory}
+      categories={categories}
     />
   );
 }
