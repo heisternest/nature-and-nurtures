@@ -167,9 +167,10 @@ export default function Page() {
                         description: row.description,
                         slug: row.slug + "-copy",
                         price: row.price,
-                        sku: row.sku,
+                        sku: `${row.sku}-copy`,
                         stockQuantity: row.stockQuantity,
                         active: row.active,
+                        updatedAt: new Date(),
                       }));
 
                       const res = await supabaseClient
@@ -178,6 +179,7 @@ export default function Page() {
 
                       if (res.error) {
                         toast.error("Failed to duplicate products");
+                        console.log(res.error);
                         return;
                       }
 

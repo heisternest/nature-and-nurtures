@@ -164,6 +164,7 @@ export default function Page() {
                         description: row.description,
                         imageUrl: row.imageUrl,
                         active: row.active,
+                        updatedAt: new Date(),
                       }));
 
                       const res = await supabaseClient
@@ -171,11 +172,12 @@ export default function Page() {
                         .insert(rowsToDuplicate);
 
                       if (res.error) {
-                        toast.error("Failed to duplicate categories");
+                        console.log(res.error);
+                        toast.error("Failed to duplicate collections");
                         return;
                       }
 
-                      toast.success("Categories duplicated successfully");
+                      toast.success("Collections duplicated successfully");
                       router.refresh();
                     },
                   },
