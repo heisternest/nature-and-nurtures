@@ -303,9 +303,9 @@ export function BlogForm() {
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 p-4 sm:p-6">
+          <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 p-4 sm:p-6 min-h-screen">
             {/* Main Content */}
-            <div className="w-full lg:flex-1 space-y-4 sm:space-y-6">
+            <div className="w-full lg:flex-1 space-y-4 sm:space-y-6  min-w-xs">
               {/* Title */}
               <Card>
                 <CardContent className="p-4 sm:p-6">
@@ -313,12 +313,12 @@ export function BlogForm() {
                     control={form.control}
                     name="title"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="flex-1 flex flex-col">
                         <FormControl>
                           <Input
                             placeholder="Add title"
                             {...field}
-                            className="!text-2xl sm:!text-3xl font-bold border-none p-0 focus-visible:ring-0 placeholder:text-gray-400 h-auto leading-tight text-brand-primary"
+                            className="max-w-2xl !text-2xl sm:!text-3xl font-bold border-none p-0 focus-visible:ring-0 placeholder:text-gray-400 h-auto leading-tight text-brand-primary break-words whitespace-normal"
                           />
                         </FormControl>
                       </FormItem>
@@ -328,7 +328,7 @@ export function BlogForm() {
                     control={form.control}
                     name="slug"
                     render={({ field }) => (
-                      <FormItem className="mt-4">
+                      <FormItem className="flex-1 flex flex-col mt-4">
                         <FormLabel className="text-sm text-gray-600">
                           Permalink / Slug
                         </FormLabel>
@@ -336,7 +336,7 @@ export function BlogForm() {
                           <Input
                             placeholder="post-slug"
                             {...field}
-                            className="border-none p-0 focus-visible:ring-0 text-blue-600"
+                            className="border-none max-w-2xl p-0 focus-visible:ring-0 text-blue-600 break-all"
                           />
                         </FormControl>
                       </FormItem>
@@ -344,7 +344,6 @@ export function BlogForm() {
                   />
                 </CardContent>
               </Card>
-
               {/* Content Editor */}
               <Card>
                 <CardContent className="p-4 sm:p-6">
@@ -366,7 +365,6 @@ export function BlogForm() {
                   />
                 </CardContent>
               </Card>
-
               {/* Excerpt */}
               <Card>
                 <CardHeader>
@@ -398,7 +396,6 @@ export function BlogForm() {
                 </CardContent>
               </Card>
             </div>
-
             {/* Sidebar */}
             <div className="w-full lg:w-80 space-y-4 sm:space-y-6 lg:sticky lg:top-24">
               {/* Featured Image */}
@@ -591,7 +588,7 @@ export function BlogForm() {
                 <Separator className="mb-6" />
                 <div className="prose max-w-none text-sm sm:text-base">
                   <div
-                    className="prose max-w-3xl  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
+                    className="prose max-w-3xl  break-words overflow-hidden [&_*]:max-w-full   [&_img]:w-full [&_img]:object-cover"
                     dangerouslySetInnerHTML={{
                       __html: form.watch("content") || "<p>No content</p>",
                     }}

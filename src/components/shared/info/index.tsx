@@ -20,11 +20,11 @@ export async function InfoSection() {
           {/* Text */}
           <div className="lg:col-span-5">
             <div
-              className="prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
+              className="prose  break-words overflow-hidden [&_*]:max-w-full   [&_img]:w-full [&_img]:object-cover"
               dangerouslySetInnerHTML={{ __html: data.title }}
             />
             <div
-              className="prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
+              className="prose  break-words overflow-hidden [&_*]:max-w-full   [&_img]:w-full [&_img]:object-cover"
               dangerouslySetInnerHTML={{ __html: data.description }}
             />
           </div>

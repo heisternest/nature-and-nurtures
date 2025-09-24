@@ -80,7 +80,7 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
 
   return (
     <style
-      className="prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
+      className="prose  break-words overflow-hidden [&_*]:max-w-full   [&_img]:w-full [&_img]:object-cover"
       dangerouslySetInnerHTML={{
         __html: Object.entries(THEMES)
           .map(
