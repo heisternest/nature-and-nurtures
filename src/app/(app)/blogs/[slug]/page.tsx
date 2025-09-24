@@ -110,7 +110,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
           {/* Blog Header */}
           <header className="mb-6 md:mb-10">
-            <h1 className="text-2xl md:text-4xl font-bold mb-4">
+            <h1 className="text-2xl md:text-4xl font-bold mb-4 max-w-7xl break-words">
               {blog.title}
             </h1>
 
