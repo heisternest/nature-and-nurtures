@@ -37,7 +37,7 @@ export function BlogCard({
           </div>
         )}
         <CardHeader>
-          <CardTitle className="line-clamp-2">
+          <CardTitle className="max-w-xs break-words">
             <h1 className="hover:text-primary transition-colors">{title}</h1>
           </CardTitle>
         </CardHeader>
