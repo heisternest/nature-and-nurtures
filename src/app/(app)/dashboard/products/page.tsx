@@ -162,41 +162,91 @@ export default function Page() {
                     id: "duplicate",
                     label: "Duplicate",
                     onUpdate: async (selectedRows) => {
-                      const rowsToDuplicate = selectedRows.map((row) => ({
-                        name:
-                          row.name +
-                          " (Copy " +
-                          Math.floor(Math.random() * 1000) +
-                          ")",
-                        description: row.description,
-                        // slug: row.slug + "-copy",
-                        slug: `${row.slug}-copy-${Math.floor(
-                          Math.random() * 1000
-                        )}`,
-                        price: row.price,
-                        // sku: `${row.sku}-copy`,
-                        sku: `${row.sku}-copy-${Math.floor(
-                          Math.random() * 1000
-                        )}`,
-                        stockQuantity: row.stockQuantity,
-                        active: row.active,
-                        updatedAt: new Date(),
-                      }));
+                      try {
+                        // Step 1: prepare product duplicates
+                        const rowsToDuplicate = selectedRows.map((row) => ({
+                          name:
+                            row.name +
+                            " (Copy " +
+                            Math.floor(Math.random() * 1000) +
+                            ")",
+                          description: row.description,
+                          slug: `${row.slug}-copy-${Math.floor(
+                            Math.random() * 1000
+                          )}`,
+                          price: row.price,
+                          sku: `${row.sku}-copy-${Math.floor(
+                            Math.random() * 1000
+                          )}`,
+                          stockQuantity: row.stockQuantity,
+                          active: row.active,
+                          updatedAt: new Date(),
+                        }));
 
-                      const res = await supabaseClient
-                        .from("products")
-                        .insert(rowsToDuplicate);
+                        // Step 2: insert duplicated products and return new rows
+                        const { data: newProducts, error: insertError } =
+                          await supabaseClient
+                            .from("products")
+                            .insert(rowsToDuplicate)
+                            .select("*"); // important: so we get new IDs
 
-                      if (res.error) {
-                        toast.error("Failed to duplicate products");
-                        console.log(res.error);
-                        return;
+                        if (insertError) {
+                          toast.error("Failed to duplicate products");
+                          console.error(insertError);
+                          return;
+                        }
+
+                        // Step 3: fetch product_images for original rows
+                        const originalIds = selectedRows.map((row) => row.id);
+                        const { data: images, error: imgFetchError } =
+                          await supabaseClient
+                            .from("product_images")
+                            .select("*")
+                            .in("productId", originalIds);
+
+                        if (imgFetchError) {
+                          console.error(imgFetchError);
+                          toast.error("Failed to fetch product images");
+                          return;
+                        }
+
+                        // Step 4: map old product_id -> new product_id
+                        const idMap: any = {};
+                        selectedRows.forEach((row, idx) => {
+                          idMap[row.id] = newProducts[idx].id;
+                        });
+
+                        // Step 5: duplicate images with new product_id
+                        const imagesToInsert = images.map(
+                          ({ id, ...rest }) => ({
+                            ...rest,
+                            productId: idMap[rest.productId],
+                          })
+                        );
+
+                        if (imagesToInsert.length > 0) {
+                          const { error: imgInsertError } = await supabaseClient
+                            .from("product_images")
+                            .insert(imagesToInsert);
+
+                          if (imgInsertError) {
+                            console.error(imgInsertError);
+                            toast.error("Failed to duplicate product images");
+                            return;
+                          }
+                        }
+
+                        toast.success(
+                          "Products and images duplicated successfully"
+                        );
+                        router.refresh();
+                      } catch (err) {
+                        console.error(err);
+                        toast.error("Something went wrong while duplicating");
                       }
-
-                      toast.success("Products duplicated successfully");
-                      router.refresh();
                     },
                   },
+
                   {
                     id: "delete",
                     label: "Delete",
