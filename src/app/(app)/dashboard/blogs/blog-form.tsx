@@ -111,10 +111,10 @@ export function BlogForm() {
   const generateSlug = (title: string) => {
     const slug = title
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-")
-      .trim();
+      .trim() // remove leading/trailing spaces first
+      .replace(/[^a-z0-9\s-]/g, "") // remove special chars
+      .replace(/\s+/g, "-") // replace spaces with single dash
+      .replace(/-+/g, "-"); // collapse multiple dashes
 
     // append random string to ensure uniqueness
     const randomString = Math.random().toString(36).substring(2, 6);
@@ -321,6 +321,7 @@ export function BlogForm() {
                             className="max-w-2xl !text-2xl sm:!text-3xl font-bold border-none p-0 focus-visible:ring-0 placeholder:text-gray-400 h-auto leading-tight text-brand-primary break-words whitespace-normal"
                           />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -339,6 +340,7 @@ export function BlogForm() {
                             className="border-none max-w-2xl p-0 focus-visible:ring-0 text-blue-600 break-all"
                           />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
