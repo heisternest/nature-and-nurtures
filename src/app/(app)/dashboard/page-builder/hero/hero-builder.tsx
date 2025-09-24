@@ -2,7 +2,6 @@
 
 import { getEmbedUrl } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Edit } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -83,9 +82,7 @@ export function HeroFormBuilder({
   onSave,
 }: {
   data?: Partial<HeroData>;
-  onSave?: (data: HeroData) => Promise<{
-    success: boolean;
-  }>;
+  onSave?: (data: HeroData) => Promise<{ success: boolean }>;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -126,15 +123,15 @@ export function HeroFormBuilder({
   const heroData = form.watch();
 
   return (
-    <div className="w-full h-full bg-gray-100 flex flex-col lg:flex-row">
-      {/* Editor Panel */}
-      <aside className="w-full lg:w-2/5 xl:w-1/3 h-screen bg-white border-r flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between px-8 py-4 border-b border-gray-200">
-          <div className="flex items-center">
-            <Edit className="text-gray-600" size={24} />
-            <h2 className="text-xl font-bold ml-3">Info Section Editor</h2>
-          </div>
+    <div className="w-full h-full bg-gray-100 flex flex-col">
+      <Tabs defaultValue="form" className="w-full flex-1 flex flex-col">
+        {/* Tabs header */}
+        <div className="border-b bg-white px-6 py-3 flex items-center justify-between">
+          <TabsList>
+            <TabsTrigger value="form">Form</TabsTrigger>
+            <TabsTrigger value="preview">Preview</TabsTrigger>
+          </TabsList>
+
           <Button
             type="submit"
             size="sm"
@@ -146,8 +143,8 @@ export function HeroFormBuilder({
           </Button>
         </div>
 
-        {/* Scrollable Form */}
-        <div className="flex-grow overflow-y-auto px-8 py-6">
+        {/* Tabs content */}
+        <TabsContent value="form" className="flex-1 overflow-y-auto px-8 py-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               {/* Title */}
@@ -160,7 +157,6 @@ export function HeroFormBuilder({
                     <FormControl>
                       <RichTextEditor
                         value={field.value}
-                        // onChange={(value) => form.setValue("title", value)}
                         onChange={(value) => field.onChange(value)}
                       />
                     </FormControl>
@@ -173,7 +169,7 @@ export function HeroFormBuilder({
               <FormField
                 control={form.control}
                 name="description"
-                render={({}) => (
+                render={() => (
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
@@ -217,9 +213,9 @@ export function HeroFormBuilder({
                         onValueChange={(v) => {
                           field.onChange(v);
                           if (v === "image") {
-                            form.setValue("videoUrl", undefined); // clear video
+                            form.setValue("videoUrl", undefined);
                           } else {
-                            form.setValue("imageUrl", undefined); // clear image
+                            form.setValue("imageUrl", undefined);
                           }
                         }}
                       >
@@ -291,17 +287,15 @@ export function HeroFormBuilder({
               />
             </form>
           </Form>
-        </div>
-      </aside>
+        </TabsContent>
 
-      {/* Live Preview */}
-      <main className="w-full lg:w-3/5 xl:w-2/3 flex-grow bg-gray-50 flex items-center justify-center overflow-auto">
-        <div className="h-full w-full flex items-center justify-center">
-          <div className="scale-75 origin-top">
-            <HeroDisplay data={heroData as any} />
-          </div>
-        </div>
-      </main>
+        <TabsContent
+          value="preview"
+          className="flex-1 overflow-auto bg-gray-50"
+        >
+          <HeroDisplay data={heroData as any} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

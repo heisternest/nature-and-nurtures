@@ -106,6 +106,7 @@ export function NavUser({
               onClick={async () => {
                 const supabaseClient = createClient();
                 await supabaseClient.auth.signOut();
+                window.location.href = "/login";
               }}
             >
               <IconLogout />

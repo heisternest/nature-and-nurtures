@@ -163,13 +163,24 @@ export default function Page() {
                     label: "Duplicate",
                     onUpdate: async (selectedRows) => {
                       const rowsToDuplicate = selectedRows.map((row) => ({
-                        name: row.name + " (Copy)",
+                        name:
+                          row.name +
+                          " (Copy " +
+                          Math.floor(Math.random() * 1000) +
+                          ")",
                         description: row.description,
-                        slug: row.slug + "-copy",
+                        // slug: row.slug + "-copy",
+                        slug: `${row.slug}-copy-${Math.floor(
+                          Math.random() * 1000
+                        )}`,
                         price: row.price,
-                        sku: row.sku,
+                        // sku: `${row.sku}-copy`,
+                        sku: `${row.sku}-copy-${Math.floor(
+                          Math.random() * 1000
+                        )}`,
                         stockQuantity: row.stockQuantity,
                         active: row.active,
+                        updatedAt: new Date(),
                       }));
 
                       const res = await supabaseClient
@@ -178,6 +189,7 @@ export default function Page() {
 
                       if (res.error) {
                         toast.error("Failed to duplicate products");
+                        console.log(res.error);
                         return;
                       }
 

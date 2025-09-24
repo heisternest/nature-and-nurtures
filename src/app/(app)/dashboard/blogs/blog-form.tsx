@@ -107,25 +107,42 @@ export function BlogForm() {
     }
   };
 
-  const generateSlug = (title: string) =>
-    title
+  const generateSlug = (title: string) => {
+    const slug = title
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, "")
       .replace(/\s+/g, "-")
       .replace(/-+/g, "-")
       .trim();
 
-  const [slugTouched, setSlugTouched] = React.useState(false);
+    // append random string to ensure uniqueness
+    const randomString = Math.random().toString(36).substring(2, 6);
+    return `${slug}-${randomString}`;
+  };
 
+  const [slugManuallyEdited, setSlugManuallyEdited] = React.useState(false);
+
+  const title = form.watch("title");
+
+  // Auto-generate slug whenever title changes (unless user edited slug)
   React.useEffect(() => {
-    const subscription = form.watch((value, { name }) => {
-      if (name === "slug") setSlugTouched(true);
-      if (name === "title" && value.title && !slugTouched) {
-        form.setValue("slug", generateSlug(value.title));
+    if (title) {
+      form.setValue("slug", generateSlug(title), {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    }
+  }, [title, slugManuallyEdited, form]);
+
+  // Detect manual slug edits
+  React.useEffect(() => {
+    const subscription = form.watch((_, { name }) => {
+      if (name === "slug") {
+        setSlugManuallyEdited(true);
       }
     });
     return () => subscription.unsubscribe();
-  }, [form, slugTouched]);
+  }, [form]);
 
   useEffect(() => {
     async function fetchBlog() {

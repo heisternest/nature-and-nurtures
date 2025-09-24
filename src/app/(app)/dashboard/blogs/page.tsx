@@ -158,7 +158,7 @@ export default function Page() {
                         return;
                       }
 
-                      toast.success("Categories deleted successfully");
+                      toast.success("Blog deleted successfully");
                       router.refresh();
                     },
                   },
