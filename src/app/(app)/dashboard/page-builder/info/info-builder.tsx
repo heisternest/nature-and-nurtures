@@ -172,7 +172,7 @@ export function InfoFormBuilder({
                 control={form.control}
                 name="description"
                 render={() => (
-                  <FormItem>
+                  <FormItem className="flex-1 flex flex-col">
                     <FormLabel>Description</FormLabel>
                     <FormControl>
                       <RichTextEditor
