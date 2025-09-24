@@ -31,11 +31,11 @@ function HeroDisplay({ data }: { data: HeroData }) {
       <div className="mx-auto grid md:grid-cols-2 items-center">
         <div className="px-10 space-y-6 ">
           <div
-            className="prose prose-lg max-w-none text-4xl md:text-6xl font-light whitespace-pre-line"
+            className="prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
             dangerouslySetInnerHTML={{ __html: data.title }}
           />
           <div
-            className="prose prose-sm  text-sm max-w-md"
+            className="prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
             dangerouslySetInnerHTML={{ __html: data.description }}
           />
           <a

@@ -62,7 +62,7 @@ export default async function PrivacyPage() {
               {data.title}
             </h1>
             <div
-              className="text-gray-700 leading-relaxed"
+              className="prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
               dangerouslySetInnerHTML={{ __html: data.content }}
             />
           </div>

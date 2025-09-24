@@ -43,7 +43,10 @@ export async function FAQSection() {
 
           {/* Right Column: Headline & Accordion */}
           <div className="p-4">
-            <div dangerouslySetInnerHTML={{ __html: faqData.headline }}></div>
+            <div
+              className="prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
+              dangerouslySetInnerHTML={{ __html: faqData.headline }}
+            ></div>
 
             <Accordion
               type="multiple"

@@ -109,7 +109,10 @@ export function TOSBuilder({
       <main className="w-1/2 h-screen p-8 overflow-y-auto bg-gray-50">
         <div className="prose max-w-full">
           <h1 className="text-3xl font-bold mb-4">{form.getValues("title")}</h1>
-          <div dangerouslySetInnerHTML={{ __html: content }} />
+          <div
+            className="prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
         </div>
       </main>
     </div>

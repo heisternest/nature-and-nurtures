@@ -151,7 +151,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
           {/* Blog Content */}
           <div
-            className="prose prose-sm md:prose-lg max-w-none"
+            className="prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
             dangerouslySetInnerHTML={{ __html: blog.content }}
           />
         </article>

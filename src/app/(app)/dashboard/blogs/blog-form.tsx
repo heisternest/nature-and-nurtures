@@ -572,6 +572,7 @@ export function BlogForm() {
                 <Separator className="mb-6" />
                 <div className="prose max-w-none text-sm sm:text-base">
                   <div
+                    className="prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
                     dangerouslySetInnerHTML={{
                       __html: form.watch("content") || "<p>No content</p>",
                     }}

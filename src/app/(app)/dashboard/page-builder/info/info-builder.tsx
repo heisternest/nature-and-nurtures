@@ -31,11 +31,11 @@ export function InfoDisplay({ data }: { data: InfoData }) {
           {/* Text */}
           <div className="lg:col-span-5">
             <div
-              className="text-4xl sm:text-5xl lg:text-6xl font-light leading-tight prose max-w-none"
+              className="prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
               dangerouslySetInnerHTML={{ __html: data.title }}
             />
             <div
-              className="mt-8 max-w-md text-neutral-600 text-sm uppercase tracking-wide prose prose-sm"
+              className="mt-8 prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
               dangerouslySetInnerHTML={{ __html: data.description }}
             />
           </div>
