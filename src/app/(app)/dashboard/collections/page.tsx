@@ -160,7 +160,13 @@ export default function Page() {
                     label: "Duplicate",
                     onUpdate: async (selectedRows) => {
                       const rowsToDuplicate = selectedRows.map((row) => ({
-                        name: row.name + " (Copy)",
+                        // name: row.name + " (Copy)",
+                        // random Copy + random number to avoid unique constraint
+                        name:
+                          row.name +
+                          " (Copy " +
+                          Math.floor(Math.random() * 1000) +
+                          ")",
                         description: row.description,
                         imageUrl: row.imageUrl,
                         active: row.active,
