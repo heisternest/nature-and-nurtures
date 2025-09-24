@@ -18,6 +18,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputTags } from "@/components/ui/input-tags";
@@ -351,14 +352,15 @@ export function BlogForm() {
                     control={form.control}
                     name="content"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="flex-1 flex flex-col">
                         <FormLabel>Content</FormLabel>
-                        <FormControl>
+                        <FormControl className="flex-1">
                           <RichTextEditor
                             value={field.value}
-                            onChange={field.onChange}
+                            onChange={(val) => form.setValue("content", val)}
                           />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -578,7 +580,7 @@ export function BlogForm() {
                     </Badge>
                   ))}
                 </div>
-                <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2">
+                <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2 break-words max-w-3xl">
                   {form.watch("title") || "Untitled Post"}
                 </h1>
                 {form.watch("excerpt") && (
@@ -589,7 +591,7 @@ export function BlogForm() {
                 <Separator className="mb-6" />
                 <div className="prose max-w-none text-sm sm:text-base">
                   <div
-                    className="prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
+                    className="prose max-w-3xl  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
                     dangerouslySetInnerHTML={{
                       __html: form.watch("content") || "<p>No content</p>",
                     }}

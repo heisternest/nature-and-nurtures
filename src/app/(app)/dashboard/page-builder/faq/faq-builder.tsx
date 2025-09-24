@@ -108,7 +108,7 @@ export function FAQBuilderForm({
                 control={form.control}
                 name="headline"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex-1 flex flex-col">
                     <FormLabel>Headline</FormLabel>
                     <FormControl>
                       <RichTextEditor

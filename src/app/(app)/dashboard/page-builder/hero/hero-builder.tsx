@@ -152,7 +152,7 @@ export function HeroFormBuilder({
                 control={form.control}
                 name="title"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex-1 flex flex-col">
                     <FormLabel>Title</FormLabel>
                     <FormControl>
                       <RichTextEditor
@@ -170,7 +170,7 @@ export function HeroFormBuilder({
                 control={form.control}
                 name="description"
                 render={() => (
-                  <FormItem>
+                  <FormItem className="flex-1 flex flex-col">
                     <FormLabel>Description</FormLabel>
                     <FormControl>
                       <RichTextEditor
