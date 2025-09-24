@@ -33,6 +33,11 @@ export function SiteHeader() {
               const href = "/" + segments.slice(0, index + 1).join("/");
               const isLast = index === segments.length - 1;
 
+              // if it is page-builder dont show it in the breadcrumb
+              if (segment === "page-builder") {
+                return null;
+              }
+
               return (
                 <div key={href} className="flex items-center">
                   <BreadcrumbSeparator />
