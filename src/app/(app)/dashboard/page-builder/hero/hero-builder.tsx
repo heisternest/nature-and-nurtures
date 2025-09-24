@@ -126,7 +126,7 @@ export function HeroFormBuilder({
     <div className="w-full h-full bg-gray-100 flex flex-col">
       <Tabs defaultValue="form" className="w-full flex-1 flex flex-col">
         {/* Tabs header */}
-        <div className="border-b bg-white px-6 py-3 flex items-center justify-between">
+        <div className="border-b bg-white px-6 py-3 flex items-center justify-end gap-2">
           <TabsList>
             <TabsTrigger value="form">Form</TabsTrigger>
             <TabsTrigger value="preview">Preview</TabsTrigger>

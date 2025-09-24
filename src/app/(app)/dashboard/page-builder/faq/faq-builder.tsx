@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit, Loader2 } from "lucide-react";
@@ -25,7 +26,6 @@ import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { FAQFormData, FAQSchema } from "./schema";
-// import { SaveFAQ } from "./action";
 
 const defaultFAQ: FAQFormData = {
   headline: "",
@@ -72,146 +72,152 @@ export function FAQBuilderForm({
   };
 
   return (
-    <div className="w-full h-full bg-gray-100 font-sans flex flex-col lg:flex-row">
-      {/* Form Panel */}
-      <aside className="w-full lg:w-2/5 xl:w-2/5 h-screen bg-white border-r flex flex-col">
-        <div className="flex items-center px-8 py-4 border-b border-gray-200 flex-shrink-0">
-          <Edit className="text-gray-600" size={24} />
-          <h2 className="text-xl font-bold text-gray-800 ml-3">
-            Frequently Asked Questions
-          </h2>
+    <Tabs defaultValue="editor" className="w-full h-full flex flex-col">
+      {/* Header with Tabs + Save */}
+      <div className="flex items-center justify-between px-6 py-3 border-b bg-white">
+        <div className="flex items-center gap-2">
+          <Edit className="text-gray-600" size={22} />
+          <h2 className="text-lg font-semibold">FAQ Section</h2>
         </div>
-        <div className="flex-grow overflow-y-auto  py-6">
+        <div className="flex items-center gap-4">
+          <TabsList>
+            <TabsTrigger value="editor">Editor</TabsTrigger>
+            <TabsTrigger value="preview">Preview</TabsTrigger>
+          </TabsList>
+          <Button
+            type="submit"
+            size="sm"
+            className="bg-black text-white hover:bg-gray-800"
+            onClick={form.handleSubmit(saveFaq)}
+            disabled={loading}
+          >
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {loading ? "Saving..." : "Save FAQ"}
+          </Button>
+        </div>
+      </div>
+
+      {/* Tabs Content */}
+      <div className="flex-1 overflow-auto">
+        {/* Editor Tab */}
+        <TabsContent value="editor" className="p-6">
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(saveFaq)}
-              className="flex flex-col h-full"
-            >
-              {/* Scrollable Form Content */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                {/* Headlines */}
-                <div className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="headline"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Headline</FormLabel>
-                        <FormControl>
-                          <RichTextEditor
-                            onChange={field.onChange}
-                            value={field.value}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+            <form onSubmit={form.handleSubmit(saveFaq)} className="space-y-6">
+              {/* Headline */}
+              <FormField
+                control={form.control}
+                name="headline"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Headline</FormLabel>
+                    <FormControl>
+                      <RichTextEditor
+                        onChange={field.onChange}
+                        value={field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                {/* Media */}
-                <div className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="imageUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Image </FormLabel>
-                        <FormControl>
-                          <FileUpload
-                            value={field.value}
-                            bucketName="ecom"
-                            type="single"
-                            control={form.control}
-                            name="imageUrl"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+              {/* Image */}
+              <FormField
+                control={form.control}
+                name="imageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image</FormLabel>
+                    <FormControl>
+                      <FileUpload
+                        value={field.value}
+                        bucketName="ecom"
+                        type="single"
+                        control={form.control}
+                        name="imageUrl"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                {/* Accordion Items */}
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-medium">FAQ Items</h3>
+              {/* Accordion Items */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium">FAQ Items</h3>
+                  <Button
+                    type="button"
+                    onClick={() =>
+                      append({
+                        title: "New Question",
+                        content: "Answer for the new question.",
+                      })
+                    }
+                  >
+                    Add Item
+                  </Button>
+                </div>
+                {fields.map((field, index) => (
+                  <div
+                    key={field.id}
+                    className="p-4 border rounded-md relative space-y-4"
+                  >
                     <Button
                       type="button"
-                      onClick={() =>
-                        append({
-                          title: "New Question",
-                          content: "Answer for the new question.",
-                        })
-                      }
+                      variant="destructive"
+                      size="sm"
+                      className="absolute top-2 right-2"
+                      onClick={() => remove(index)}
                     >
-                      Add Accordion Item
+                      Remove
                     </Button>
+
+                    <FormField
+                      control={form.control}
+                      name={`accordionItems.${index}.title`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Item {index + 1} Title</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name={`accordionItems.${index}.content`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Item {index + 1} Content</FormLabel>
+                          <FormControl>
+                            <Textarea {...field} rows={3} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
-                  {fields.map((field, index) => (
-                    <div
-                      key={field.id}
-                      className="p-4 border rounded-md relative space-y-4"
-                    >
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="absolute top-2 right-2"
-                        onClick={() => remove(index)}
-                      >
-                        Remove
-                      </Button>
-
-                      <FormField
-                        control={form.control}
-                        name={`accordionItems.${index}.title`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Item {index + 1} Title</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name={`accordionItems.${index}.content`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Item {index + 1} Content</FormLabel>
-                            <FormControl>
-                              <Textarea {...field} rows={3} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Fixed Bottom Save Button */}
-              <div className="border-t border-gray-200 bg-white px-10 py-4 sticky bottom-0 z-10">
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {loading ? "Saving..." : "Save FAQ"}
-                </Button>
+                ))}
               </div>
             </form>
           </Form>
-        </div>
-      </aside>
+        </TabsContent>
 
-      {/* Live Preview */}
-      <main className="flex-1 bg-gray-100 p-8 overflow-auto">
-        <FAQSectionDisplay data={form.watch()} />
-      </main>
-    </div>
+        {/* Preview Tab */}
+        <TabsContent
+          value="preview"
+          className="h-full w-full flex items-center justify-center bg-gray-50 p-6"
+        >
+          <div className="w-full max-w-5xl">
+            <FAQSectionDisplay data={form.watch()} />
+          </div>
+        </TabsContent>
+      </div>
+    </Tabs>
   );
 }
 
@@ -235,7 +241,7 @@ function FAQSectionDisplay({ data }: FAQSectionDisplayProps) {
 
         <div className="space-y-6">
           <div
-            className="prose  break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
+            className="prose break-words overflow-hidden [&_*]:max-w-full [&_img]:h-64 [&_img]:w-full [&_img]:object-cover"
             dangerouslySetInnerHTML={{ __html: data.headline }}
           />
 

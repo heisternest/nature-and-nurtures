@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { InfoData, infoSchema } from "./schema";
 
@@ -77,7 +78,6 @@ export function InfoDisplay({ data }: { data: InfoData }) {
   );
 }
 
-// ---------------- Form Builder ----------------
 export function InfoFormBuilder({
   data,
   onSave,
@@ -120,15 +120,18 @@ export function InfoFormBuilder({
   const infoData = form.watch();
 
   return (
-    <div className="w-full h-full bg-gray-100 flex flex-col lg:flex-row">
-      {/* Form Panel */}
-      <aside className="w-full lg:w-2/5 xl:w-1/3 h-screen bg-white border-r flex flex-col">
-        {/* Header with Save Button */}
-        <div className="flex items-center justify-between px-8 py-4 border-b border-gray-200">
-          <div className="flex items-center">
-            <Edit className="text-gray-600" size={24} />
-            <h2 className="text-xl font-bold ml-3">Info Section Editor</h2>
-          </div>
+    <Tabs defaultValue="editor" className="w-full h-full flex flex-col">
+      {/* Header with Save Button + Tab Switcher */}
+      <div className="flex items-center justify-between px-6 py-3 border-b bg-white">
+        <div className="flex items-center gap-2">
+          <Edit className="text-gray-600" size={22} />
+          <h2 className="text-lg font-semibold">Info Section</h2>
+        </div>
+        <div className="flex items-center gap-4">
+          <TabsList>
+            <TabsTrigger value="editor">Editor</TabsTrigger>
+            <TabsTrigger value="preview">Preview</TabsTrigger>
+          </TabsList>
           <Button
             type="submit"
             size="sm"
@@ -139,9 +142,11 @@ export function InfoFormBuilder({
             {loading ? "Saving..." : "Save"}
           </Button>
         </div>
+      </div>
 
-        {/* Scrollable Form */}
-        <div className="flex-grow overflow-y-auto px-8 py-6">
+      {/* Content */}
+      <div className="flex-1 overflow-auto">
+        <TabsContent value="editor" className="p-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               {/* Title */}
@@ -182,89 +187,32 @@ export function InfoFormBuilder({
                 )}
               />
 
-              {/* Left Image */}
-              <FormField
-                control={form.control}
-                name="image1"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image 1</FormLabel>
-                    <FormControl>
-                      <FileUpload
-                        bucketName="ecom"
-                        control={form.control}
-                        type="single"
-                        value={field.value}
-                        name="image1"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Right Image */}
-              <FormField
-                control={form.control}
-                name="image2"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image 2</FormLabel>
-                    <FormControl>
-                      <FileUpload
-                        bucketName="ecom"
-                        control={form.control}
-                        type="single"
-                        value={field.value}
-                        name="image2"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Image 3 (Optional) */}
-              <FormField
-                control={form.control}
-                name="image3"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image 3 (Optional)</FormLabel>
-                    <FormControl>
-                      <FileUpload
-                        bucketName="ecom"
-                        control={form.control}
-                        type="single"
-                        value={field.value}
-                        name="image3"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Image 4 (Optional) */}
-              <FormField
-                control={form.control}
-                name="image4"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image 4 (Optional)</FormLabel>
-                    <FormControl>
-                      <FileUpload
-                        bucketName="ecom"
-                        control={form.control}
-                        type="single"
-                        value={field.value}
-                        name="image4"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/* Images */}
+              {["image1", "image2", "image3", "image4"].map((name, i) => (
+                <FormField
+                  key={name}
+                  control={form.control}
+                  name={name as keyof InfoData}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Image {i + 1}
+                        {i > 1 && " (Optional)"}
+                      </FormLabel>
+                      <FormControl>
+                        <FileUpload
+                          bucketName="ecom"
+                          control={form.control}
+                          type="single"
+                          value={field.value}
+                          name={name as any}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ))}
 
               {/* Background */}
               <FormField
@@ -281,17 +229,17 @@ export function InfoFormBuilder({
               />
             </form>
           </Form>
-        </div>
-      </aside>
+        </TabsContent>
 
-      {/* Preview */}
-      <main className="w-full lg:w-3/5 xl:w-2/3 flex-grow bg-gray-50 flex items-center justify-center overflow-auto">
-        <div className="h-full w-full flex items-center justify-center">
-          <div className="transform scale-75 origin-top w-[133%]">
-            <InfoDisplay data={infoData as any} />
+        <TabsContent
+          value="preview"
+          className="h-full w-full flex items-center justify-center bg-gray-50 p-6"
+        >
+          <div className="w-full max-w-7xl">
+            <InfoDisplay data={infoData as InfoData} />
           </div>
-        </div>
-      </main>
-    </div>
+        </TabsContent>
+      </div>
+    </Tabs>
   );
 }
