@@ -254,7 +254,8 @@ export function HeaderClient({
                         className="text-gray-900 hover:text-[#7c2943] transition-colors"
                         onClick={() => setMobileExploreOpen(false)}
                       >
-                        {item.name}
+                        {item.name.split(" ").slice(0, 3).join(" ")}
+                        {item.name.split(" ").length > 3 ? "..." : ""}
                       </Link>
                     </li>
                   ))
