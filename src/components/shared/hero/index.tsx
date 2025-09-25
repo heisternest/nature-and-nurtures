@@ -44,8 +44,8 @@ export async function HeroSection() {
           {/* CTA Button */}
           <Link
             href="/products"
-            className="inline-flex items-center bg-white rounded-full px-5 sm:px-6 py-3 text-xs sm:text-sm font-semibold uppercase tracking-wider
-                       transform transition-transform duration-200 hover:scale-105 hover:bg-gray-100"
+            className="inline-flex items-center bg-brand rounded-full px-5 sm:px-6 py-3 text-xs sm:text-sm font-semibold uppercase tracking-wider
+                       transform transition-transform duration-200 hover:scale-105 hover:bg-brand/90"
           >
             {data.buttonText}
             <span

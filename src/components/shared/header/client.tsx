@@ -13,7 +13,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CartClientDrawer } from "../cart/client";
 import { SearchBar } from "../search/search-drawer";
@@ -32,7 +31,6 @@ export function HeaderClient({
   const [mobileExploreOpen, setMobileExploreOpen] = useState(false);
 
   const { items } = useCartStore();
-  const router = useRouter();
 
   const categories = Array.isArray(data) ? data : [];
   const megaMenuCategories = categories.slice(0, 4);
@@ -189,6 +187,9 @@ export function HeaderClient({
 
             <Link href="/blogs" className="hover:text-gray-700">
               BLOGS
+            </Link>
+            <Link href="/contact" className="hover:text-gray-700">
+              CONTACT
             </Link>
           </nav>
         </div>
