@@ -80,6 +80,9 @@ export async function Footer() {
                 <li>
                   <Link href="/about">ABOUT</Link>
                 </li>
+                <li>
+                  <Link href="/contact">CONTACT</Link>
+                </li>
               </ul>
             </div>
             <div>
