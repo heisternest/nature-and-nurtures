@@ -10,6 +10,7 @@ import {
   IconHelp,
   IconInfoCircle,
   IconListDetails,
+  IconPhoneFilled,
   IconReport,
   IconSettings,
   IconTrademark,
@@ -85,6 +86,11 @@ const data = {
       name: "FAQ",
       url: "/dashboard/page-builder/faq",
       icon: IconHelp,
+    },
+    {
+      name: "Contact",
+      url: "/dashboard/page-builder/contact",
+      icon: IconPhoneFilled,
     },
     {
       name: "Terms Of Service",
