@@ -39,7 +39,7 @@ export function CategoryProductClient({ data }: { data: any }) {
               <Star size={16} className="text-gray-800" fill="currentColor" />
             </div>
             <p className="text-xs sm:text-sm uppercase tracking-widest text-gray-500">
-              Collection
+              Category
             </p>
             <h1 className="text-2xl sm:text-4xl md:text-6xl font-serif text-gray-900 my-2">
               {data.name}
