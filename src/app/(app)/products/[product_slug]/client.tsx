@@ -250,20 +250,6 @@ export function ProductPage({ product }: { product: any }) {
               ADD TO CART
             </button>
           </div>
-
-          {/* Product Info */}
-          <div className="space-y-4 pt-6 border-t border-gray-200">
-            <div className="text-sm sm:text-base text-gray-600 space-y-1">
-              <p>
-                <strong>SKU:</strong> {product.sku}
-              </p>
-              {product.category && product.category.name && (
-                <p>
-                  <strong>Categories:</strong> {product.category.name}
-                </p>
-              )}
-            </div>
-          </div>
         </div>
       </div>
 
