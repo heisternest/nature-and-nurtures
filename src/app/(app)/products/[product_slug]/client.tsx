@@ -124,11 +124,6 @@ export function ProductPage({ product }: { product: any }) {
           {/* Header */}
           <div className="flex justify-between items-start">
             <div>
-              {product.category && product.category.name && (
-                <p className="text-sm text-gray-500 font-medium">
-                  {product.category.name}
-                </p>
-              )}
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                 {product.name}
               </h1>
