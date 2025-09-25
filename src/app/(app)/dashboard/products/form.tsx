@@ -361,7 +361,7 @@ export function ProductForm({
                 control={form.control}
                 name="about"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex-1 flex flex-col">
                     <FormLabel>About *</FormLabel>
                     <FormControl>
                       <RichTextEditor
