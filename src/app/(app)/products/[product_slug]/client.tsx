@@ -67,7 +67,10 @@ export function ProductPage({ product }: { product: any }) {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{product.name}</BreadcrumbPage>
+            <BreadcrumbPage>
+              {product.name.split(" ").slice(0, 3).join(" ")}
+              {product.name.split(" ").length > 3 ? "..." : ""}
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
