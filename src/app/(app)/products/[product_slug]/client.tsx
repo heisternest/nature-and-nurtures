@@ -8,6 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCartStore } from "@/lib/cart-store";
 import { imageThumbnailUrl } from "@/utils/image-otf";
 import { useState } from "react";
@@ -18,7 +19,6 @@ export function ProductPage({ product }: { product: any }) {
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState("M");
   const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState("description");
 
   const { addToCart } = useCartStore();
 
@@ -45,6 +45,7 @@ export function ProductPage({ product }: { product: any }) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 sm:py-8">
+      {/* Breadcrumb */}
       <Breadcrumb className="mb-6 sm:mb-8">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -56,7 +57,6 @@ export function ProductPage({ product }: { product: any }) {
               product.category.name && (
                 <>
                   <BreadcrumbSeparator />
-
                   <BreadcrumbItem>
                     <BreadcrumbLink href={`/category/${product.category.slug}`}>
                       {product.category.name}
@@ -71,6 +71,8 @@ export function ProductPage({ product }: { product: any }) {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+
+      {/* Product Content */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Left Column - Images */}
         <div className="flex flex-col sm:flex-row gap-4 lg:sticky lg:top-8 lg:self-start">
@@ -124,7 +126,6 @@ export function ProductPage({ product }: { product: any }) {
                   {product.category.name}
                 </p>
               )}
-
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                 {product.name}
               </h1>
@@ -255,43 +256,14 @@ export function ProductPage({ product }: { product: any }) {
 
       {/* Tabs */}
       <div className="mt-12 sm:mt-16 max-w-7xl mx-auto">
-        <div className="flex gap-6 sm:gap-8 border-b border-gray-200 mb-6 sm:mb-8 overflow-x-auto">
-          <button
-            onClick={() => setActiveTab("description")}
-            className={`pb-3 sm:pb-4 text-base sm:text-lg font-medium whitespace-nowrap ${
-              activeTab === "description"
-                ? "text-black border-b-2 border-black"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            Description
-          </button>
-          <button
-            onClick={() => setActiveTab("specifications")}
-            className={`pb-3 sm:pb-4 text-base sm:text-lg font-medium whitespace-nowrap ${
-              activeTab === "specifications"
-                ? "text-black border-b-2 border-black"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            Specifications
-          </button>
-        </div>
+        <Tabs defaultValue="about" className="w-full">
+          <TabsList className="border-b border-gray-200 mb-6 sm:mb-8">
+            <TabsTrigger value="about">About This Product</TabsTrigger>
+            <TabsTrigger value="specifications">Specifications</TabsTrigger>
+          </TabsList>
 
-        {/* Tab Content */}
-        {activeTab === "description" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 sm:mb-16">
-            {/* Description */}
-            <div>
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
-                Description
-              </h3>
-              <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
-                {product.description}
-              </p>
-            </div>
-
-            {/* About This Product */}
+          {/* About This Product */}
+          <TabsContent value="about">
             <div>
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
                 About This Product
@@ -308,11 +280,10 @@ export function ProductPage({ product }: { product: any }) {
                 ))}
               </ul>
             </div>
-          </div>
-        )}
+          </TabsContent>
 
-        {activeTab === "specifications" && (
-          <div className="mb-12 sm:mb-16">
+          {/* Specifications */}
+          <TabsContent value="specifications">
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
               {product.specifications.map((spec: any) => (
                 <li key={spec.id} className="flex gap-2 text-sm sm:text-base">
@@ -321,8 +292,8 @@ export function ProductPage({ product }: { product: any }) {
                 </li>
               ))}
             </ul>
-          </div>
-        )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
