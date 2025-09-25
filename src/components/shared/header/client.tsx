@@ -188,6 +188,9 @@ export function HeaderClient({
             <Link href="/blogs" className="hover:text-gray-700">
               BLOGS
             </Link>
+            <Link href="/about" className="hover:text-gray-700">
+              ABOUT
+            </Link>
             <Link href="/contact" className="hover:text-gray-700">
               CONTACT
             </Link>

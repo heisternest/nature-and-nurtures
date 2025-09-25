@@ -58,7 +58,7 @@ export const ContactPreview: React.FC<{ data: ContactPageForm }> = ({
 
   return (
     <Card
-      className="w-full max-w-6xl p-8 md:p-12 border-gray-200 shadow-xl"
+      className="w-full max-w-7xl p-8 md:p-12 border-gray-200 shadow-xl"
       style={backgroundStyle}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
