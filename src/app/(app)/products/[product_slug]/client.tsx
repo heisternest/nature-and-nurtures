@@ -11,11 +11,12 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCartStore } from "@/lib/cart-store";
 import { imageThumbnailUrl } from "@/utils/image-otf";
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export function ProductPage({ product }: { product: any }) {
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState("M");
   const [quantity, setQuantity] = useState(1);
@@ -78,44 +79,63 @@ export function ProductPage({ product }: { product: any }) {
       {/* Product Content */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Left Column - Images */}
-        <div className="flex flex-col sm:flex-row gap-4 lg:sticky lg:top-8 lg:self-start">
-          {/* Thumbnails */}
-          <div className="flex sm:flex-col gap-2 sm:max-h-[38rem] sm:overflow-y-auto">
+        <div className="space-y-4">
+          {/* Main Image */}
+          {/* Main Image with Amazon-style Zoom */}
+          <div
+            className="aspect-square bg-gray-100 rounded-2xl overflow-hidden relative"
+            onMouseMove={(e) => {
+              const { left, top, width, height } =
+                e.currentTarget.getBoundingClientRect();
+              const x = ((e.pageX - left) / width) * 100;
+              const y = ((e.pageY - top) / height) * 100;
+              e.currentTarget.style.setProperty("--zoom-x", `${x}%`);
+              e.currentTarget.style.setProperty("--zoom-y", `${y}%`);
+            }}
+          >
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={selectedImageIndex}
+                src={
+                  product.productImages?.[selectedImageIndex]?.url ||
+                  "/placeholder.png"
+                }
+                alt={
+                  product.productImages?.[selectedImageIndex]?.alt ||
+                  product.name ||
+                  "Product image"
+                }
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="w-full h-full object-contain transform transition duration-300 ease-in-out hover:scale-[2] cursor-zoom-in"
+                style={{
+                  transformOrigin: "var(--zoom-x, 50%) var(--zoom-y, 50%)",
+                }}
+              />
+            </AnimatePresence>
+          </div>
+
+          {/* Thumbnail Images */}
+          <div className="flex space-x-3 overflow-x-auto pb-2">
             {product.productImages?.map((img: any, index: number) => (
               <button
-                key={img.id}
-                onClick={() => setSelectedImage(index)}
-                className={`w-16 h-20 sm:w-20 sm:h-24 border-2 rounded-lg overflow-hidden flex-shrink-0 ${
-                  selectedImage === index ? "border-black" : "border-gray-200"
+                key={index}
+                onClick={() => setSelectedImageIndex(index)}
+                className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                  selectedImageIndex === index
+                    ? "border-blue-500 ring-2 ring-blue-200"
+                    : "border-gray-200 hover:border-gray-300"
                 }`}
               >
                 <img
                   src={imageThumbnailUrl(img.url) || "/placeholder.svg"}
-                  alt={img.alt || `Product thumbnail ${index + 1}`}
-                  width={80}
-                  height={100}
+                  alt={`${product.name} view ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
               </button>
             ))}
-          </div>
-
-          {/* Main Image */}
-          <div className="flex-1 bg-gray-100 rounded-lg overflow-hidden h-96 sm:h-[38rem]">
-            <img
-              src={
-                product.productImages?.[selectedImage]?.url ||
-                "/placeholder.png"
-              }
-              alt={
-                product.productImages?.[selectedImage]?.alt ||
-                product.name ||
-                "Product image"
-              }
-              width={500}
-              height={1200}
-              className="w-full h-full object-cover"
-            />
           </div>
         </div>
 

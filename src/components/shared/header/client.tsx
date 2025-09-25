@@ -1,9 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
@@ -87,7 +85,8 @@ export function HeaderClient({
                                   )}`}
                                   className="text-lg text-gray-900 hover:text-[#7c2943] font-normal transition-colors"
                                 >
-                                  {item.name}
+                                  {item.name.split(" ").slice(0, 3).join(" ")}
+                                  {item.name.split(" ").length > 3 ? "..." : ""}
                                 </Link>
                               </li>
                             ))
@@ -204,7 +203,7 @@ export function HeaderClient({
             onClick={() => setMobileExploreOpen(true)}
             className="md:hidden text-sm font-medium hover:text-gray-700"
           >
-            SHOP ALL
+            EXPLORE
           </button>
 
           {/* Search */}
@@ -237,12 +236,7 @@ export function HeaderClient({
       <Drawer open={mobileExploreOpen} onOpenChange={setMobileExploreOpen}>
         <DrawerContent className="h-[85vh]">
           <DrawerHeader>
-            <DrawerTitle>SHOP ALL</DrawerTitle>
-            <DrawerClose asChild>
-              <Button variant="ghost" size="sm">
-                ✕
-              </Button>
-            </DrawerClose>
+            <DrawerTitle>EXPLORE</DrawerTitle>
           </DrawerHeader>
 
           <div className="p-6 overflow-y-auto space-y-8">
@@ -346,6 +340,37 @@ export function HeaderClient({
                     </span>
                   </Link>
                 ))}
+            </div>
+            <div className="pt-6 border-t border-gray-200">
+              <ul className="space-y-3 text-lg">
+                <li>
+                  <Link
+                    href="/blogs"
+                    className="text-gray-900 hover:text-[#7c2943] transition-colors"
+                    onClick={() => setMobileExploreOpen(false)}
+                  >
+                    BLOGS
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/about"
+                    className="text-gray-900 hover:text-[#7c2943] transition-colors"
+                    onClick={() => setMobileExploreOpen(false)}
+                  >
+                    ABOUT
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/contact"
+                    className="text-gray-900 hover:text-[#7c2943] transition-colors"
+                    onClick={() => setMobileExploreOpen(false)}
+                  >
+                    CONTACT
+                  </Link>
+                </li>
+              </ul>
             </div>
           </div>
         </DrawerContent>

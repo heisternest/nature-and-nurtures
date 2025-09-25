@@ -4,7 +4,6 @@ import { Footer } from "@/components/shared/footer";
 import Header from "@/components/shared/header";
 import { HeroSection } from "@/components/shared/hero";
 import { InfoSection } from "@/components/shared/info";
-import { Newsletter } from "@/components/shared/newsletter";
 import { ProductShowcase } from "@/components/shared/product/product-showcase";
 
 export const revalidate = 0;
@@ -38,7 +37,7 @@ export default function Home() {
       <InfoSection />
       <ProductShowcase />
       <FAQSection />
-      <Newsletter />
+      {/* <Newsletter /> */}
       <Footer />
     </div>
   );
