@@ -78,6 +78,7 @@ export async function saveProduct(data: ProductFormData) {
           slug: data.slug,
           images: data.images,
           description: data.description,
+          about: data.about,
           active: data.active,
           sku: data.sku,
           stockQuantity: data.stockQuantity,
@@ -182,6 +183,7 @@ export async function saveProduct(data: ProductFormData) {
           slug: `${data.name.replace(/\s+/g, "-").toLowerCase()}-${data.sku}`,
           images: data.images,
           description: data.description,
+          about: data.about,
           sku: data.sku,
           active: data.active,
           productImages: data.productImages

@@ -46,6 +46,7 @@ model Product {
   discount        Int?                   @default(0)
   featured        Boolean                @default(false)
   description     String?
+  about           String?
   aboutProduct    String[]
   metaTitle       String?
   metaDescription String?

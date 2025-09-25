@@ -268,6 +268,16 @@ export function ProductPage({ product }: { product: any }) {
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
                 About This Product
               </h3>
+              <div className="mb-6 text-gray-600 leading-relaxed text-sm sm:text-base">
+                <div
+                  className="prose  break-words overflow-hidden [&_*]:max-w-full   [&_img]:w-full [&_img]:object-cover"
+                  dangerouslySetInnerHTML={{ __html: product.about }}
+                />
+              </div>
+
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
+                Key Features
+              </h3>
               <ul className="space-y-2 sm:space-y-3 text-gray-600">
                 {product.features.map((item: any) => (
                   <li

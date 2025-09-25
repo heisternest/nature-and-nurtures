@@ -1,6 +1,7 @@
 "use client";
 
 import { FileUpload } from "@/components/file-upload";
+import { RichTextEditor } from "@/components/text-editor/text-editor";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -75,6 +76,7 @@ export function ProductForm({
       slug: product?.slug || "",
       name: product?.name || "",
       description: product?.description || "",
+      about: product?.about || "",
       price: product?.price || 0,
       originalPrice: product?.originalPrice || undefined,
       sku: product?.sku || "",
@@ -346,6 +348,25 @@ export function ProductForm({
                       <Textarea
                         placeholder="Describe your product..."
                         {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Provide a short description of your product
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="about"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>About *</FormLabel>
+                    <FormControl>
+                      <RichTextEditor
+                        value={field.value || ""}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormDescription>
