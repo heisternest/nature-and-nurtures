@@ -861,9 +861,7 @@ export function ProductForm({
                     <FormControl>
                       <Input placeholder="SEO meta title" {...field} />
                     </FormControl>
-                    <FormDescription>
-                      Title for search engines (max 60 characters)
-                    </FormDescription>
+                    <FormDescription>Title for search engines</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

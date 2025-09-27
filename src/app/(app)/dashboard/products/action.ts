@@ -65,6 +65,7 @@ export async function saveProduct(data: ProductFormData) {
         where: { id: data.id },
         data: {
           name: data.name,
+          metaTitle: data.metaTitle,
           category: { connect: { id: data.categoryId } },
           collections:
             data.collections && data.collections.length > 0
@@ -84,6 +85,7 @@ export async function saveProduct(data: ProductFormData) {
           stockQuantity: data.stockQuantity,
           price: data.price,
           featured: data.featured,
+          metaDescription: data.metaDescription,
 
           originalPrice: data.originalPrice,
           discount: data.originalPrice
@@ -171,6 +173,8 @@ export async function saveProduct(data: ProductFormData) {
       const newProduct = await prisma.product.create({
         data: {
           name: data.name,
+          metaTitle: data.metaTitle,
+          metaDescription: data.metaDescription,
           category: { connect: { id: data.categoryId } },
           collections:
             data.collections && data.collections.length > 0

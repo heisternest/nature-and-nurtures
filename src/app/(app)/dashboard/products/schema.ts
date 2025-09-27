@@ -60,10 +60,7 @@ export const productSchema = z.object({
       })
     )
     .optional(),
-  metaTitle: z
-    .string()
-    .max(60, "Meta title should not exceed 60 characters")
-    .optional(),
+  metaTitle: z.string().optional(),
   metaDescription: z
     .string()
     .max(160, "Meta description should not exceed 160 characters")
