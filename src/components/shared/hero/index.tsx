@@ -12,11 +12,6 @@ export async function HeroSection() {
     .eq("pageType", "HERO")
     .single();
 
-  const normalizedTitle = data.title.replace(
-    /(>)™/g,
-    ' style="font-size: inherit;">™'
-  );
-
   return (
     <section
       className="w-full"
@@ -33,11 +28,13 @@ export async function HeroSection() {
               {data.icon}
             </span>
           </div>
-
           {/* Title */}
           <div
-            className="prose  break-words overflow-hidden [&_*]:max-w-full   [&_img]:w-full [&_img]:object-cover"
-            dangerouslySetInnerHTML={{ __html: normalizedTitle }}
+            className="prose font-serif  break-words overflow-hidden [&_*]:max-w-full   [&_img]:w-full [&_img]:object-cover"
+            dangerouslySetInnerHTML={{
+              __html: data.title,
+              // data.title if there is  tm symbol replace with &trade
+            }}
           />
 
           {/* Description */}
@@ -45,7 +42,6 @@ export async function HeroSection() {
             className="prose  break-words overflow-hidden [&_*]:max-w-full   [&_img]:w-full [&_img]:object-cover"
             dangerouslySetInnerHTML={{ __html: data.description }}
           />
-
           {/* CTA Button */}
           <Link
             href="/products"
