@@ -18,11 +18,9 @@ import { SearchBar } from "../search/search-drawer";
 export function HeaderClient({
   data,
   collections,
-  featuredProducts,
 }: {
   data: any;
   collections: any;
-  featuredProducts: any;
 }) {
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -53,13 +51,22 @@ export function HeaderClient({
 
           {/* Navigation (Desktop) */}
           <nav className="hidden md:flex items-center space-x-8 text-sm font-medium relative">
-            {/* Single EXPLORE MEGAMENU */}
+            <Link href="/" className="hover:text-gray-700">
+              HOME
+            </Link>
+
+            {/* SHOP with Dropdown */}
             <div
               className="relative group"
               onMouseEnter={() => setMenuOpen(true)}
               onMouseLeave={() => setMenuOpen(false)}
             >
-              <button className="hover:text-gray-700">SHOP ▾</button>
+              <Link
+                href="/categories"
+                className="hover:text-gray-700 inline-flex items-center"
+              >
+                SHOP ▾
+              </Link>
               <AnimatePresence>
                 {menuOpen && (
                   <motion.div
@@ -170,14 +177,6 @@ export function HeaderClient({
 
         {/* Search + Cart */}
         <div className="flex items-center space-x-4">
-          {/* Mobile Explore Button */}
-          <button
-            onClick={() => setMobileExploreOpen(true)}
-            className="md:hidden text-sm font-medium hover:text-gray-700"
-          >
-            EXPLORE
-          </button>
-
           {/* Search */}
           <div className="hidden md:block w-64">
             <SearchBar />
@@ -204,39 +203,14 @@ export function HeaderClient({
       {/* Cart Drawer */}
       <CartClientDrawer open={open} closeDrawer={closeDrawer} />
 
-      {/* Mobile Explore Drawer */}
+      {/* Mobile Drawer */}
       <Drawer open={mobileExploreOpen} onOpenChange={setMobileExploreOpen}>
         <DrawerContent className="h-[85vh]">
           <DrawerHeader>
-            <DrawerTitle>EXPLORE</DrawerTitle>
+            <DrawerTitle>MENU</DrawerTitle>
           </DrawerHeader>
 
           <div className="p-6 overflow-y-auto space-y-8">
-            {/* Featured Products */}
-            <div>
-              <h4 className="font-bold mb-3 text-xs tracking-widest text-[#7c2943]">
-                FEATURED PRODUCTS
-              </h4>
-              <ul className="space-y-2">
-                {featuredProducts.length ? (
-                  featuredProducts.map((item: any) => (
-                    <li key={item.id}>
-                      <Link
-                        href={`/products/${encodeURIComponent(item.slug)}`}
-                        className="text-gray-900 hover:text-[#7c2943] transition-colors"
-                        onClick={() => setMobileExploreOpen(false)}
-                      >
-                        {item.name.split(" ").slice(0, 3).join(" ")}
-                        {item.name.split(" ").length > 3 ? "..." : ""}
-                      </Link>
-                    </li>
-                  ))
-                ) : (
-                  <li className="text-gray-500">No featured products</li>
-                )}
-              </ul>
-            </div>
-
             {/* Categories */}
             {megaMenuCategories.map((category: any) => (
               <div key={category.id}>
@@ -289,37 +263,31 @@ export function HeaderClient({
               </ul>
             </div>
 
-            {/* Category Images */}
-            <div className="grid grid-cols-2 gap-4">
-              {categories
-                .filter((c: any) => c.imageUrl)
-                .slice(0, 3)
-                .map((c: any) => (
-                  <Link
-                    key={c.id}
-                    href={`/category/${encodeURIComponent(c.slug)}`}
-                    onClick={() => setMobileExploreOpen(false)}
-                  >
-                    <Image
-                      src={c.imageUrl}
-                      alt={c.name}
-                      width={160}
-                      height={128}
-                      className="w-full h-28 object-cover rounded"
-                      unoptimized
-                    />
-                    <span className="mt-1 block text-sm text-gray-700 text-center">
-                      {c.name}
-                    </span>
-                  </Link>
-                ))}
-            </div>
+            {/* Bottom Links */}
             <div className="pt-6 border-t border-gray-200">
               <ul className="space-y-3 text-lg">
                 <li>
                   <Link
+                    href="/"
+                    className="text-gray-900 hover:text-[#7c2943]"
+                    onClick={() => setMobileExploreOpen(false)}
+                  >
+                    HOME
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/categories"
+                    className="text-gray-900 hover:text-[#7c2943]"
+                    onClick={() => setMobileExploreOpen(false)}
+                  >
+                    SHOP
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/blogs"
-                    className="text-gray-900 hover:text-[#7c2943] transition-colors"
+                    className="text-gray-900 hover:text-[#7c2943]"
                     onClick={() => setMobileExploreOpen(false)}
                   >
                     BLOGS
@@ -328,7 +296,7 @@ export function HeaderClient({
                 <li>
                   <Link
                     href="/about"
-                    className="text-gray-900 hover:text-[#7c2943] transition-colors"
+                    className="text-gray-900 hover:text-[#7c2943]"
                     onClick={() => setMobileExploreOpen(false)}
                   >
                     ABOUT
@@ -337,7 +305,7 @@ export function HeaderClient({
                 <li>
                   <Link
                     href="/contact"
-                    className="text-gray-900 hover:text-[#7c2943] transition-colors"
+                    className="text-gray-900 hover:text-[#7c2943]"
                     onClick={() => setMobileExploreOpen(false)}
                   >
                     CONTACT
