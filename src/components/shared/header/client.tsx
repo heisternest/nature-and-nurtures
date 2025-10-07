@@ -59,7 +59,7 @@ export function HeaderClient({
               onMouseEnter={() => setMenuOpen(true)}
               onMouseLeave={() => setMenuOpen(false)}
             >
-              <button className="hover:text-gray-700">SHOP ALL ▾</button>
+              <button className="hover:text-gray-700">SHOP ▾</button>
               <AnimatePresence>
                 {menuOpen && (
                   <motion.div
@@ -70,34 +70,6 @@ export function HeaderClient({
                     className="fixed left-0 top-20 w-full z-30 bg-white shadow-2xl border-b border-gray-100 px-16 py-12 flex justify-center"
                   >
                     <div className="flex w-full max-w-7xl space-x-12">
-                      {/* Featured */}
-                      <div className="min-w-[180px]">
-                        <h4 className="font-bold mb-4 text-xs tracking-widest text-[#7c2943]">
-                          FEATURED PRODUCTS
-                        </h4>
-                        <ul className="space-y-4">
-                          {featuredProducts.length ? (
-                            featuredProducts.map((item: any) => (
-                              <li key={item.id}>
-                                <Link
-                                  href={`/products/${encodeURIComponent(
-                                    item.slug
-                                  )}`}
-                                  className="text-lg text-gray-900 hover:text-[#7c2943] font-normal transition-colors"
-                                >
-                                  {item.name.split(" ").slice(0, 3).join(" ")}
-                                  {item.name.split(" ").length > 3 ? "..." : ""}
-                                </Link>
-                              </li>
-                            ))
-                          ) : (
-                            <li className="text-gray-500">
-                              No featured products
-                            </li>
-                          )}
-                        </ul>
-                      </div>
-
                       {/* Categories */}
                       {megaMenuCategories.map((category: any) => (
                         <div key={category.id} className="min-w-[220px]">

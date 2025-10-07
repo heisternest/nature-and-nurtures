@@ -51,10 +51,9 @@ export async function FAQSection() {
             <Accordion
               type="multiple"
               defaultValue={
-                [
-                  faqData.accordionItems[0]?.title,
-                  faqData.accordionItems[2]?.title,
-                ].filter(Boolean) as string[]
+                faqData.accordionItems[0]?.title
+                  ? [faqData.accordionItems[0].title]
+                  : []
               }
               className="mt-4 sm:mt-6 min-w-0 w-full"
             >
