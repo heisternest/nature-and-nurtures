@@ -34,17 +34,5 @@ export default async function Header() {
     orderBy: { createdAt: "desc" },
   });
 
-  const featuredProducts = await prisma.product.findMany({
-    where: { active: true, featured: true },
-    take: 3,
-    orderBy: { createdAt: "desc" },
-  });
-
-  return (
-    <HeaderClient
-      data={data}
-      collections={collections}
-      featuredProducts={featuredProducts}
-    />
-  );
+  return <HeaderClient data={data} collections={collections} />;
 }

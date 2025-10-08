@@ -1,10 +1,11 @@
-"use server";
-
 import { Footer } from "@/components/shared/footer";
 import Header from "@/components/shared/header";
 import prisma from "@/lib/db";
 import type { Metadata } from "next";
 import { CategoryProductClient } from "./client";
+
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 async function getCategoryWithProducts(category_slug: string) {
   return prisma.category.findUnique({
