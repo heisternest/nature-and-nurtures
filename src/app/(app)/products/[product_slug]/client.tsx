@@ -11,6 +11,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCartStore } from "@/lib/cart-store";
 import { imageThumbnailUrl } from "@/utils/image-otf";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
@@ -82,6 +83,20 @@ export function ProductPage({ product }: { product: any }) {
           <ImageGallery
             showPlayButton={false}
             autoPlay={true}
+            // custom arrow icons can be added here
+            renderLeftNav={(onClick, disabled) => (
+              <div onClick={onClick} className={disabled ? "hidden" : ""}>
+                <ChevronLeft
+                  // center of the image gallery
+                  className="absolute top-1/2 left-2 transform -translate-y-1/2 w-8 h-8 text-white bg-black bg-opacity-50 rounded-full p-1 cursor-pointer z-10"
+                />
+              </div>
+            )}
+            renderRightNav={(onClick, disabled) => (
+              <div onClick={onClick} className={disabled ? "hidden" : ""}>
+                <ChevronRight className="absolute top-1/2 right-2 transform -translate-y-1/2 w-8 h-8 text-white bg-black bg-opacity-50 rounded-full p-1 cursor-pointer z-10" />
+              </div>
+            )}
             items={product.productImages.map((img: any) => ({
               original: imageThumbnailUrl(img.url, 800, 800),
               thumbnail: imageThumbnailUrl(img.url, 100, 100),
@@ -239,7 +254,7 @@ export function ProductPage({ product }: { product: any }) {
           <ImageGallery
             showThumbnails={false}
             showPlayButton={false}
-            showFullscreenButton={false}
+            showFullscreenButton={true}
             showBullets={true}
             autoPlay={true}
             slideInterval={4000}
