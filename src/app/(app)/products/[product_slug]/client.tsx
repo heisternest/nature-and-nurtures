@@ -20,7 +20,6 @@ export function ProductPage({ product }: { product: any }) {
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState("M");
   const [quantity, setQuantity] = useState(1);
-
   const { addToCart } = useCartStore();
 
   const handleAddToCart = () => {
@@ -46,36 +45,38 @@ export function ProductPage({ product }: { product: any }) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 sm:py-8">
-      {/* Breadcrumb */}
-      <Breadcrumb className="mb-6 sm:mb-8">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          {product.category &&
-            product.category.slug &&
-            product.category.name && (
-              <>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink href={`/category/${product.category.slug}`}>
-                    {product.category.name}
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-              </>
-            )}
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>
-              {product.name.split(" ").slice(0, 3).join(" ")}
-              {product.name.split(" ").length > 3 ? "..." : ""}
-            </BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      {/* --- Breadcrumb (desktop only) --- */}
+      <div className="hidden lg:block mb-6 sm:mb-8">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            {product.category &&
+              product.category.slug &&
+              product.category.name && (
+                <>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href={`/category/${product.category.slug}`}>
+                      {product.category.name}
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                </>
+              )}
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>
+                {product.name.split(" ").slice(0, 3).join(" ")}
+                {product.name.split(" ").length > 3 ? "..." : ""}
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
 
-      {/* Product Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+      {/* --- Desktop Layout --- */}
+      <div className="hidden lg:grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Left Column - Images */}
         <div className="space-y-4">
           <ImageGallery
@@ -223,45 +224,126 @@ export function ProductPage({ product }: { product: any }) {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="mt-12 sm:mt-16 max-w-7xl mx-auto">
+      {/* --- Mobile Layout --- */}
+      <div className="block lg:hidden space-y-6">
+        {/* Title + Description */}
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            {product.name}
+          </h1>
+          <p className="text-gray-600 text-sm">{product.description}</p>
+        </div>
+
+        {/* Swipeable Gallery with Circle Indicators */}
+        <div className="relative">
+          <ImageGallery
+            showThumbnails={false}
+            showPlayButton={false}
+            showFullscreenButton={false}
+            showBullets={true}
+            autoPlay={true}
+            slideInterval={4000}
+            items={product.productImages.map((img: any) => ({
+              original: imageThumbnailUrl(img.url, 800, 800),
+              originalAlt: product.name,
+            }))}
+          />
+        </div>
+
+        {/* Product Options (Size + Quantity) */}
+        <div className="space-y-5">
+          {/* Size */}
+          {product.sizes.length > 0 && (
+            <div>
+              <h3 className="text-sm font-medium text-gray-900 mb-2">Size:</h3>
+              <div className="flex flex-wrap gap-2">
+                {product.sizes.map((size: any, index: number) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedSize(size)}
+                    className={`px-3 py-2 border rounded-md text-sm font-medium ${
+                      selectedSize === size
+                        ? "border-black bg-black text-white"
+                        : "border-gray-300 text-gray-700 hover:border-gray-400"
+                    }`}
+                  >
+                    {size.size}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Quantity */}
+          <div>
+            <h3 className="text-sm font-medium text-gray-900 mb-2">
+              Quantity:
+            </h3>
+            <div className="flex items-center border border-gray-300 rounded-md w-fit">
+              <button
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="px-3 py-2 text-gray-600 hover:text-gray-800"
+              >
+                −
+              </button>
+              <span className="px-4 py-2 border-x border-gray-300">
+                {quantity}
+              </span>
+              <button
+                onClick={() => setQuantity(quantity + 1)}
+                className="px-3 py-2 text-gray-600 hover:text-gray-800"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="space-y-3">
+            <button className="w-full bg-black text-white py-3 rounded-md font-medium hover:bg-gray-800 transition-colors">
+              BUY NOW
+            </button>
+            <button
+              onClick={handleAddToCart}
+              className="w-full bg-white border border-gray-300 text-gray-900 py-3 rounded-md font-medium hover:bg-gray-50 transition-colors"
+            >
+              ADD TO CART
+            </button>
+          </div>
+        </div>
+
+        {/* About This Product Section */}
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">
+            About This Product
+          </h3>
+          <div
+            className="prose prose-sm text-gray-600 leading-relaxed [&_img]:w-full [&_img]:object-cover"
+            dangerouslySetInnerHTML={{ __html: product.about }}
+          />
+        </div>
+      </div>
+
+      {/* --- Tabs (Desktop Only) --- */}
+      <div className="hidden lg:block mt-12 sm:mt-16 max-w-7xl mx-auto">
         <Tabs defaultValue="about" className="w-full">
           <TabsList className="border-b border-gray-200 mb-6 sm:mb-8">
             <TabsTrigger value="about">About This Product</TabsTrigger>
             <TabsTrigger value="specifications">Specifications</TabsTrigger>
           </TabsList>
 
-          {/* About This Product */}
           <TabsContent value="about">
             <div>
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
                 About This Product
               </h3>
-              <div className="mb-6 text-gray-600 leading-relaxed text-sm sm:text-base">
-                <div
-                  className="prose  break-words overflow-hidden [&_*]:max-w-full   [&_img]:w-full [&_img]:object-cover"
-                  dangerouslySetInnerHTML={{ __html: product.about }}
-                />
-              </div>
-
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
-                Key Features
-              </h3>
-              <ul className="space-y-2 sm:space-y-3 text-gray-600">
-                {product.features.map((item: any) => (
-                  <li
-                    key={item.id}
-                    className="flex items-start gap-2 text-sm sm:text-base"
-                  >
-                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 flex-shrink-0"></span>
-                    {item.description}
-                  </li>
-                ))}
-              </ul>
+              <div
+                className="prose break-words overflow-hidden [&_*]:max-w-full [&_img]:w-full [&_img]:object-cover"
+                dangerouslySetInnerHTML={{ __html: product.about }}
+              />
             </div>
           </TabsContent>
 
-          {/* Specifications */}
           <TabsContent value="specifications">
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
               {product.specifications.map((spec: any) => (
