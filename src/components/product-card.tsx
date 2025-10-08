@@ -22,7 +22,7 @@ export const ProductCard: React.FC<{ product: any }> = ({ product }) => (
       ></div>
 
       {/* Product Info - Below Image */}
-      <div className="pt-3 px-1 text-center sm:text-left w-full">
+      <div className="pt-3 px-1 text-center sm:text-left w-full hidden sm:block">
         <h3 className="font-semibold  tracking-wide text-gray-900 group-hover:text-gray-700 transition-colors">
           {product.name}
         </h3>

@@ -88,6 +88,7 @@ export function ProductPage({ product }: { product: any }) {
               <div onClick={onClick} className={disabled ? "hidden" : ""}>
                 <ChevronLeft
                   // center of the image gallery
+
                   className="absolute top-1/2 left-2 transform -translate-y-1/2 w-8 h-8 text-white bg-black bg-opacity-50 rounded-full p-1 cursor-pointer z-10"
                 />
               </div>
@@ -253,11 +254,24 @@ export function ProductPage({ product }: { product: any }) {
         <div className="relative">
           <ImageGallery
             showThumbnails={false}
+            swipeThreshold={50}
+            renderLeftNav={(onClick, disabled) => (
+              <div onClick={onClick} className={disabled ? "hidden" : ""}>
+                <ChevronLeft
+                  // center of the image gallery
+
+                  className="absolute top-1/2 left-2 transform -translate-y-1/2 w-8 h-8 text-white bg-black bg-opacity-50 rounded-full p-1 cursor-pointer z-10"
+                />
+              </div>
+            )}
+            renderRightNav={(onClick, disabled) => (
+              <div onClick={onClick} className={disabled ? "hidden" : ""}>
+                <ChevronRight className="absolute top-1/2 right-2 transform -translate-y-1/2 w-8 h-8 text-white bg-black bg-opacity-50 rounded-full p-1 cursor-pointer z-10" />
+              </div>
+            )}
             showPlayButton={false}
             showFullscreenButton={true}
             showBullets={true}
-            autoPlay={true}
-            slideInterval={4000}
             items={product.productImages.map((img: any) => ({
               original: imageThumbnailUrl(img.url, 800, 800),
               originalAlt: product.name,
