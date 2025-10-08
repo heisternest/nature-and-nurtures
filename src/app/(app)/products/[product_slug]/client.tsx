@@ -11,12 +11,12 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCartStore } from "@/lib/cart-store";
 import { imageThumbnailUrl } from "@/utils/image-otf";
-import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css";
 import { toast } from "sonner";
 
 export function ProductPage({ product }: { product: any }) {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState("M");
   const [quantity, setQuantity] = useState(1);
@@ -78,53 +78,16 @@ export function ProductPage({ product }: { product: any }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Left Column - Images */}
         <div className="space-y-4">
-          {/* Main Image */}
-          {/* Main Image with Amazon-style Zoom */}
-          <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden relative">
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={selectedImageIndex}
-                src={
-                  product.productImages?.[selectedImageIndex]?.url ||
-                  "/placeholder.png"
-                }
-                alt={
-                  product.productImages?.[selectedImageIndex]?.alt ||
-                  product.name ||
-                  "Product image"
-                }
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="w-full h-full object-contain transform transition duration-300 ease-in-out"
-                style={{
-                  transformOrigin: "var(--zoom-x, 50%) var(--zoom-y, 50%)",
-                }}
-              />
-            </AnimatePresence>
-          </div>
-
-          {/* Thumbnail Images */}
-          <div className="flex space-x-3 overflow-x-auto pb-2">
-            {product.productImages?.map((img: any, index: number) => (
-              <button
-                key={index}
-                onClick={() => setSelectedImageIndex(index)}
-                className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
-                  selectedImageIndex === index
-                    ? "border-blue-500 ring-2 ring-blue-200"
-                    : "border-gray-200 hover:border-gray-300"
-                }`}
-              >
-                <img
-                  src={imageThumbnailUrl(img.url) || "/placeholder.svg"}
-                  alt={`${product.name} view ${index + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
+          <ImageGallery
+            showPlayButton={false}
+            slideDuration={3000}
+            items={product.productImages.map((img: any) => ({
+              original: imageThumbnailUrl(img.url, 800, 800),
+              thumbnail: imageThumbnailUrl(img.url, 100, 100),
+              originalAlt: product.name,
+              thumbnailAlt: product.name,
+            }))}
+          />
         </div>
 
         {/* Right Column - Product Details */}
