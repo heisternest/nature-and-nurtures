@@ -5,7 +5,6 @@ import Header from "@/components/shared/header";
 import { HeroSection } from "@/components/shared/hero";
 import { InfoSection } from "@/components/shared/info";
 import { FeaturedProductShowcase } from "@/components/shared/product/featured-product";
-import { ProductShowcase } from "@/components/shared/product/product-showcase";
 
 export const revalidate = 0;
 
@@ -37,7 +36,6 @@ export default function Home() {
       <FeaturedProductShowcase />
       <CategoryShowcase />
       <InfoSection />
-      <ProductShowcase />
       <FAQSection />
       {/* <Newsletter /> */}
       <Footer />
