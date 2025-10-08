@@ -1,5 +1,7 @@
 "use server";
 
+import { Footer } from "@/components/shared/footer";
+import Header from "@/components/shared/header";
 import prisma from "@/lib/db";
 import type { Metadata } from "next";
 import { CategoryProductClient } from "./client";
@@ -70,5 +72,11 @@ export default async function Page({
     );
   }
 
-  return <CategoryProductClient data={data} />;
+  return (
+    <div>
+      <Header />
+      <CategoryProductClient data={data} />
+      <Footer />
+    </div>
+  );
 }
