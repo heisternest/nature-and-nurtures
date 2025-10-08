@@ -21,7 +21,7 @@ export default async function Header() {
   });
 
   const collections = await prisma.productCollection.findMany({
-    where: { active: true, featured: true },
+    where: { active: true },
     include: {
       _count: {
         select: {
