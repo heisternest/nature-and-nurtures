@@ -80,7 +80,7 @@ export function ProductPage({ product }: { product: any }) {
         <div className="space-y-4">
           <ImageGallery
             showPlayButton={false}
-            slideDuration={3000}
+            autoPlay={true}
             items={product.productImages.map((img: any) => ({
               original: imageThumbnailUrl(img.url, 800, 800),
               thumbnail: imageThumbnailUrl(img.url, 100, 100),
