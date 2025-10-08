@@ -44,7 +44,7 @@ export async function HeroSection() {
           />
           {/* CTA Button */}
           <Link
-            href="/products"
+            href="/products?search=oil"
             className="inline-flex items-center bg-brand rounded-full px-5 sm:px-6 py-3 text-xs sm:text-sm font-semibold uppercase tracking-wider
                        transform transition-transform duration-200 hover:scale-105 hover:bg-brand/90"
           >
