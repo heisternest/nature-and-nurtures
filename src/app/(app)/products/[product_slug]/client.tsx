@@ -300,9 +300,6 @@ export function ProductPage({ product }: { product: any }) {
 
           {/* Buttons */}
           <div className="space-y-3">
-            <button className="w-full bg-black text-white py-3 rounded-md font-medium hover:bg-gray-800 transition-colors">
-              BUY NOW
-            </button>
             <button
               onClick={handleAddToCart}
               className="w-full bg-white border border-gray-300 text-gray-900 py-3 rounded-md font-medium hover:bg-gray-50 transition-colors"
