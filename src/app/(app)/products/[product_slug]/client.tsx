@@ -263,7 +263,6 @@ export function ProductPage({ product }: { product: any }) {
         <div className="relative">
           <ImageGallery
             showThumbnails={false}
-            swipeThreshold={50}
             renderItem={(item) => (
               <ImageZoom
                 // src="https://picsum.photos/seed/022/3840/2160"
@@ -289,6 +288,7 @@ export function ProductPage({ product }: { product: any }) {
             showPlayButton={false}
             showFullscreenButton={true}
             showBullets={true}
+            autoPlay={false}
             items={product.productImages.map((img: any) => ({
               original: imageThumbnailUrl(img.url, 800, 800),
               originalAlt: product.name,
