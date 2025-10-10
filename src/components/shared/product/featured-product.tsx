@@ -26,14 +26,12 @@ export async function FeaturedProductShowcase() {
   });
   return (
     <Carousel opts={{ align: "start", loop: true }} className="w-full">
-      <div className="max-w-7xl mx-auto my-20 overflow-hidden">
+      <div className="max-w-7xl mx-auto my-20 overflow-hidden px-4 sm:px-6 md:px-8">
         {/* Header */}
-        <div className="bg-white font-serif p-8 flex items-center justify-between w-full mb-10">
+        <div className="bg-white font-serif flex items-center justify-between w-full mb-10">
           {/* Central text block with "Explore Face Wash" and the curved arrow */}
           <div className="text-center relative">
-            <h1 className="text-6xl italic text-gray-900 -mt-4">
-              Featured Products
-            </h1>
+            <h1 className="text-6xl italic text-gray-900">Featured Products</h1>
           </div>
 
           {/* Description text to the right of the central text */}

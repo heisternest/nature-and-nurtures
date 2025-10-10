@@ -67,7 +67,7 @@ export function CategoryProductClient({ data }: { data: any }) {
           <h1 className="text-2xl sm:text-4xl md:text-6xl font-serif text-gray-900 my-2">
             {data.name}
           </h1>
-          <p className="max-w-md mx-auto text-gray-600 text-xs sm:text-sm leading-relaxed">
+          <p className="max-w-5xl mt-4 mx-auto text-gray-600 text-xs sm:text-sm leading-relaxed">
             {data.description}
           </p>
         </header>

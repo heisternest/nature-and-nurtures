@@ -1,77 +1,14 @@
 "use client";
 
+import { CategoryCard } from "@/components/category-card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { imageThumbnailUrl } from "@/utils/image-otf";
 import { Category } from "@prisma/client";
 import Autoplay from "embla-carousel-autoplay";
-import Link from "next/link";
 import * as React from "react";
-
-const ArrowIcon = () => (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M7 17L17 7"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M7 7H17V17"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const CategoryCard = ({ category }: any) => {
-  return (
-    <Link href={`/category/${category.slug}`} className="p-2 group">
-      <div
-        className="relative aspect-square w-full rounded-xl overflow-hidden
-                   transition-transform duration-500 group-hover:scale-105"
-      >
-        <img
-          src={
-            category.imageUrl
-              ? imageThumbnailUrl(category.imageUrl, 400, 400)
-              : "/placeholder.png"
-          }
-          alt={category.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-
-        {/* gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent transition-opacity duration-300 opacity-0 group-hover:opacity-100"></div>
-
-        <div className="absolute bottom-4 left-4 right-4">
-          <button
-            className="w-full bg-white/90 backdrop-blur-sm text-black px-4 py-3 rounded-lg
-                       flex justify-between items-center text-sm font-medium
-                       transition-colors duration-300 hover:bg-white"
-          >
-            <span>{category.name.toUpperCase()}</span>
-            <ArrowIcon />
-          </button>
-        </div>
-      </div>
-    </Link>
-  );
-};
-
-export default CategoryCard;
 
 export function CategoryShowcaseClient({
   categories,

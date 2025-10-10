@@ -14,14 +14,14 @@ export async function HeroSection() {
 
   return (
     <section
-      className="w-full"
+      className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8"
       style={{
         backgroundColor: data.backgroundColor,
       }}
     >
       <div className="mx-auto grid grid-cols-1 md:grid-cols-2 items-center">
         {/* Left Content */}
-        <div className="p-6 sm:p-10 md:px-16 lg:px-24 space-y-6 text-center md:text-left">
+        <div className=" space-y-6 text-center md:text-left">
           {/* Icon */}
           <div className="flex justify-center md:justify-start items-center space-x-2">
             <span className="text-4xl sm:text-5xl md:text-6xl">
