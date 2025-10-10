@@ -15,6 +15,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
+import ImageZoom from "react-image-zooom";
 import { toast } from "sonner";
 
 export function ProductPage({ product }: { product: any }) {
@@ -82,7 +83,7 @@ export function ProductPage({ product }: { product: any }) {
         <div className="space-y-4">
           <ImageGallery
             showPlayButton={false}
-            autoPlay={true}
+            autoPlay={false}
             // custom arrow icons can be added here
             renderLeftNav={(onClick, disabled) => (
               <div onClick={onClick} className={disabled ? "hidden" : ""}>
@@ -97,6 +98,14 @@ export function ProductPage({ product }: { product: any }) {
               <div onClick={onClick} className={disabled ? "hidden" : ""}>
                 <ChevronRight className="absolute top-1/2 right-2 transform -translate-y-1/2 w-8 h-8 text-white bg-black bg-opacity-50 rounded-full p-1 cursor-pointer z-10" />
               </div>
+            )}
+            renderItem={(item) => (
+              <ImageZoom
+                // src="https://picsum.photos/seed/022/3840/2160"
+                src={item.original}
+                alt={item.originalAlt}
+                fullWidth={true}
+              />
             )}
             items={product.productImages.map((img: any) => ({
               original: imageThumbnailUrl(img.url, 800, 800),
@@ -255,6 +264,14 @@ export function ProductPage({ product }: { product: any }) {
           <ImageGallery
             showThumbnails={false}
             swipeThreshold={50}
+            renderItem={(item) => (
+              <ImageZoom
+                // src="https://picsum.photos/seed/022/3840/2160"
+                src={item.original}
+                alt={item.originalAlt}
+                fullWidth={true}
+              />
+            )} // Hide default item to customize navigation
             renderLeftNav={(onClick, disabled) => (
               <div onClick={onClick} className={disabled ? "hidden" : ""}>
                 <ChevronLeft
