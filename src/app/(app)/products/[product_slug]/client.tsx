@@ -263,6 +263,7 @@ export function ProductPage({ product }: { product: any }) {
         <div className="relative">
           <ImageGallery
             showThumbnails={false}
+            disableSwipe={true}
             renderItem={(item) => (
               <ImageZoom
                 // src="https://picsum.photos/seed/022/3840/2160"
