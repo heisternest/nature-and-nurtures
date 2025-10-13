@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/drawer";
 import { useCartStore } from "@/lib/cart-store";
 import { AnimatePresence, motion } from "framer-motion";
-import { ShoppingBag } from "lucide-react";
+import { Menu, ShoppingBag } from "lucide-react"; // 👈 Added Menu icon
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -175,8 +175,17 @@ export function HeaderClient({
           </nav>
         </div>
 
-        {/* Search + Cart */}
+        {/* Search + Cart + Hamburger */}
         <div className="flex items-center space-x-4">
+          {/* Mobile Hamburger Menu */}
+          <button
+            className="md:hidden p-2"
+            onClick={() => setMobileExploreOpen(true)}
+            aria-label="Open menu"
+          >
+            <Menu className="w-6 h-6 text-gray-800" />
+          </button>
+
           {/* Search */}
           <div className="hidden md:block w-64">
             <SearchBar />

@@ -342,12 +342,25 @@ export function ProductForm({
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description *</FormLabel>
+                  // <FormItem>
+                  //   <FormLabel>Description *</FormLabel>
+                  //   <FormControl>
+                  //     <Textarea
+                  //       placeholder="Describe your product..."
+                  //       {...field}
+                  //     />
+                  //   </FormControl>
+                  //   <FormDescription>
+                  //     Provide a short description of your product
+                  //   </FormDescription>
+                  //   <FormMessage />
+                  // </FormItem>
+                  <FormItem className="flex-1 flex flex-col">
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Describe your product..."
-                        {...field}
+                      <RichTextEditor
+                        value={field.value || ""}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormDescription>
