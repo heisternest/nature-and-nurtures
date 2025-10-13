@@ -264,14 +264,14 @@ export function ProductPage({ product }: { product: any }) {
           <ImageGallery
             showThumbnails={false}
             disableSwipe={true}
-            renderItem={(item) => (
-              <ImageZoom
-                // src="https://picsum.photos/seed/022/3840/2160"
-                src={item.original}
-                alt={item.originalAlt}
-                fullWidth={true}
-              />
-            )} // Hide default item to customize navigation
+            // renderItem={(item) => (
+            //   <ImageZoom
+            //     // src="https://picsum.photos/seed/022/3840/2160"
+            //     src={item.original}
+            //     alt={item.originalAlt}
+            //     fullWidth={true}
+            //   />
+            // )}
             renderLeftNav={(onClick, disabled) => (
               <div onClick={onClick} className={disabled ? "hidden" : ""}>
                 <ChevronLeft
@@ -287,7 +287,7 @@ export function ProductPage({ product }: { product: any }) {
               </div>
             )}
             showPlayButton={false}
-            showFullscreenButton={true}
+            showFullscreenButton={false}
             showBullets={true}
             autoPlay={false}
             items={product.productImages.map((img: any) => ({
