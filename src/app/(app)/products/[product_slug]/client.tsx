@@ -8,6 +8,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCartStore } from "@/lib/cart-store";
 import { imageThumbnailUrl } from "@/utils/image-otf";
@@ -261,40 +268,21 @@ export function ProductPage({ product }: { product: any }) {
 
         {/* Swipeable Gallery with Circle Indicators */}
         <div className="relative">
-          <ImageGallery
-            showThumbnails={false}
-            disableSwipe={true}
-            // renderItem={(item) => (
-            //   <ImageZoom
-            //     // src="https://picsum.photos/seed/022/3840/2160"
-            //     src={item.original}
-            //     alt={item.originalAlt}
-            //     fullWidth={true}
-            //   />
-            // )}
-            renderLeftNav={(onClick, disabled) => (
-              <div onClick={onClick} className={disabled ? "hidden" : ""}>
-                <ChevronLeft
-                  // center of the image gallery
-
-                  className="absolute top-1/2 left-2 transform -translate-y-1/2 w-8 h-8 text-white bg-black bg-opacity-50 rounded-full p-1 cursor-pointer z-10"
-                />
-              </div>
-            )}
-            renderRightNav={(onClick, disabled) => (
-              <div onClick={onClick} className={disabled ? "hidden" : ""}>
-                <ChevronRight className="absolute top-1/2 right-2 transform -translate-y-1/2 w-8 h-8 text-white bg-black bg-opacity-50 rounded-full p-1 cursor-pointer z-10" />
-              </div>
-            )}
-            showPlayButton={false}
-            showFullscreenButton={false}
-            showBullets={true}
-            autoPlay={false}
-            items={product.productImages.map((img: any) => ({
-              original: imageThumbnailUrl(img.url, 800, 800),
-              originalAlt: product.name,
-            }))}
-          />
+          <Carousel>
+            <CarouselContent>
+              {product.productImages.map((img: any, index: number) => (
+                <CarouselItem key={index} className="w-full ">
+                  <img
+                    src={imageThumbnailUrl(img.url, 800, 800)}
+                    alt={product.name}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute top-1/2 left-2 transform -translate-y-1/2 w-8 h-8 text-white bg-black  rounded-full p-1 cursor-pointer z-10" />
+            <CarouselNext className="absolute top-1/2 right-2 transform -translate-y-1/2 w-8 h-8 text-white bg-black rounded-full p-1 cursor-pointer z-10" />
+          </Carousel>
         </div>
 
         {/* Product Options (Size + Quantity) */}
